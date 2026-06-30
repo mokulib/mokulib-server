@@ -1,6 +1,8 @@
 package pers.liaohaolong.mokulibserver.model;
 
 import com.baomidou.mybatisplus.annotation.EnumValue;
+import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
 import lombok.Getter;
@@ -15,6 +17,7 @@ public class BookCopy {
 
     public static final String TABLE_NAME = "book_copy";
 
+    @TableId(type = IdType.AUTO)
     private Integer id;
 
     private Integer book_id;

@@ -1,5 +1,7 @@
 package pers.liaohaolong.mokulibserver.model;
 
+import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
 
@@ -11,6 +13,7 @@ public class Captcha {
 
     public static final String TABLE_NAME = "captcha";
 
+    @TableId(type = IdType.ASSIGN_UUID)
     private String token;
 
     private String captcha;
