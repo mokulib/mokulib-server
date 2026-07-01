@@ -116,11 +116,11 @@ close_status: 'OPEN', 'CLOSED', 'LOST', 'DAMAGED'
 
 ## activation_token (激活令牌)
 
-| Name        | DataType | Default            | AutoInc | PK/UK/IDX | NotNull |
-|:------------|:---------|:-------------------|:--------|:----------|:--------|
-| user_id     | int      |                    |         | PK        | Y       |
-| token       | char(32) | IdType.ASSIGN_UUID |         |           | Y       |
-| expire_time | datetime |                    |         |           | Y       |
+| Name        | DataType | Default | AutoInc | PK/UK/IDX | NotNull |
+|:------------|:---------|:--------|:--------|:----------|:--------|
+| user_id     | int      |         |         | PK        | Y       |
+| token       | char(32) |         |         |           | Y       |
+| expire_time | datetime |         |         |           | Y       |
 
 ## email_verification (邮箱验证码)
 
@@ -135,8 +135,10 @@ close_status: 'OPEN', 'CLOSED', 'LOST', 'DAMAGED'
 
 ## captcha (人机验证码)
 
-| Name        | DataType | Default            | AutoInc | PK/UK/IDX | NotNull |
-|:------------|:---------|:-------------------|:--------|:----------|:--------|
-| token       | char(32) | IdType.ASSIGN_UUID |         | PK        | Y       |
-| captcha     | char(4)  |                    |         |           | Y       | 
-| expire_time | datetime |                    |         |           | Y       |
+| Name        | DataType | Default | AutoInc | PK/UK/IDX | NotNull |
+|:------------|:---------|:--------|:--------|:----------|:--------|
+| token       | char(32) |         |         | PK        | Y       |
+| captcha     | char(4)  |         |         |           | Y       | 
+| expire_time | datetime |         |         |           | Y       |
+
+token: 默认值由 MybatisPlus 的 IdType.ASSIGN_UUID 生成
