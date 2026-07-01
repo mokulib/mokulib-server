@@ -37,20 +37,17 @@ public class BookMapperTest {
         book.setDescription("全国高等教育自学考试指定教材。");
         book.setPrice(new BigDecimal("49"));
 
-        int id = bookMapper.insert(book);
+        bookMapper.insert(book);
 
-        Assertions.assertNotNull(book.getId());
-        Assertions.assertEquals(1, id);
+        Assertions.assertEquals(1, book.getId());
     }
 
     @Test
     @Order(2)
     @DisplayName("反序列化测试")
     void selectTest() {
-        // 反序列化测试
         Book found = bookMapper.selectById(1);
 
-        Assertions.assertNotNull(found);
         Assertions.assertEquals(Locale.CHINESE, found.getLanguage());
 
         log.info(found.toString());
