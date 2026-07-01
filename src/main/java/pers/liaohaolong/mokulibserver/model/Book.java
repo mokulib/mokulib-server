@@ -1,16 +1,18 @@
 package pers.liaohaolong.mokulibserver.model;
 
 import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
+import pers.liaohaolong.mokulibserver.model.type.LocaleTypeHandler;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.Locale;
 
 @Data
-@TableName
+@TableName(autoResultMap = true)
 public class Book {
 
     public static final String TABLE_NAME = "book";
@@ -34,6 +36,7 @@ public class Book {
 
     private Integer pageCount;
 
+    @TableField(typeHandler = LocaleTypeHandler.class)
     private Locale language;
 
     private String description;
