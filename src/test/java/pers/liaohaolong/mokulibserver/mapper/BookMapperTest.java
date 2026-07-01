@@ -1,11 +1,12 @@
 package pers.liaohaolong.mokulibserver.mapper;
 
 import lombok.extern.slf4j.Slf4j;
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Order;
+import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.context.annotation.Import;
-import pers.liaohaolong.mokulibserver.MybatisPlusConfiguration;
+import pers.liaohaolong.mokulibserver.MokuLibServerTest;
 import pers.liaohaolong.mokulibserver.dao.BookMapper;
 import pers.liaohaolong.mokulibserver.model.Book;
 
@@ -14,9 +15,7 @@ import java.time.LocalDate;
 import java.util.Locale;
 
 @Slf4j
-@SpringBootTest
-@TestMethodOrder(MethodOrderer.OrderAnnotation.class)
-@Import(MybatisPlusConfiguration.class)
+@MokuLibServerTest
 public class BookMapperTest {
 
     @Autowired
@@ -24,8 +23,8 @@ public class BookMapperTest {
 
     @Test
     @Order(1)
+    @DisplayName("序列化测试")
     void insertTest() {
-        // 序列化测试
         Book book = new Book();
         book.setIsbn("9787505863606");
         book.setTitle("计算机网络原理");
@@ -46,6 +45,7 @@ public class BookMapperTest {
 
     @Test
     @Order(2)
+    @DisplayName("反序列化测试")
     void selectTest() {
         // 反序列化测试
         Book found = bookMapper.selectById(1);
