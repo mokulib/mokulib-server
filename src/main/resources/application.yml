@@ -1,0 +1,17 @@
+server:
+  port: 8080
+
+
+spring:
+  application:
+    name: MokuLib
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/mokulib?useUnicode=true&characterEncoding=UTF-8&serverTimezone=Asia/Shanghai
+    username: mokulib
+    password: mokulib
+
+
+logging:
+  level:
+    pers.liaohaolong.mokulibserver: DEBUG
