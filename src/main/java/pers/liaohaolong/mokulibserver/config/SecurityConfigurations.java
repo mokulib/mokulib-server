@@ -11,6 +11,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.cors.CorsConfiguration;
+import pers.liaohaolong.mokulibserver.security.authentication.AuthenticationFailureHandler;
+import pers.liaohaolong.mokulibserver.security.authentication.AuthenticationSuccessHandler;
 import pers.liaohaolong.mokulibserver.security.authentication.captcha.EmailCaptchaAuthenticationProviderWrapper;
 import pers.liaohaolong.mokulibserver.security.filter.InvalidLoginRequestFilter;
 import pers.liaohaolong.mokulibserver.security.filter.JwtRequestFilter;
@@ -23,6 +25,8 @@ public class SecurityConfigurations {
     @Bean
     public SecurityFilterChain securityFilterChain(
             HttpSecurity http,
+            AuthenticationSuccessHandler successHandler,
+            AuthenticationFailureHandler failureHandler,
             EmailCaptchaDetailsService emailCaptchaDetailsService,
             InvalidLoginRequestFilter invalidLoginRequestFilter,
             JwtRequestFilter jwtRequestFilter
@@ -38,6 +42,13 @@ public class SecurityConfigurations {
             configuration.addAllowedMethod("*");
             return configuration;
         }));
+
+        // 登录
+        http.formLogin(configurer -> configurer
+                .successHandler(successHandler)
+                .failureHandler(failureHandler)
+                .permitAll()
+        );
 
         // 配置授权规则(包括Mapping接口和需要权限控制的静态资源)
         http.authorizeHttpRequests(registry -> registry
