@@ -1,4 +1,3 @@
--- 用户表
 CREATE TABLE IF NOT EXISTS `user`
 (
     `id`           INT AUTO_INCREMENT PRIMARY KEY,
@@ -12,7 +11,6 @@ CREATE TABLE IF NOT EXISTS `user`
     `delete_time`  DATETIME
 );
 
--- 分类表
 CREATE TABLE IF NOT EXISTS `category`
 (
     `id`        INT AUTO_INCREMENT PRIMARY KEY,
@@ -21,14 +19,12 @@ CREATE TABLE IF NOT EXISTS `category`
     `name`      VARCHAR(16)   NOT NULL
 );
 
--- 标签表
 CREATE TABLE IF NOT EXISTS `tag`
 (
     `id`   INT AUTO_INCREMENT PRIMARY KEY,
     `name` VARCHAR(16) NOT NULL UNIQUE
 );
 
--- 图书表
 CREATE TABLE IF NOT EXISTS `book`
 (
     `id`           INT AUTO_INCREMENT PRIMARY KEY,
@@ -45,7 +41,6 @@ CREATE TABLE IF NOT EXISTS `book`
     `price`        DECIMAL(8, 2) NOT NULL
 );
 
--- 图书副本表
 CREATE TABLE IF NOT EXISTS `book_copy`
 (
     `id`             INT AUTO_INCREMENT PRIMARY KEY,
@@ -59,7 +54,6 @@ CREATE TABLE IF NOT EXISTS `book_copy`
     `remove_time`    DATETIME
 );
 
--- 书评表
 CREATE TABLE IF NOT EXISTS `book_review`
 (
     `id`          INT AUTO_INCREMENT PRIMARY KEY,
@@ -70,7 +64,6 @@ CREATE TABLE IF NOT EXISTS `book_review`
     `create_time` DATETIME DEFAULT CURRENT_TIMESTAMP NOT NULL
 );
 
--- 收藏表
 CREATE TABLE IF NOT EXISTS `user_book_like`
 (
     `user_id`     INT                                NOT NULL,
@@ -79,7 +72,6 @@ CREATE TABLE IF NOT EXISTS `user_book_like`
     PRIMARY KEY (`user_id`, `book_id`)
 );
 
--- 书评点赞表
 CREATE TABLE IF NOT EXISTS `user_book_review_like`
 (
     `user_id`        INT                                NOT NULL,
@@ -88,7 +80,6 @@ CREATE TABLE IF NOT EXISTS `user_book_review_like`
     PRIMARY KEY (`user_id`, `book_review_id`)
 );
 
--- 借阅记录表
 CREATE TABLE IF NOT EXISTS `borrow_record`
 (
     `id`           INT AUTO_INCREMENT PRIMARY KEY,
@@ -101,7 +92,6 @@ CREATE TABLE IF NOT EXISTS `borrow_record`
     `close_time`   DATETIME
 );
 
--- 图书与标签关系表
 CREATE TABLE IF NOT EXISTS `book_tag_relation`
 (
     `book_id` INT NOT NULL,
@@ -109,7 +99,6 @@ CREATE TABLE IF NOT EXISTS `book_tag_relation`
     PRIMARY KEY (`book_id`, `tag_id`)
 );
 
--- 激活令牌表
 CREATE TABLE IF NOT EXISTS `activation_token`
 (
     `user_id`     INT PRIMARY KEY,
@@ -117,19 +106,17 @@ CREATE TABLE IF NOT EXISTS `activation_token`
     `expire_time` DATETIME NOT NULL
 );
 
--- 邮箱验证码表
-CREATE TABLE IF NOT EXISTS `email_verification`
+CREATE TABLE IF NOT EXISTS `email_captcha`
 (
     `user_id`       INT                                NOT NULL,
     `business_type` VARCHAR(16)                        NOT NULL,
-    `code`          CHAR(9)                            NOT NULL,
+    `captcha`       CHAR(9)                            NOT NULL,
     `is_used`       BOOLEAN  DEFAULT FALSE             NOT NULL,
-    `create_time`   DATETIME DEFAULT CURRENT_TIMESTAMP NOT NULL,
-    `send_time`     DATETIME DEFAULT CURRENT_TIMESTAMP NOT NULL,
+    `cooling_time`  DATETIME                           NOT NULL,
+    `expire_time`   DATETIME                           NOT NULL,
     PRIMARY KEY (`user_id`, `business_type`)
 );
 
--- 人机验证码表
 CREATE TABLE IF NOT EXISTS `captcha`
 (
     `token`       CHAR(32) PRIMARY KEY,

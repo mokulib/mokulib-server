@@ -122,16 +122,16 @@ close_status: 'OPEN', 'CLOSED', 'LOST', 'DAMAGED'
 | token       | char(32) |         |         |           | Y       |
 | expire_time | datetime |         |         |           | Y       |
 
-## email_verification (邮箱验证码)
+## email_captcha (邮箱验证码)
 
-| Name          | DataType    | Default           | AutoInc | PK/UK/IDX | NotNull |
-|:--------------|:------------|:------------------|:--------|:----------|:--------|
-| user_id       | int         |                   |         | PK(Union) | Y       |
-| business_type | varchar(16) |                   |         | PK(Union) | Y       |
-| code          | char(9)     |                   |         |           | Y       |
-| is_used       | boolean     | false             |         |           | Y       |
-| create_time   | datetime    | current_timestamp |         |           | Y       |
-| send_time     | datetime    | current_timestamp |         |           | Y       |
+| Name          | DataType    | Default | AutoInc | PK/UK/IDX | NotNull |
+|:--------------|:------------|:--------|:--------|:----------|:--------|
+| user_id       | int         |         |         | PK(Union) | Y       |
+| business_type | varchar(16) |         |         | PK(Union) | Y       |
+| captcha       | char(9)     |         |         |           | Y       |
+| is_used       | boolean     | false   |         |           | Y       |
+| cooling_time  | datetime    |         |         |           | Y       |
+| expire_time   | datetime    |         |         |           | Y       |
 
 ## captcha (人机验证码)
 
