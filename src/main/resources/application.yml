@@ -5,11 +5,8 @@ server:
 spring:
   application:
     name: MokuLib
-  datasource:
-    driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://localhost:3306/mokulib?useUnicode=true&characterEncoding=UTF-8&serverTimezone=Asia/Shanghai
-    username: mokulib
-    password: mokulib
+  profiles:
+    active: local
 
 
 logging:

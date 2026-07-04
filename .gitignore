@@ -8,3 +8,10 @@
 *.iml
 *.ipr
 *.iws
+
+# springboot
+
+application-local.properties
+application-local.yml
+application-test.properties
+application-test.yml
