@@ -5,6 +5,7 @@ import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.scheduling.annotation.EnableAsync;
+import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 /**
@@ -12,6 +13,7 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
  */
 @Slf4j
 @EnableAsync
+@EnableMethodSecurity
 @SpringBootApplication
 @MapperScan("pers.liaohaolong.mokulibserver.dao")
 public class MokuLibServerApplication implements WebMvcConfigurer {

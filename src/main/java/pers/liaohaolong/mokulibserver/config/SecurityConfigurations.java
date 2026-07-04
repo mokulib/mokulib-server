@@ -11,6 +11,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.cors.CorsConfiguration;
+import pers.liaohaolong.mokulibserver.security.CustomAccessDeniedHandler;
+import pers.liaohaolong.mokulibserver.security.CustomAuthenticationEntryPoint;
 import pers.liaohaolong.mokulibserver.security.authentication.AuthenticationFailureHandler;
 import pers.liaohaolong.mokulibserver.security.authentication.AuthenticationSuccessHandler;
 import pers.liaohaolong.mokulibserver.security.authentication.captcha.EmailCaptchaAuthenticationProviderWrapper;
@@ -27,6 +29,8 @@ public class SecurityConfigurations {
             HttpSecurity http,
             AuthenticationSuccessHandler successHandler,
             AuthenticationFailureHandler failureHandler,
+            CustomAuthenticationEntryPoint authenticationEntryPoint,
+            CustomAccessDeniedHandler accessDeniedHandler,
             EmailCaptchaDetailsService emailCaptchaDetailsService,
             InvalidLoginRequestFilter invalidLoginRequestFilter,
             JwtRequestFilter jwtRequestFilter
@@ -56,6 +60,14 @@ public class SecurityConfigurations {
                 .requestMatchers("/swagger-ui/**").hasRole("ADMIN")
                 // 其余接口放行
                 .anyRequest().permitAll()
+        );
+
+        // 配置异常处理
+        http.exceptionHandling(configurer -> configurer
+                // 处理认证失败 401（正常情况下应该登录认证失败 -> 跳转到登录页面）
+                .authenticationEntryPoint(authenticationEntryPoint)
+                // 处理权限不足 403
+                .accessDeniedHandler(accessDeniedHandler)
         );
 
         // 禁用 session
