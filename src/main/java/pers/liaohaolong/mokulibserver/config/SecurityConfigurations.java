@@ -12,6 +12,7 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.cors.CorsConfiguration;
 import pers.liaohaolong.mokulibserver.security.filter.InvalidLoginRequestFilter;
+import pers.liaohaolong.mokulibserver.security.filter.JwtRequestFilter;
 
 @Slf4j
 @Configuration
@@ -20,7 +21,8 @@ public class SecurityConfigurations {
     @Bean
     public SecurityFilterChain securityFilterChain(
             HttpSecurity http,
-            InvalidLoginRequestFilter invalidLoginRequestFilter
+            InvalidLoginRequestFilter invalidLoginRequestFilter,
+            JwtRequestFilter jwtRequestFilter
     ) {
         // 关闭 CSRF 防护，因为我们使用 JWT 进行认证，不需要 CSRF 防护
         http.csrf(AbstractHttpConfigurer::disable);
@@ -49,6 +51,7 @@ public class SecurityConfigurations {
 
         // 添加过滤器
         http.addFilterBefore(invalidLoginRequestFilter, UsernamePasswordAuthenticationFilter.class);
+        http.addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
     }
