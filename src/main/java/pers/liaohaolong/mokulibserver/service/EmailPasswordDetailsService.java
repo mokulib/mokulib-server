@@ -1,0 +1,16 @@
+package pers.liaohaolong.mokulibserver.service;
+
+import org.jspecify.annotations.NonNull;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
+
+public interface EmailPasswordDetailsService extends UserDetailsService {
+
+    @NonNull UserDetails loadUserPasswordByEmail(@NonNull String email) throws UsernameNotFoundException;
+
+    default @NonNull UserDetails loadUserByUsername(@NonNull String username) throws UsernameNotFoundException {
+        return loadUserPasswordByEmail(username);
+    }
+
+}
