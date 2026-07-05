@@ -16,6 +16,7 @@ import pers.liaohaolong.mokulibserver.security.CustomAuthenticationEntryPoint;
 import pers.liaohaolong.mokulibserver.security.authentication.AuthenticationFailureHandler;
 import pers.liaohaolong.mokulibserver.security.authentication.AuthenticationSuccessHandler;
 import pers.liaohaolong.mokulibserver.security.authentication.captcha.EmailCaptchaAuthenticationProviderWrapper;
+import pers.liaohaolong.mokulibserver.security.filter.CaptchaFilter;
 import pers.liaohaolong.mokulibserver.security.filter.InvalidLoginRequestFilter;
 import pers.liaohaolong.mokulibserver.security.filter.JwtRequestFilter;
 import pers.liaohaolong.mokulibserver.service.business.EmailCaptchaDetailsService;
@@ -33,6 +34,7 @@ public class SecurityConfigurations {
             CustomAccessDeniedHandler accessDeniedHandler,
             EmailCaptchaDetailsService emailCaptchaDetailsService,
             InvalidLoginRequestFilter invalidLoginRequestFilter,
+            CaptchaFilter captchaFilter,
             JwtRequestFilter jwtRequestFilter
     ) {
         // 关闭 CSRF 防护，因为我们使用 JWT 进行认证，不需要 CSRF 防护
@@ -92,6 +94,7 @@ public class SecurityConfigurations {
 
         // 添加过滤器
         http.addFilterBefore(invalidLoginRequestFilter, UsernamePasswordAuthenticationFilter.class);
+        http.addFilterBefore(captchaFilter, UsernamePasswordAuthenticationFilter.class);
         http.addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
