@@ -46,7 +46,7 @@ public class CaptchaFilter extends OncePerRequestFilter {
                 // response.sendError(HttpServletResponse.SC_BAD_REQUEST); // 不要使用这种方法，这种方法会将请求转发到 /error
                 response.setStatus(HttpServletResponse.SC_OK);
                 response.setContentType("application/json;charset=UTF-8");
-                response.getWriter().write(ResultDTO.ERROR.toJson());
+                response.getWriter().write(ResultDTO.error().businessType("验证码").message("验证码错误，请重新输入").build().toJson());
                 response.getWriter().flush(); // 确保响应立即发送
                 return; // 直接返回，不继续执行后续的过滤器
             }
