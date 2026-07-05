@@ -1,8 +1,8 @@
 package pers.liaohaolong.mokulibserver.service.business.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -23,6 +23,7 @@ import java.util.UUID;
 
 @Slf4j
 @Service
+@RequiredArgsConstructor
 public class AuthServiceImpl implements AuthService {
 
     private final EmailCaptchaBaseService emailCaptchaBaseService;
@@ -34,15 +35,6 @@ public class AuthServiceImpl implements AuthService {
     private final UserMapper userMapper;
 
     private final PasswordEncoder passwordEncoder;
-
-    @Autowired
-    public AuthServiceImpl(EmailCaptchaBaseService emailCaptchaBaseService, MailService mailService, ActivationTokenMapper activationTokenMapper, UserMapper userMapper, PasswordEncoder passwordEncoder) {
-        this.emailCaptchaBaseService = emailCaptchaBaseService;
-        this.mailService = mailService;
-        this.activationTokenMapper = activationTokenMapper;
-        this.userMapper = userMapper;
-        this.passwordEncoder = passwordEncoder;
-    }
 
     @Override
     @Transactional

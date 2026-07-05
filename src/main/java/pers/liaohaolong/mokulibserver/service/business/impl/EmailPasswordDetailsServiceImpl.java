@@ -1,9 +1,9 @@
 package pers.liaohaolong.mokulibserver.service.business.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.jspecify.annotations.NonNull;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
@@ -13,14 +13,10 @@ import pers.liaohaolong.mokulibserver.service.business.EmailPasswordDetailsServi
 
 @Slf4j
 @Service
+@RequiredArgsConstructor
 public class EmailPasswordDetailsServiceImpl implements EmailPasswordDetailsService {
 
     private final UserMapper userMapper;
-
-    @Autowired
-    public EmailPasswordDetailsServiceImpl(UserMapper userMapper) {
-        this.userMapper = userMapper;
-    }
 
     @Override
     public @NonNull UserDetails loadUserPasswordByEmail(@NonNull String email) throws UsernameNotFoundException {

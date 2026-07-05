@@ -2,8 +2,8 @@ package pers.liaohaolong.mokulibserver.service.base.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 import org.thymeleaf.context.Context;
@@ -18,17 +18,12 @@ import java.util.concurrent.ThreadLocalRandom;
 
 @Slf4j
 @Component
+@RequiredArgsConstructor
 public class EmailCaptchaBaseServiceImpl implements EmailCaptchaBaseService {
 
     private final EmailCaptchaMapper emailCaptchaMapper;
 
     private final MailService mailService;
-
-    @Autowired
-    public EmailCaptchaBaseServiceImpl(EmailCaptchaMapper emailCaptchaMapper, MailService mailService) {
-        this.emailCaptchaMapper = emailCaptchaMapper;
-        this.mailService = mailService;
-    }
 
     @Override
     @Transactional

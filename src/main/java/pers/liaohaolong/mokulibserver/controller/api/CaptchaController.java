@@ -1,6 +1,6 @@
 package pers.liaohaolong.mokulibserver.controller.api;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -11,14 +11,10 @@ import java.io.IOException;
 
 @RestController
 @RequestMapping("/api/captcha")
+@RequiredArgsConstructor
 public class CaptchaController {
 
     private final CaptchaService captchaService;
-
-    @Autowired
-    public CaptchaController(CaptchaService captchaService) {
-        this.captchaService = captchaService;
-    }
 
     @GetMapping
     public ResultDTO getCaptcha() throws IOException {

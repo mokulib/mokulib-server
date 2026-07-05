@@ -2,9 +2,9 @@ package pers.liaohaolong.mokulibserver.service.business.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.jspecify.annotations.NonNull;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
@@ -19,17 +19,12 @@ import java.time.LocalDateTime;
 
 @Slf4j
 @Service
+@RequiredArgsConstructor
 public class EmailCaptchaDetailsServiceImpl implements EmailCaptchaDetailsService {
 
     private final UserMapper userMapper;
 
     private final EmailCaptchaMapper emailCaptchaMapper;
-
-    @Autowired
-    public EmailCaptchaDetailsServiceImpl(UserMapper userMapper, EmailCaptchaMapper emailCaptchaMapper) {
-        this.userMapper = userMapper;
-        this.emailCaptchaMapper = emailCaptchaMapper;
-    }
 
     @Override
     public @NonNull UserDetails loadUserCaptchaByEmail(@NonNull String email) throws UsernameNotFoundException, EmailCaptchaNotFoundException {

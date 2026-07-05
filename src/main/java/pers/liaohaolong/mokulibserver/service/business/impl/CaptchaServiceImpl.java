@@ -1,6 +1,6 @@
 package pers.liaohaolong.mokulibserver.service.business.impl;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import pers.liaohaolong.mokulibserver.dao.CaptchaMapper;
 import pers.liaohaolong.mokulibserver.dto.GetCaptchaDTO;
@@ -12,14 +12,10 @@ import java.io.IOException;
 import java.time.LocalDateTime;
 
 @Service
+@RequiredArgsConstructor
 public class CaptchaServiceImpl implements CaptchaService {
 
     private final CaptchaMapper captchaMapper;
-
-    @Autowired
-    public CaptchaServiceImpl(CaptchaMapper captchaMapper) {
-        this.captchaMapper = captchaMapper;
-    }
 
     @Override
     public GetCaptchaDTO getCaptcha() throws IOException {
