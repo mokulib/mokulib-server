@@ -6,6 +6,11 @@ import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
+/**
+ * <h3>结果数据传输对象</h3>
+ *
+ * <p>后端所有接口均统一返回此类的实体。</p>
+ */
 @Data
 @AllArgsConstructor
 public class ResultDTO {
