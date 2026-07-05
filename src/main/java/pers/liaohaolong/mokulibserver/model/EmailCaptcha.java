@@ -28,8 +28,8 @@ public class EmailCaptcha {
     @Getter
     public enum BusinessType {
 
-        LOGIN("LOGIN", "登录", 1, 15),
-        CLOSE_ACCOUNT("CLOSE_ACCOUNT", "删除账户", 1, 30),;
+        LOGIN("LOGIN", "登录", 1, 15, "login"),
+        CLOSE_ACCOUNT("CLOSE_ACCOUNT", "删除账户", 1, 30, "close-account"),;
 
         @EnumValue
         private final String code;
@@ -40,11 +40,14 @@ public class EmailCaptcha {
 
         private final int captchaValidationMinutes;
 
-        BusinessType(String code, String desc, int emailSendCoolingMinutes, int captchaValidationMinutes) {
+        private final String templateName;
+
+        BusinessType(String code, String desc, int emailSendCoolingMinutes, int captchaValidationMinutes, String templateName) {
             this.code = code;
             this.desc = desc;
             this.emailSendCoolingMinutes = emailSendCoolingMinutes;
             this.captchaValidationMinutes = captchaValidationMinutes;
+            this.templateName = templateName;
         }
 
     }

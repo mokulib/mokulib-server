@@ -1,28 +1,67 @@
 package pers.liaohaolong.mokulibserver.controller.api;
 
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+import pers.liaohaolong.mokulibserver.dto.GetEmailCaptchaResultDTO;
+import pers.liaohaolong.mokulibserver.dto.RegisterDTO;
 import pers.liaohaolong.mokulibserver.dto.ResultDTO;
+import pers.liaohaolong.mokulibserver.exception.BusinessException;
 import pers.liaohaolong.mokulibserver.model.EmailCaptcha;
-import pers.liaohaolong.mokulibserver.service.business.EmailCaptchaService;
+import pers.liaohaolong.mokulibserver.service.business.AuthService;
+
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/auth")
 public class AuthController {
 
-    private final EmailCaptchaService emailCaptchaService;
+    private final AuthService authService;
 
     @Autowired
-    public AuthController(EmailCaptchaService emailCaptchaService) {
-        this.emailCaptchaService = emailCaptchaService;
+    public AuthController(AuthService authService) {
+        this.authService = authService;
     }
 
     @GetMapping("login")
-    public ResultDTO getNewEmailCaptcha(@RequestParam String email) {
-        return emailCaptchaService.newEmailCaptcha(email, EmailCaptcha.BusinessType.LOGIN);
+    public ResultDTO getLoginCaptcha(@RequestParam @NotNull @NotBlank @Email String email) {
+        GetEmailCaptchaResultDTO resultDTO;
+        try {
+            resultDTO = authService.getLoginCaptcha(email);
+        } catch (BusinessException e) {
+            return ResultDTO.error()
+                    .businessType(EmailCaptcha.BusinessType.LOGIN.getDesc())
+                    .message(e.getMessage())
+                    .build();
+        }
+
+        if (resultDTO.isSent())
+            return ResultDTO.ok()
+                    .businessType(EmailCaptcha.BusinessType.LOGIN.getDesc())
+                    .message("验证码已发送，请注意查收")
+                    .data(Map.of("codePrefix", resultDTO.getCodePrefix(), "coolingTime", resultDTO.getCoolingTime()))
+                    .build();
+        else
+            return ResultDTO.builder()
+                    .status(ResultDTO.TOO_FREQUENT)
+                    .businessType(EmailCaptcha.BusinessType.LOGIN.getDesc())
+                    .message("请求过于频繁，请稍后再试")
+                    .data(Map.of("codePrefix", resultDTO.getCodePrefix(), "coolingTime", resultDTO.getCoolingTime()))
+                    .build();
+    }
+
+    @PostMapping("register")
+    public ResultDTO register(@RequestBody @Valid RegisterDTO registerDTO) {
+        try {
+            authService.register(registerDTO.getEmail(), registerDTO.getPassword(), registerDTO.getUsername());
+        } catch (BusinessException e) {
+            return ResultDTO.error().message(e.getMessage()).build();
+        }
+
+        return ResultDTO.OK;
     }
 
 }

@@ -103,4 +103,17 @@ public class User implements UserDetails, CredentialsContainer {
         this.password = null;
     }
 
+    /**
+     * 规则化昵称，去掉前后空白后，截取前 16 个字符
+     *
+     * @param nickname 昵称
+     * @return 规则化后的昵称
+     */
+    public static String regularizeNickname(String nickname) {
+        nickname = nickname.trim();
+        if (nickname.length() > 16)
+            nickname = nickname.substring(0, 16);
+        return nickname;
+    }
+
 }
