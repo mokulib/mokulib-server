@@ -4,14 +4,14 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
-import pers.liaohaolong.mokulibserver.service.base.CaptchaBaseService;
+import pers.liaohaolong.mokulibserver.service.business.CaptchaService;
 
 @Slf4j
 @Component
 @RequiredArgsConstructor
 public class CaptchaScheduler {
 
-    private final CaptchaBaseService captchaBaseService;
+    private final CaptchaService captchaBaseService;
 
     @Scheduled(cron = "0 0/30 * * * ?")
     public void clearExpired() {

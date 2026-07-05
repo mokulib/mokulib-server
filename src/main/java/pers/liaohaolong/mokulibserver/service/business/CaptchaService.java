@@ -8,4 +8,9 @@ public interface CaptchaService {
 
     GetCaptchaDTO getCaptcha() throws IOException;
 
+    /**
+     * 清理过期验证码
+     */
+    void clearExpired();
+
 }

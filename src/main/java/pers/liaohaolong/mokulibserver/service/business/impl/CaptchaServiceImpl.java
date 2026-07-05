@@ -1,5 +1,6 @@
 package pers.liaohaolong.mokulibserver.service.business.impl;
 
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import pers.liaohaolong.mokulibserver.dao.CaptchaMapper;
@@ -31,6 +32,13 @@ public class CaptchaServiceImpl implements CaptchaService {
         captchaMapper.insert(imageCaptchaDO);
         // 返回验证码 Token 和图片
         return new GetCaptchaDTO(imageCaptchaDO.getToken(), image);
+    }
+
+    @Override
+    public void clearExpired() {
+        captchaMapper.delete(new LambdaQueryWrapper<Captcha>()
+                .lt(Captcha::getExpireTime, LocalDateTime.now())
+        );
     }
 
 }

@@ -15,9 +15,4 @@ public interface EmailCaptchaBaseService {
      */
     GetEmailCaptchaResultDTO getEmailCaptcha(int userId, String email, EmailCaptcha.BusinessType businessType);
 
-    /**
-     * 清理过期验证码
-     */
-    void clearExpired();
-
 }

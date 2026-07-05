@@ -106,11 +106,4 @@ public class EmailCaptchaBaseServiceImpl implements EmailCaptchaBaseService {
         return resultDTO;
     }
 
-    @Override
-    public void clearExpired() {
-        emailCaptchaMapper.delete(new LambdaQueryWrapper<EmailCaptcha>()
-                .lt(EmailCaptcha::getExpireTime, LocalDateTime.now())
-        );
-    }
-
 }
