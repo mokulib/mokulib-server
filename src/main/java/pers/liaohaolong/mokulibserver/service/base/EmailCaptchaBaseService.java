@@ -1,10 +1,8 @@
 package pers.liaohaolong.mokulibserver.service.base;
 
-import org.springframework.validation.annotation.Validated;
 import pers.liaohaolong.mokulibserver.dto.GetEmailCaptchaResultDTO;
 import pers.liaohaolong.mokulibserver.model.EmailCaptcha;
 
-@Validated
 public interface EmailCaptchaBaseService {
 
     /**
