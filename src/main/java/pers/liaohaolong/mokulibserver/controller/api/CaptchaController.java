@@ -7,6 +7,8 @@ import org.springframework.web.bind.annotation.RestController;
 import pers.liaohaolong.mokulibserver.dto.ResultDTO;
 import pers.liaohaolong.mokulibserver.service.business.CaptchaService;
 
+import java.io.IOException;
+
 @RestController
 @RequestMapping("/api/captcha")
 public class CaptchaController {
@@ -19,7 +21,7 @@ public class CaptchaController {
     }
 
     @GetMapping
-    public ResultDTO getCaptcha() {
+    public ResultDTO getCaptcha() throws IOException {
         return ResultDTO.ok().data(captchaService.getCaptcha()).build();
     }
 
