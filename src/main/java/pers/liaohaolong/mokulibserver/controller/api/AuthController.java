@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import pers.liaohaolong.mokulibserver.dto.ResultDTO;
 import pers.liaohaolong.mokulibserver.model.EmailCaptcha;
-import pers.liaohaolong.mokulibserver.service.EmailCaptchaService;
+import pers.liaohaolong.mokulibserver.service.business.EmailCaptchaService;
 
 @RestController
 @RequestMapping("/api/auth")

@@ -4,7 +4,7 @@ import org.jetbrains.annotations.NotNull;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import pers.liaohaolong.mokulibserver.config.RegexpConfigurations;
-import pers.liaohaolong.mokulibserver.service.EmailCaptchaDetailsService;
+import pers.liaohaolong.mokulibserver.service.business.EmailCaptchaDetailsService;
 
 import java.util.Objects;
 

@@ -1,4 +1,4 @@
-package pers.liaohaolong.mokulibserver.service;
+package pers.liaohaolong.mokulibserver.service.business;
 
 import jakarta.validation.constraints.Email;
 import org.springframework.validation.annotation.Validated;

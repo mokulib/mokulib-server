@@ -1,4 +1,4 @@
-package pers.liaohaolong.mokulibserver.service.impl;
+package pers.liaohaolong.mokulibserver.service.business.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import lombok.extern.slf4j.Slf4j;
@@ -9,7 +9,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import pers.liaohaolong.mokulibserver.dao.UserMapper;
 import pers.liaohaolong.mokulibserver.model.User;
-import pers.liaohaolong.mokulibserver.service.EmailPasswordDetailsService;
+import pers.liaohaolong.mokulibserver.service.business.EmailPasswordDetailsService;
 
 @Slf4j
 @Service

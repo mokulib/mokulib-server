@@ -1,4 +1,4 @@
-package pers.liaohaolong.mokulibserver.service.impl;
+package pers.liaohaolong.mokulibserver.service.business.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
@@ -13,13 +13,14 @@ import pers.liaohaolong.mokulibserver.dao.UserMapper;
 import pers.liaohaolong.mokulibserver.dto.ResultDTO;
 import pers.liaohaolong.mokulibserver.model.EmailCaptcha;
 import pers.liaohaolong.mokulibserver.model.User;
-import pers.liaohaolong.mokulibserver.service.EmailCaptchaService;
+import pers.liaohaolong.mokulibserver.service.business.EmailCaptchaService;
 import pers.liaohaolong.mokulibserver.util.MailUtils;
 
 import java.time.LocalDateTime;
 import java.util.Map;
 import java.util.concurrent.ThreadLocalRandom;
 
+// TODO 邮件模板随业务类型更改
 @Slf4j
 @Component
 public class EmailCaptchaServiceImpl implements EmailCaptchaService {
