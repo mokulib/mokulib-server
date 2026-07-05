@@ -10,6 +10,7 @@ import java.time.LocalDateTime;
 /**
  * <h3>JWT 用户数据传输对象</h3>
  *
+ * <p>后端 -> 前端, 前端 -> 后端</p>
  * <p>用于生成/解析 JWT 中的用户信息负载，较 {@link User} 类，减少了许多无用的或敏感的信息。</p>
  */
 @Data
