@@ -133,6 +133,8 @@ close_status: 'OPEN', 'CLOSED', 'LOST', 'DAMAGED'
 | cooling_time  | datetime    |         |         |           | Y       |
 | expire_time   | datetime    |         |         |           | Y       |
 
+business_type: 'LOGIN', 'CLOSE_ACCOUNT'
+
 ## captcha (人机验证码)
 
 | Name        | DataType | Default | AutoInc | PK/UK/IDX | NotNull |
