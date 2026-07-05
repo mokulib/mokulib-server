@@ -49,6 +49,7 @@ public class SecurityConfigurations {
 
         // 登录
         http.formLogin(configurer -> configurer
+                .loginProcessingUrl("/api/auth/login")
                 .successHandler(successHandler)
                 .failureHandler(failureHandler)
                 .permitAll()

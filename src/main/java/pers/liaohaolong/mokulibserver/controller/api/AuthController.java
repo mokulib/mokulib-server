@@ -10,13 +10,13 @@ import pers.liaohaolong.mokulibserver.model.EmailCaptcha;
 import pers.liaohaolong.mokulibserver.service.EmailCaptchaService;
 
 @RestController
-@RequestMapping("/api/captcha")
-public class CaptchaController {
+@RequestMapping("/api/auth")
+public class AuthController {
 
     private final EmailCaptchaService emailCaptchaService;
 
     @Autowired
-    public CaptchaController(EmailCaptchaService emailCaptchaService) {
+    public AuthController(EmailCaptchaService emailCaptchaService) {
         this.emailCaptchaService = emailCaptchaService;
     }
 
