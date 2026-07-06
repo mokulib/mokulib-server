@@ -74,7 +74,7 @@ public class AuthServiceImpl implements AuthService {
         activationToken.setExpireTime(user.getCreateTime().plusDays(7));
         activationTokenMapper.insert(activationToken);
 
-        activationToken = activationTokenMapper.selectOne(new LambdaQueryWrapper<ActivationToken>().eq(ActivationToken::getUserId, user.getId()));
+        activationToken = activationTokenMapper.selectById(user.getId());
 
         // 发送邮件
         Context context = new Context();
