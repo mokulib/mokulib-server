@@ -23,16 +23,8 @@ public class AuthController {
     private final AuthService authService;
 
     @GetMapping("login")
-    public ResultDTO getLoginCaptcha(@RequestParam @NotNull @NotBlank @Email String email) {
-        GetEmailCaptchaResultDTO resultDTO;
-        try {
-            resultDTO = authService.getLoginCaptcha(email);
-        } catch (BusinessException e) {
-            return ResultDTO.error()
-                    .businessType(EmailCaptcha.BusinessType.LOGIN.getDesc())
-                    .message(e.getMessage())
-                    .build();
-        }
+    public ResultDTO getLoginCaptcha(@RequestParam @NotNull @NotBlank @Email String email) throws BusinessException {
+        GetEmailCaptchaResultDTO resultDTO = authService.getLoginCaptcha(email);
 
         if (resultDTO.isSent())
             return ResultDTO.ok()
@@ -50,13 +42,14 @@ public class AuthController {
     }
 
     @PostMapping("register")
-    public ResultDTO register(@RequestBody @Valid RegisterDTO registerDTO) {
-        try {
-            authService.register(registerDTO.getEmail(), registerDTO.getPassword(), registerDTO.getUsername());
-        } catch (BusinessException e) {
-            return ResultDTO.error().message(e.getMessage()).build();
-        }
+    public ResultDTO register(@RequestBody @Valid RegisterDTO registerDTO) throws BusinessException {
+        authService.register(registerDTO.getEmail(), registerDTO.getPassword(), registerDTO.getUsername());
+        return ResultDTO.OK;
+    }
 
+    @GetMapping("activate/{token}")
+    public ResultDTO activate(@PathVariable @NotNull @NotBlank String token) throws BusinessException {
+        // authService.activate(token);
         return ResultDTO.OK;
     }
 

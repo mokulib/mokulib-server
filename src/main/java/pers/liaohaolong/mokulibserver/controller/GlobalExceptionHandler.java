@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.method.annotation.HandlerMethodValidationException;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 import pers.liaohaolong.mokulibserver.dto.ResultDTO;
+import pers.liaohaolong.mokulibserver.exception.BusinessException;
 
 /**
  * <h3>全局异常处理器</h3>
@@ -103,7 +104,23 @@ public class GlobalExceptionHandler {
     }
 
     /**
+     * <h3>处理业务异常</h3>
+     *
+     * <p>
+     *     {@link BusinessException} 业务异常：表示业务无法执行用户期望的请求。
+     * </p>
+     *
+     * @param e 异常
+     * @return {@link ResultDTO}
+     */
+    @ExceptionHandler({BusinessException.class})
+    public ResponseEntity<ResultDTO> handleBusinessException(@NotNull BusinessException e) {
+        return ResponseEntity.ok(ResultDTO.error().message(e.getMessage()).build());
+    }
+
+    /**
      * <h3>处理不应出现的异常</h3>
+     *
      * <p>
      *     {@link DataAccessException} 数据访问异常：表示 MySQL 数据库操作异常。<br>
      *     {@link Exception} 未知异常
