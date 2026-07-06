@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.method.annotation.HandlerMethodValidationException;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
+import org.springframework.web.servlet.resource.NoResourceFoundException;
 import pers.liaohaolong.mokulibserver.dto.ResultDTO;
 import pers.liaohaolong.mokulibserver.exception.BusinessException;
 
@@ -38,7 +39,7 @@ public class GlobalExceptionHandler {
      */
     @ExceptionHandler({AuthorizationDeniedException.class})
     public ResultDTO authorizationDeniedException(AuthorizationDeniedException ignore) {
-        return ResultDTO.error().businessType("认证").message("访问拒绝").build();
+        return ResultDTO.error().businessType("认证").message("访问拒绝.").build();
     }
 
     /**
@@ -113,6 +114,21 @@ public class GlobalExceptionHandler {
                 .message(e.getParameterValidationResults().getFirst().getResolvableErrors().getFirst().getDefaultMessage())
                 .data(e.getParameterValidationResults().getFirst().getResolvableErrors().stream().map(MessageSourceResolvable::getDefaultMessage).toList())
                 .build();
+    }
+
+    /**
+     * <h3>处理资源未找到异常</h3>
+     *
+     * <p>
+     *     {@link NoResourceFoundException} 资源未找到异常：表示请求的资源不存在。
+     * </p>
+     *
+     * @param ignore 异常
+     * @return {@link ResultDTO}
+     */
+    @ExceptionHandler({NoResourceFoundException.class})
+    public ResultDTO handleNoResourceFoundException(@NotNull Exception ignore) {
+        return ResultDTO.error().message("资源未找到.").build();
     }
 
     /**
