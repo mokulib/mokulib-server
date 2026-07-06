@@ -12,6 +12,7 @@ import org.springframework.security.web.servlet.util.matcher.PathPatternRequestM
 import org.springframework.security.web.util.matcher.RequestMatcher;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
+import pers.liaohaolong.mokulibserver.config.ImageCaptchaConfigurations;
 import pers.liaohaolong.mokulibserver.config.LoginFilterConfigurations;
 import pers.liaohaolong.mokulibserver.dto.ResultDTO;
 import pers.liaohaolong.mokulibserver.service.business.ImageCaptchaService;
@@ -38,8 +39,8 @@ public class ImageCaptchaFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(@NotNull HttpServletRequest request, @NotNull HttpServletResponse response, @NotNull FilterChain filterChain) throws ServletException, IOException {
         if (requiresAuthenticationRequestMatchers.stream().anyMatch(requestMatcher -> requestMatcher.matches(request))) {
-            String token = request.getParameter("captchaToken");
-            String captcha = request.getParameter("captcha");
+            String token = request.getParameter(ImageCaptchaConfigurations.REQUEST_PARAMETER_TOKEN);
+            String captcha = request.getParameter(ImageCaptchaConfigurations.REQUEST_PARAMETER_CAPTCHA);
 
             // 验证失败
             if (!imageCaptchaService.verify(token, captcha)) {

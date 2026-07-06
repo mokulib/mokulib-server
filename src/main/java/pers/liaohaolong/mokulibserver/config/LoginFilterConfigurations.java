@@ -15,8 +15,8 @@ public final class LoginFilterConfigurations {
             PathPatternRequestMatcher.withDefaults().matcher(HttpMethod.POST, "/api/auth/login"),
             new RegexpParameterRequestMatcher("username", RegexpConfigurations.EMAIL_REGEXP),
             new RegexpParameterRequestMatcher("password", RegexpConfigurations.PASSWORD_REGEXP),
-            new ParameterRequestMatcher("captchaToken"),
-            new ParameterRequestMatcher("captcha")
+            new ParameterRequestMatcher(ImageCaptchaConfigurations.REQUEST_PARAMETER_TOKEN),
+            new ParameterRequestMatcher(ImageCaptchaConfigurations.REQUEST_PARAMETER_CAPTCHA)
     );
 
     public static final RequestMatcher CAPTCHA_LOGIN_REQUEST_MATCHER = new AndRequestMatcher(
