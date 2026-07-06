@@ -84,4 +84,9 @@ public class AuthServiceImpl implements AuthService {
         log.debug("发送激活邮件：邮箱={}, 激活码={}", email, activationToken.getToken());
     }
 
+    @Override
+    @Transactional
+    public void activate(String token) throws BusinessException {
+    }
+
 }

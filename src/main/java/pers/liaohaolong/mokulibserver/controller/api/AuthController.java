@@ -48,7 +48,7 @@ public class AuthController {
 
     @GetMapping("activate/{token}")
     public void activate(@PathVariable @NotNull @NotBlank String token) throws BusinessException {
-        // authService.activate(token);
+        authService.activate(token);
     }
 
 }

@@ -7,6 +7,7 @@ import org.jspecify.annotations.NonNull;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import pers.liaohaolong.mokulibserver.dao.UserMapper;
 import pers.liaohaolong.mokulibserver.model.User;
 import pers.liaohaolong.mokulibserver.service.business.EmailPasswordDetailsService;
@@ -19,6 +20,7 @@ public class EmailPasswordDetailsServiceImpl implements EmailPasswordDetailsServ
     private final UserMapper userMapper;
 
     @Override
+    @Transactional(readOnly = true)
     public @NonNull UserDetails loadUserPasswordByEmail(@NonNull String email) throws UsernameNotFoundException {
         User user = userMapper.selectOne(new LambdaQueryWrapper<User>().eq(User::getEmail, email));
         if (user == null) {

@@ -9,4 +9,6 @@ public interface AuthService {
 
     void register(String email, String password, String username) throws BusinessException;
 
+    void activate(String token) throws BusinessException;
+
 }

@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import pers.liaohaolong.mokulibserver.dao.EmailCaptchaMapper;
 import pers.liaohaolong.mokulibserver.model.EmailCaptcha;
 import pers.liaohaolong.mokulibserver.service.business.EmailCaptchaService;
@@ -18,6 +19,7 @@ public class EmailCaptchaServiceImpl implements EmailCaptchaService {
     private final EmailCaptchaMapper emailCaptchaMapper;
 
     @Override
+    @Transactional
     public void clearExpired() {
         emailCaptchaMapper.delete(new LambdaQueryWrapper<EmailCaptcha>()
                 .lt(EmailCaptcha::getExpireTime, LocalDateTime.now())

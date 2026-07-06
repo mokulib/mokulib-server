@@ -8,6 +8,7 @@ import org.jspecify.annotations.NonNull;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import pers.liaohaolong.mokulibserver.dao.EmailCaptchaMapper;
 import pers.liaohaolong.mokulibserver.dao.UserMapper;
 import pers.liaohaolong.mokulibserver.exception.EmailCaptchaNotFoundException;
@@ -27,6 +28,7 @@ public class EmailCaptchaDetailsServiceImpl implements EmailCaptchaDetailsServic
     private final EmailCaptchaMapper emailCaptchaMapper;
 
     @Override
+    @Transactional
     public @NonNull UserDetails loadUserCaptchaByEmail(@NonNull String email) throws UsernameNotFoundException, EmailCaptchaNotFoundException {
         // 加载用户
         User user = userMapper.selectOne(new LambdaQueryWrapper<User>().eq(User::getEmail, email));
