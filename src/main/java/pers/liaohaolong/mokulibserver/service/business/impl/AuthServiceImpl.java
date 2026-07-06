@@ -1,6 +1,7 @@
 package pers.liaohaolong.mokulibserver.service.business.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -87,6 +88,18 @@ public class AuthServiceImpl implements AuthService {
     @Override
     @Transactional
     public void activate(String token) throws BusinessException {
+        ActivationToken activationToken = activationTokenMapper.selectById(token);
+        // 有效验证
+        if (activationToken == null)
+            throw new BusinessException("激活码无效");
+
+        // 激活账户
+        userMapper.update(new LambdaUpdateWrapper<User>()
+                .eq(User::getId, activationToken.getUserId())
+                .set(User::getIsActivated, true)
+        );
+        // 删除激活码
+        activationTokenMapper.deleteById(activationToken);
     }
 
 }
