@@ -41,7 +41,7 @@ public class AuthServiceImpl implements AuthService {
     @Transactional
     public GetEmailCaptchaResultDTO getLoginCaptcha(String email) throws BusinessException {
         // 查询用户
-        User user = userMapper.selectOne(new LambdaQueryWrapper<User>().eq(User::getEmail, email));
+        User user = userMapper.selectByEmail(email);
         // 用户检查
         if (user == null)
             throw new BusinessException("用户不存在");
@@ -65,7 +65,7 @@ public class AuthServiceImpl implements AuthService {
         user.setUsername(User.regularizeNickname(username));
         userMapper.insert(user);
 
-        user = userMapper.selectOne(new LambdaQueryWrapper<User>().eq(User::getEmail, email));
+        user = userMapper.selectByEmail(email);
 
         // 使用用户 ID 创建激活码
         ActivationToken activationToken = new ActivationToken();

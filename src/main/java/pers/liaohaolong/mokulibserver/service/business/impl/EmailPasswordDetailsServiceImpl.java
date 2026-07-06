@@ -1,6 +1,5 @@
 package pers.liaohaolong.mokulibserver.service.business.impl;
 
-import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.jspecify.annotations.NonNull;
@@ -22,7 +21,7 @@ public class EmailPasswordDetailsServiceImpl implements EmailPasswordDetailsServ
     @Override
     @Transactional(readOnly = true)
     public @NonNull UserDetails loadUserPasswordByEmail(@NonNull String email) throws UsernameNotFoundException {
-        User user = userMapper.selectOne(new LambdaQueryWrapper<User>().eq(User::getEmail, email));
+        User user = userMapper.selectByEmail(email);
         if (user == null) {
             log.debug("User not found: {}", email);
             throw new UsernameNotFoundException("User not found");

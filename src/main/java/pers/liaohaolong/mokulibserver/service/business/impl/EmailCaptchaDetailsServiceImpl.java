@@ -31,7 +31,7 @@ public class EmailCaptchaDetailsServiceImpl implements EmailCaptchaDetailsServic
     @Transactional
     public @NonNull UserDetails loadUserCaptchaByEmail(@NonNull String email) throws UsernameNotFoundException, EmailCaptchaNotFoundException {
         // 加载用户
-        User user = userMapper.selectOne(new LambdaQueryWrapper<User>().eq(User::getEmail, email));
+        User user = userMapper.selectByEmail(email);
         if (user == null) {
             log.debug("User not found: {}", email);
             throw new UsernameNotFoundException("User not found");
