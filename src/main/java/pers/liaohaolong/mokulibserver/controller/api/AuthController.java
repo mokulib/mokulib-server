@@ -42,15 +42,13 @@ public class AuthController {
     }
 
     @PostMapping("register")
-    public ResultDTO register(@RequestBody @Valid RegisterDTO registerDTO) throws BusinessException {
+    public void register(@RequestBody @Valid RegisterDTO registerDTO) throws BusinessException {
         authService.register(registerDTO.getEmail(), registerDTO.getPassword(), registerDTO.getUsername());
-        return ResultDTO.OK;
     }
 
     @GetMapping("activate/{token}")
-    public ResultDTO activate(@PathVariable @NotNull @NotBlank String token) throws BusinessException {
+    public void activate(@PathVariable @NotNull @NotBlank String token) throws BusinessException {
         // authService.activate(token);
-        return ResultDTO.OK;
     }
 
 }
