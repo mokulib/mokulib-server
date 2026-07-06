@@ -8,7 +8,7 @@ import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import pers.liaohaolong.mokulibserver.exception.EmailCaptchaNotFoundException;
-import pers.liaohaolong.mokulibserver.service.business.EmailCaptchaDetailsService;
+import pers.liaohaolong.mokulibserver.service.sercurity.EmailCaptchaDetailsService;
 
 /**
  * <h3>邮箱验证码认证提供器</h3>

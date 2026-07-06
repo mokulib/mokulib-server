@@ -1,4 +1,4 @@
-package pers.liaohaolong.mokulibserver.service.business.impl;
+package pers.liaohaolong.mokulibserver.service.sercurity.impl;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -9,7 +9,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import pers.liaohaolong.mokulibserver.dao.UserMapper;
 import pers.liaohaolong.mokulibserver.model.User;
-import pers.liaohaolong.mokulibserver.service.business.EmailPasswordDetailsService;
+import pers.liaohaolong.mokulibserver.service.sercurity.EmailPasswordDetailsService;
 
 @Slf4j
 @Service

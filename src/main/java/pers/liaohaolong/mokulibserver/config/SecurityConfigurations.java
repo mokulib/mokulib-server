@@ -19,7 +19,7 @@ import pers.liaohaolong.mokulibserver.security.authentication.captcha.EmailCaptc
 import pers.liaohaolong.mokulibserver.security.filter.ImageCaptchaFilter;
 import pers.liaohaolong.mokulibserver.security.filter.InvalidLoginRequestFilter;
 import pers.liaohaolong.mokulibserver.security.filter.JwtRequestFilter;
-import pers.liaohaolong.mokulibserver.service.business.EmailCaptchaDetailsService;
+import pers.liaohaolong.mokulibserver.service.sercurity.EmailCaptchaDetailsService;
 
 @Slf4j
 @Configuration

@@ -1,4 +1,4 @@
-package pers.liaohaolong.mokulibserver.service.business;
+package pers.liaohaolong.mokulibserver.service.sercurity;
 
 import org.jspecify.annotations.NonNull;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -13,13 +13,6 @@ import pers.liaohaolong.mokulibserver.exception.EmailCaptchaNotFoundException;
  */
 public interface EmailCaptchaDetailsService {
 
-    /**
-     *
-     * @param email
-     * @return
-     * @throws UsernameNotFoundException
-     * @throws EmailCaptchaNotFoundException
-     */
     @NonNull UserDetails loadUserCaptchaByEmail(@NonNull String email) throws UsernameNotFoundException, EmailCaptchaNotFoundException;
 
 }

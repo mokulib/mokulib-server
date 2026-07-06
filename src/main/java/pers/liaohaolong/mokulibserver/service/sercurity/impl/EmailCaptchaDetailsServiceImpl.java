@@ -1,4 +1,4 @@
-package pers.liaohaolong.mokulibserver.service.business.impl;
+package pers.liaohaolong.mokulibserver.service.sercurity.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
@@ -14,7 +14,7 @@ import pers.liaohaolong.mokulibserver.dao.UserMapper;
 import pers.liaohaolong.mokulibserver.exception.EmailCaptchaNotFoundException;
 import pers.liaohaolong.mokulibserver.model.EmailCaptcha;
 import pers.liaohaolong.mokulibserver.model.User;
-import pers.liaohaolong.mokulibserver.service.business.EmailCaptchaDetailsService;
+import pers.liaohaolong.mokulibserver.service.sercurity.EmailCaptchaDetailsService;
 
 import java.time.LocalDateTime;
 

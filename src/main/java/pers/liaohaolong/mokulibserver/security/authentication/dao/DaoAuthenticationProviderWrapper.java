@@ -9,7 +9,7 @@ import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 import pers.liaohaolong.mokulibserver.config.RegexpConfigurations;
-import pers.liaohaolong.mokulibserver.service.business.EmailPasswordDetailsService;
+import pers.liaohaolong.mokulibserver.service.sercurity.EmailPasswordDetailsService;
 
 import java.util.Objects;
 

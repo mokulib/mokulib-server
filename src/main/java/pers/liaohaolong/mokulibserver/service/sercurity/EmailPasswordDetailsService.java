@@ -1,4 +1,4 @@
-package pers.liaohaolong.mokulibserver.service.business;
+package pers.liaohaolong.mokulibserver.service.sercurity;
 
 import org.jspecify.annotations.NonNull;
 import org.springframework.security.core.userdetails.UserDetails;
