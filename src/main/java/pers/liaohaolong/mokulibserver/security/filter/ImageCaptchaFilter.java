@@ -14,7 +14,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 import pers.liaohaolong.mokulibserver.config.LoginFilterConfigurations;
 import pers.liaohaolong.mokulibserver.dto.ResultDTO;
-import pers.liaohaolong.mokulibserver.service.business.CaptchaService;
+import pers.liaohaolong.mokulibserver.service.business.ImageCaptchaService;
 
 import java.io.IOException;
 import java.util.List;
@@ -22,7 +22,7 @@ import java.util.List;
 @Slf4j
 @Component
 @RequiredArgsConstructor
-public class CaptchaFilter extends OncePerRequestFilter {
+public class ImageCaptchaFilter extends OncePerRequestFilter {
 
     /**
      * 需要进行验证码验证的请求匹配器列表
@@ -33,7 +33,7 @@ public class CaptchaFilter extends OncePerRequestFilter {
             PathPatternRequestMatcher.withDefaults().matcher(HttpMethod.POST, "/api/auth/register") // 注册账户
     );
 
-    private final CaptchaService captchaService;
+    private final ImageCaptchaService imageCaptchaService;
 
     @Override
     protected void doFilterInternal(@NotNull HttpServletRequest request, @NotNull HttpServletResponse response, @NotNull FilterChain filterChain) throws ServletException, IOException {
@@ -42,7 +42,7 @@ public class CaptchaFilter extends OncePerRequestFilter {
             String captcha = request.getParameter("captcha");
 
             // 验证失败
-            if (!captchaService.verify(token, captcha)) {
+            if (!imageCaptchaService.verify(token, captcha)) {
                 // response.sendError(HttpServletResponse.SC_BAD_REQUEST); // 不要使用这种方法，这种方法会将请求转发到 /error
                 response.setStatus(HttpServletResponse.SC_OK);
                 response.setContentType("application/json;charset=UTF-8");

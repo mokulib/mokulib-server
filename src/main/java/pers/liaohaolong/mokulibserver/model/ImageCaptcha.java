@@ -8,10 +8,10 @@ import lombok.Data;
 import java.time.LocalDateTime;
 
 @Data
-@TableName(Captcha.TABLE_NAME)
-public class Captcha {
+@TableName(ImageCaptcha.TABLE_NAME)
+public class ImageCaptcha {
 
-    public static final String TABLE_NAME = "captcha";
+    public static final String TABLE_NAME = "image_captcha";
 
     @TableId(type = IdType.ASSIGN_UUID)
     private String token;

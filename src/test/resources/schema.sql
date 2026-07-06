@@ -117,7 +117,7 @@ CREATE TABLE IF NOT EXISTS `email_captcha`
     PRIMARY KEY (`user_id`, `business_type`)
 );
 
-CREATE TABLE IF NOT EXISTS `captcha`
+CREATE TABLE IF NOT EXISTS `image_captcha`
 (
     `token`       CHAR(32) PRIMARY KEY,
     `captcha`     CHAR(4)  NOT NULL,

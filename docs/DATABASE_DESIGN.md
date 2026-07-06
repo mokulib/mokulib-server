@@ -135,7 +135,7 @@ close_status: 'OPEN', 'CLOSED', 'LOST', 'DAMAGED'
 
 business_type: 'LOGIN', 'CLOSE_ACCOUNT'
 
-## captcha (人机验证码)
+## image_captcha (图片验证码)
 
 | Name        | DataType | Default | AutoInc | PK/UK/IDX | NotNull |
 |:------------|:---------|:--------|:--------|:----------|:--------|

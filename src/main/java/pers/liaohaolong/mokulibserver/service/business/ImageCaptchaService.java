@@ -5,7 +5,7 @@ import pers.liaohaolong.mokulibserver.dto.GetCaptchaDTO;
 
 import java.io.IOException;
 
-public interface CaptchaService {
+public interface ImageCaptchaService {
 
     /**
      * <p>创建验证码，包括 Token、验证码以及图片。</p>
@@ -13,7 +13,7 @@ public interface CaptchaService {
      *
      * @return {@link GetCaptchaDTO}
      */
-    GetCaptchaDTO getCaptcha() throws IOException;
+    GetCaptchaDTO getImageCaptcha() throws IOException;
 
     /**
      * 验证用户输入的验证码是否正确，此接口应是一次性的，无论验证成功与否，ID 与验证码的关联记录都应被删除
