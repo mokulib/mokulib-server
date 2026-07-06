@@ -6,6 +6,7 @@ import org.springframework.context.MessageSourceResolvable;
 import org.springframework.context.support.DefaultMessageSourceResolvable;
 import org.springframework.dao.DataAccessException;
 import org.springframework.http.converter.HttpMessageNotReadableException;
+import org.springframework.security.authorization.AuthorizationDeniedException;
 import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.MissingServletRequestParameterException;
@@ -24,6 +25,21 @@ import pers.liaohaolong.mokulibserver.exception.BusinessException;
 @Slf4j
 @RestControllerAdvice
 public class GlobalExceptionHandler {
+
+    /**
+     * <h3>处理认证拒绝异常</h3>
+     *
+     * <p>
+     *     {@link AuthorizationDeniedException} 认证拒绝异常：表示接口权限认证失败，通常由用户凭证已过期或越权访问产生。
+     * </p>
+     *
+     * @param ignore 异常
+     * @return {@link ResultDTO}
+     */
+    @ExceptionHandler({AuthorizationDeniedException.class})
+    public ResultDTO authorizationDeniedException(AuthorizationDeniedException ignore) {
+        return ResultDTO.error().businessType("认证").message("访问拒绝").build();
+    }
 
     /**
      * <h3>处理请求方法不支持异常</h3>

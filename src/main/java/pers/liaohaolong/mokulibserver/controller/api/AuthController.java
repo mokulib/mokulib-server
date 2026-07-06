@@ -5,6 +5,7 @@ import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import pers.liaohaolong.mokulibserver.dto.GetEmailCaptchaResultDTO;
 import pers.liaohaolong.mokulibserver.dto.RegisterDTO;
@@ -21,6 +22,11 @@ import java.util.Map;
 public class AuthController {
 
     private final AuthService authService;
+
+    @GetMapping("ping")
+    @PreAuthorize("hasAnyRole('ADMIN', 'USER')")
+    public void ping() {
+    }
 
     @GetMapping("login")
     public ResultDTO getLoginCaptcha(@RequestParam @NotNull @NotBlank @Email String email) throws BusinessException {
