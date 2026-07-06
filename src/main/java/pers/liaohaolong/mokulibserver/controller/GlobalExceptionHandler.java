@@ -5,13 +5,12 @@ import org.jetbrains.annotations.NotNull;
 import org.springframework.context.MessageSourceResolvable;
 import org.springframework.context.support.DefaultMessageSourceResolvable;
 import org.springframework.dao.DataAccessException;
-import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.MissingServletRequestParameterException;
-import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.method.annotation.HandlerMethodValidationException;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 import pers.liaohaolong.mokulibserver.dto.ResultDTO;
@@ -21,10 +20,9 @@ import pers.liaohaolong.mokulibserver.exception.BusinessException;
  * <h3>全局异常处理器</h3>
  *
  * <p>此处理器的优先级高于 {@link org.springframework.boot.webmvc.error.ErrorController}.</p>
- * <p>如果不返回{@link ResponseEntity#ok(Object)}，将跳转至<code>/error</code>.</p>
  */
 @Slf4j
-@ControllerAdvice
+@RestControllerAdvice
 public class GlobalExceptionHandler {
 
     /**
@@ -39,8 +37,8 @@ public class GlobalExceptionHandler {
      * @return {@link ResultDTO}
      */
     @ExceptionHandler({HttpRequestMethodNotSupportedException.class})
-    public ResponseEntity<ResultDTO> handleHttpRequestMethodNotSupportedException(@NotNull Exception ignore) {
-        return ResponseEntity.ok(ResultDTO.error().message("请求方法不支持.").build());
+    public ResultDTO handleHttpRequestMethodNotSupportedException(@NotNull Exception ignore) {
+        return ResultDTO.error().message("请求方法不支持.").build();
     }
 
     /**
@@ -61,10 +59,8 @@ public class GlobalExceptionHandler {
             MissingServletRequestParameterException.class,
             MethodArgumentTypeMismatchException.class
     })
-    public ResponseEntity<ResultDTO> handleBadRequestException(@NotNull Exception ignore) {
-        return ResponseEntity.ok(ResultDTO.error()
-                .message("请求错误.")
-                .build());
+    public ResultDTO handleBadRequestException(@NotNull Exception ignore) {
+        return ResultDTO.error().message("请求错误.").build();
     }
 
     /**
@@ -78,11 +74,11 @@ public class GlobalExceptionHandler {
      * @return {@link ResultDTO}
      */
     @ExceptionHandler({MethodArgumentNotValidException.class})
-    public ResponseEntity<ResultDTO> handleMethodArgumentNotValidException(@NotNull MethodArgumentNotValidException e) {
-        return ResponseEntity.ok(ResultDTO.error()
+    public ResultDTO handleMethodArgumentNotValidException(@NotNull MethodArgumentNotValidException e) {
+        return ResultDTO.error()
                 .message(e.getBindingResult().getFieldErrors().getFirst().getDefaultMessage())
                 .data(e.getBindingResult().getFieldErrors().stream().map(DefaultMessageSourceResolvable::getDefaultMessage).toList())
-                .build());
+                .build();
     }
 
     /**
@@ -96,11 +92,11 @@ public class GlobalExceptionHandler {
      * @return {@link ResultDTO}
      */
     @ExceptionHandler(HandlerMethodValidationException.class)
-    public ResponseEntity<ResultDTO> handleHandlerMethodValidationException(@NotNull HandlerMethodValidationException e) {
-        return ResponseEntity.ok(ResultDTO.error()
+    public ResultDTO handleHandlerMethodValidationException(@NotNull HandlerMethodValidationException e) {
+        return ResultDTO.error()
                 .message(e.getParameterValidationResults().getFirst().getResolvableErrors().getFirst().getDefaultMessage())
                 .data(e.getParameterValidationResults().getFirst().getResolvableErrors().stream().map(MessageSourceResolvable::getDefaultMessage).toList())
-                .build());
+                .build();
     }
 
     /**
@@ -114,8 +110,8 @@ public class GlobalExceptionHandler {
      * @return {@link ResultDTO}
      */
     @ExceptionHandler({BusinessException.class})
-    public ResponseEntity<ResultDTO> handleBusinessException(@NotNull BusinessException e) {
-        return ResponseEntity.ok(ResultDTO.error().message(e.getMessage()).build());
+    public ResultDTO handleBusinessException(@NotNull BusinessException e) {
+        return ResultDTO.error().message(e.getMessage()).build();
     }
 
     /**
@@ -132,12 +128,9 @@ public class GlobalExceptionHandler {
     @ExceptionHandler({
             DataAccessException.class,
             Exception.class})
-    public ResponseEntity<ResultDTO> handleUncontrollableException(@NotNull Exception e) {
+    public ResultDTO handleUncontrollableException(@NotNull Exception e) {
         log.warn("Ah! T_T\n", e);
-        return ResponseEntity.ok(ResultDTO.error()
-                .message("服务器错误，请稍后重试.")
-                .data(e.getMessage())
-                .build());
+        return ResultDTO.error().message("服务器错误，请稍后重试.").data(e.getMessage()).build();
     }
 
 }
