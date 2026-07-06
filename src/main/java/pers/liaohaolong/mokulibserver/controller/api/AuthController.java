@@ -32,19 +32,12 @@ public class AuthController {
     public ResultDTO getLoginCaptcha(@RequestParam @NotNull @NotBlank @Email String email) throws BusinessException {
         GetEmailCaptchaResultDTO resultDTO = authService.getLoginCaptcha(email);
 
-        if (resultDTO.isSent())
-            return ResultDTO.ok()
-                    .businessType(EmailCaptcha.BusinessType.LOGIN.getDesc())
-                    .message("验证码已发送，请注意查收")
-                    .data(Map.of("codePrefix", resultDTO.getCodePrefix(), "coolingTime", resultDTO.getCoolingTime()))
-                    .build();
-        else
-            return ResultDTO.builder()
-                    .status(ResultDTO.TOO_FREQUENT)
-                    .businessType(EmailCaptcha.BusinessType.LOGIN.getDesc())
-                    .message("请求过于频繁，请稍后再试")
-                    .data(Map.of("codePrefix", resultDTO.getCodePrefix(), "coolingTime", resultDTO.getCoolingTime()))
-                    .build();
+        return ResultDTO.builder()
+                .status(resultDTO.isSent() ? ResultDTO.OK_STATUS : ResultDTO.TOO_FREQUENT)
+                .businessType(EmailCaptcha.BusinessType.LOGIN.getDesc())
+                .message(resultDTO.isSent() ? "验证码已发送，请注意查收" : "请求过于频繁，请稍后再试")
+                .data(Map.of("codePrefix", resultDTO.getCodePrefix(), "coolingTime", resultDTO.getCoolingTime()))
+                .build();
     }
 
     @PostMapping("register")
