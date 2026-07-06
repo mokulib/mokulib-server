@@ -6,12 +6,14 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import pers.liaohaolong.mokulibserver.dto.GetEmailCaptchaResultDTO;
 import pers.liaohaolong.mokulibserver.dto.RegisterDTO;
 import pers.liaohaolong.mokulibserver.dto.ResultDTO;
 import pers.liaohaolong.mokulibserver.exception.BusinessException;
 import pers.liaohaolong.mokulibserver.model.EmailCaptcha;
+import pers.liaohaolong.mokulibserver.model.User;
 import pers.liaohaolong.mokulibserver.service.business.AuthService;
 
 import java.util.Map;
@@ -48,6 +50,29 @@ public class AuthController {
     @GetMapping("activate/{token}")
     public void activate(@PathVariable @NotNull @NotBlank String token) throws BusinessException {
         authService.activate(token);
+    }
+
+    @GetMapping("close-account")
+    public ResultDTO getCloseAccountCaptcha(@AuthenticationPrincipal User user) {
+        GetEmailCaptchaResultDTO resultDTO = authService.getCloseAccountCaptcha(user);
+
+        return ResultDTO.builder()
+                .status(resultDTO.isSent() ? ResultDTO.OK_STATUS : ResultDTO.TOO_FREQUENT)
+                .businessType(EmailCaptcha.BusinessType.CLOSE_ACCOUNT.getDesc())
+                .message(resultDTO.isSent() ? "验证码已发送，请注意查收" : "请求过于频繁，请稍后再试")
+                .data(Map.of("codePrefix", resultDTO.getCodePrefix(), "coolingTime", resultDTO.getCoolingTime()))
+                .build();
+    }
+
+    @PostMapping("close-account")
+    public ResultDTO closeAccount(@AuthenticationPrincipal User user, @RequestParam("emailCaptcha") String emailCaptcha) throws BusinessException {
+        // 关闭账户
+        authService.closeAccount(user, emailCaptcha);
+        // 签发无效 JWT
+        return ResultDTO.ok()
+                .message("账户已关闭")
+                .data(Map.of("jwt", ""))
+                .build();
     }
 
 }
