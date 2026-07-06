@@ -33,15 +33,14 @@ public class EmailCaptchaBaseServiceImpl implements EmailCaptchaBaseService {
         // 准备时间戳
         LocalDateTime now = LocalDateTime.now();
 
-        // 查询同用户同业务是否已有数据（决定后续是插入还是更新）
+        // 查询同用户同业务是否已有数据
         EmailCaptcha emailCaptcha = emailCaptchaMapper.selectOne(new LambdaQueryWrapper<EmailCaptcha>()
                 .eq(EmailCaptcha::getUserId, userId)
                 .eq(EmailCaptcha::getBusinessType, businessType)
         );
-        boolean isInsert = emailCaptcha == null;
 
         // 数据不存在，或已过期，或已使用过且已过发送冷却期
-        if (isInsert || now.isAfter(emailCaptcha.getExpireTime()) || emailCaptcha.getIsUsed() && now.isAfter(emailCaptcha.getCoolingTime())) {
+        if (emailCaptcha == null || now.isAfter(emailCaptcha.getExpireTime()) || emailCaptcha.getIsUsed() && now.isAfter(emailCaptcha.getCoolingTime())) {
             LocalDateTime coolingTime = now.plusMinutes(businessType.getEmailSendCoolingMinutes());
             LocalDateTime expireTime = now.plusMinutes(businessType.getCaptchaValidationMinutes());
             // 生成验证码
@@ -49,25 +48,16 @@ public class EmailCaptchaBaseServiceImpl implements EmailCaptchaBaseService {
             char c1 = (char) ('A' + random.nextInt(26));
             char c2 = (char) ('A' + random.nextInt(26));
             String captcha = String.format("%c%c-%06d", c1, c2, random.nextInt(1000000));
+            // 生成验证码实体
+            EmailCaptcha newEmailCaptcha = new EmailCaptcha();
+            newEmailCaptcha.setUserId(userId);
+            newEmailCaptcha.setBusinessType(businessType);
+            newEmailCaptcha.setCaptcha(captcha);
+            newEmailCaptcha.setIsUsed(false);
+            newEmailCaptcha.setCoolingTime(coolingTime);
+            newEmailCaptcha.setExpireTime(expireTime);
             // 保存验证码
-            if (isInsert) {
-                EmailCaptcha newEmailCaptcha = new EmailCaptcha();
-                newEmailCaptcha.setUserId(userId);
-                newEmailCaptcha.setBusinessType(businessType);
-                newEmailCaptcha.setCaptcha(captcha);
-                newEmailCaptcha.setCoolingTime(coolingTime);
-                newEmailCaptcha.setExpireTime(expireTime);
-                emailCaptchaMapper.insert(newEmailCaptcha);
-            } else {
-                emailCaptchaMapper.update(new LambdaUpdateWrapper<EmailCaptcha>()
-                        .eq(EmailCaptcha::getUserId, userId)
-                        .eq(EmailCaptcha::getBusinessType, businessType)
-                        .set(EmailCaptcha::getCaptcha, captcha)
-                        .set(EmailCaptcha::getIsUsed, false)
-                        .set(EmailCaptcha::getCoolingTime, coolingTime)
-                        .set(EmailCaptcha::getExpireTime, expireTime)
-                );
-            }
+            emailCaptchaMapper.insertOrUpdate(newEmailCaptcha);
             // 异步发送
             Context context = new Context();
             context.setVariable("captcha", captcha);
