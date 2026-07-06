@@ -55,9 +55,7 @@ public class ImageCaptchaServiceImpl implements ImageCaptchaService {
             return false;
 
         // 核对后无论成功与否都需要删除记录
-        imageCaptchaMapper.delete(new LambdaQueryWrapper<ImageCaptcha>()
-                .eq(ImageCaptcha::getToken, token)
-        );
+        imageCaptchaMapper.deleteById(token);
         // 返回比较结果
         return imageCaptcha.getCaptcha().equalsIgnoreCase(captcha);
     }
