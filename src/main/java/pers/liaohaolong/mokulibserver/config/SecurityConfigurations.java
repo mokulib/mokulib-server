@@ -59,9 +59,7 @@ public class SecurityConfigurations {
 
         // 配置授权规则(包括Mapping接口和需要权限控制的静态资源)
         http.authorizeHttpRequests(registry -> registry
-                // 仅管理员访问 Swagger UI
-                .requestMatchers("/swagger-ui/**").hasRole("ADMIN")
-                // 其余接口放行
+                // 放行所有
                 .anyRequest().permitAll()
         );
 
