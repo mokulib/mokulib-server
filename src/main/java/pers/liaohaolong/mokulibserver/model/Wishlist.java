@@ -6,10 +6,10 @@ import lombok.Data;
 import java.time.LocalDateTime;
 
 @Data
-@TableName(UserBookLike.TABLE_NAME)
-public class UserBookLike {
+@TableName(Wishlist.TABLE_NAME)
+public class Wishlist {
 
-    public static final String TABLE_NAME = "user_book_like";
+    public static final String TABLE_NAME = "wishlist";
 
     private Integer userId;
 

@@ -64,7 +64,7 @@ CREATE TABLE IF NOT EXISTS `book_review`
     `create_time` DATETIME DEFAULT CURRENT_TIMESTAMP NOT NULL
 );
 
-CREATE TABLE IF NOT EXISTS `user_book_like`
+CREATE TABLE IF NOT EXISTS `wishlist`
 (
     `user_id`     INT                                NOT NULL,
     `book_id`     INT                                NOT NULL,

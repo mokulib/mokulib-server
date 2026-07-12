@@ -76,7 +76,7 @@ status: 'AVAILABLE', 'UNAVAILABLE', 'WITHDRAWN'
 | content      | text     |                   |         |           | Y       |
 | create_time  | datetime | current_timestamp |         |           | Y       |
 
-## user_book_like (收藏)
+## wishlist (心愿单)
 
 | Name        | DataType | Default           | AutoInc | PK/UK/IDX | NotNull |
 |:------------|:---------|:------------------|:--------|:----------|:--------|
