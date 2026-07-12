@@ -6,6 +6,7 @@ CREATE TABLE IF NOT EXISTS `user`
     `password`     CHAR(60)                              NOT NULL,
     `role`         VARCHAR(16) DEFAULT 'USER'            NOT NULL,
     `username`     VARCHAR(16)                           NOT NULL,
+    `bio`          VARCHAR(30),
     `is_deleted`   BOOLEAN     DEFAULT FALSE             NOT NULL,
     `create_time`  DATETIME    DEFAULT CURRENT_TIMESTAMP NOT NULL,
     `delete_time`  DATETIME

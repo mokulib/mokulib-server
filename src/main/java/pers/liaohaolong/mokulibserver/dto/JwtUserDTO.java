@@ -26,6 +26,8 @@ public class JwtUserDTO {
 
     private String username;
 
+    private String bio;
+
     private LocalDateTime createTime;
 
     public JwtUserDTO(User user) {
@@ -33,6 +35,7 @@ public class JwtUserDTO {
         this.email = user.getEmail();
         this.role = user.getRole().getCode();
         this.username = user.getUsername();
+        this.bio = user.getBio();
         this.createTime = user.getCreateTime();
     }
 
@@ -42,6 +45,7 @@ public class JwtUserDTO {
         user.setEmail(email);
         user.setRole(User.Role.valueOf(role));
         user.setUsername(username);
+        user.setBio(bio);
         user.setCreateTime(createTime);
         return user;
     }

@@ -32,6 +32,8 @@ public class User implements UserDetails, CredentialsContainer {
 
     private String username;
 
+    private String bio;
+
     @TableLogic
     private Boolean isDeleted;
 

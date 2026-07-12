@@ -10,6 +10,7 @@
 | password     | char(60)    |                   |         |           | Y       |
 | role         | varchar(16) | 'USER'            |         |           | Y       |
 | username     | varchar(16) |                   |         |           | Y       |
+| bio          | varchar(30) |                   |         |           |         |
 | is_deleted   | boolean     | false             |         |           | Y       |
 | create_time  | datetime    | current_timestamp |         |           | Y       |
 | delete_time  | datetime    |                   |         |           |         |
