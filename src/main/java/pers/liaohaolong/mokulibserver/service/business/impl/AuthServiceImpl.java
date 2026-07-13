@@ -92,10 +92,15 @@ public class AuthServiceImpl implements AuthService {
     @Override
     @Transactional
     public void activate(String token) throws BusinessException {
-        ActivationToken activationToken = activationTokenMapper.selectById(token);
+        ActivationToken activationToken = activationTokenMapper.selectByToken(token);
         // 有效验证
         if (activationToken == null)
             throw new BusinessException("激活码无效");
+        // 过期验证
+        if (LocalDateTime.now().isAfter(activationToken.getExpireTime())) {
+            activationTokenMapper.deleteById(activationToken);
+            throw new BusinessException("激活码无效");
+        }
 
         // 激活账户
         userMapper.update(new LambdaUpdateWrapper<User>()

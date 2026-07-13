@@ -47,7 +47,7 @@ public class AuthController {
         authService.register(registerDTO.getEmail(), registerDTO.getPassword(), registerDTO.getUsername());
     }
 
-    @GetMapping("activate/{token}")
+    @PostMapping("activate/{token}")
     public void activate(@PathVariable @NotNull @NotBlank String token) throws BusinessException {
         authService.activate(token);
     }
