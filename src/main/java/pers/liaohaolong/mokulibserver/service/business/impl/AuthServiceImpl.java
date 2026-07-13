@@ -98,17 +98,23 @@ public class AuthServiceImpl implements AuthService {
             throw new BusinessException("激活码无效");
         // 过期验证
         if (LocalDateTime.now().isAfter(activationToken.getExpireTime())) {
-            activationTokenMapper.deleteById(activationToken);
             throw new BusinessException("激活码无效");
         }
 
-        // 激活账户
+        // 查询需要激活的账户
+        User user = userMapper.selectById(activationToken.getUserId());
+        // 账户检查（是否已注销）
+        if (user == null)
+            throw new BusinessException("激活码无效");
+        // 已激活，视为激活成功
+        if (user.getIsActivated())
+            return;
+
+        // 用户存在，且未激活，激活账户
         userMapper.update(new LambdaUpdateWrapper<User>()
                 .eq(User::getId, activationToken.getUserId())
                 .set(User::getIsActivated, true)
         );
-        // 删除激活码
-        activationTokenMapper.deleteById(activationToken);
     }
 
     @Override
