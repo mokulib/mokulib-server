@@ -63,24 +63,26 @@ public final class ImageCaptchaUtils {
      */
     public static byte[] generateCaptchaImage(@NotNull String verificationCode) throws IOException {
         // 创建对象,验证码图片对象
-        BufferedImage image = new BufferedImage(CAPTCHA_IMAGE_WIDTH, CAPTCHA_IMAGE_HEIGHT, BufferedImage.TYPE_INT_RGB);
+        BufferedImage image = new BufferedImage(CAPTCHA_IMAGE_WIDTH, CAPTCHA_IMAGE_HEIGHT, BufferedImage.TYPE_INT_ARGB);
+
+        // 画笔对象
+        Graphics2D g = (Graphics2D) image.getGraphics();
 
         // 填充背景色
-        Graphics2D g = (Graphics2D) image.getGraphics(); // 画笔对象,2D来旋转验证码字母
-        g.setColor(Color.WHITE); // 设置画笔颜色
+        g.setColor(new Color(0, 0, 0, 0)); // 设置画笔颜色
         g.fillRect(0, 0, CAPTCHA_IMAGE_WIDTH, CAPTCHA_IMAGE_HEIGHT);
 
         // 改变字体
         g.setFont(CAPTCHA_FONT);
         // 将验证码偏转并写到画布上
         for (int i = 1; i <= 4; i++) {
-            int x = CAPTCHA_IMAGE_WIDTH / 5 * i;
+            int x = CAPTCHA_IMAGE_WIDTH / 6 * i;
             int y = CAPTCHA_IMAGE_HEIGHT / 3 * 2;
             // 获取正负30的角度
             int angle = RANDOM.nextInt(CAPTCHA_ROTATE * 2) - CAPTCHA_ROTATE;
             double radian = angle * Math.PI / 180;
             // 用随机产生的颜色将验证码绘制到图像中
-            g.setColor(new Color(RANDOM.nextInt(255), RANDOM.nextInt(255), RANDOM.nextInt(255)));
+            g.setColor(new Color(RANDOM.nextInt(192) + 32, RANDOM.nextInt(192) + 32, RANDOM.nextInt(192) + 32));
             // 设置旋转角度
             g.rotate(radian, x, y);
             // 把字符画在画布上
@@ -90,7 +92,7 @@ public final class ImageCaptchaUtils {
         }
 
         // 随机产生干扰线
-        g.setColor(Color.MAGENTA);
+        g.setColor(new Color(136, 51, 36));
         for (int i = 0; i < 10; i++) {
             // 随机生成坐标点
             int x1 = RANDOM.nextInt(CAPTCHA_IMAGE_WIDTH * 2) - CAPTCHA_IMAGE_WIDTH;
@@ -98,6 +100,14 @@ public final class ImageCaptchaUtils {
             int x2 = RANDOM.nextInt(CAPTCHA_IMAGE_WIDTH * 2) - CAPTCHA_IMAGE_WIDTH;
             int y2 = RANDOM.nextInt(CAPTCHA_IMAGE_HEIGHT * 2) - CAPTCHA_IMAGE_HEIGHT;
             g.drawLine(x1, y1, x2, y2);
+        }
+
+        // 随机产生噪声点
+        g.setColor(new Color(136, 51, 36));
+        for (int i = 0; i < 50; i++) {
+            int x = RANDOM.nextInt(CAPTCHA_IMAGE_WIDTH);
+            int y = RANDOM.nextInt(CAPTCHA_IMAGE_HEIGHT);
+            g.drawOval(x, y, 1, 1);
         }
 
         // 将 BufferedImage 转换为字节数组
