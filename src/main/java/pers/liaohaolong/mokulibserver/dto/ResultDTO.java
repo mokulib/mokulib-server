@@ -20,9 +20,9 @@ public class ResultDTO {
     public static final String ERROR_STATUS = "ERROR";
     public static final String TOO_FREQUENT = "TOO_FREQUENT";
 
-    public static final ResultDTO OK = new ResultDTO(OK_STATUS, null, null, null);
-    public static final ResultDTO ERROR = new ResultDTO(ERROR_STATUS, null, null, null);
-    public static final ResultDTO BAD_REQUEST = new ResultDTO(ERROR_STATUS, null, "请求错误", null);
+    public static final ResultDTO OK = new ResultDTO(OK_STATUS, "", "", null);
+    public static final ResultDTO ERROR = new ResultDTO(ERROR_STATUS, "", "", null);
+    public static final ResultDTO BAD_REQUEST = new ResultDTO(ERROR_STATUS, "", "请求错误", null);
 
     private static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
 

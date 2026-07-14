@@ -10,6 +10,7 @@ import org.springframework.http.server.ServerHttpRequest;
 import org.springframework.http.server.ServerHttpResponse;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseBodyAdvice;
+import pers.liaohaolong.mokulibserver.annotation.SuccessInfo;
 import pers.liaohaolong.mokulibserver.dto.ResultDTO;
 
 @Slf4j
@@ -40,12 +41,27 @@ public class GlobalResponseHandler implements ResponseBodyAdvice<Object> {
         if (body instanceof ResultDTO)
             return body;
 
+        // 获取注解
+        SuccessInfo successInfo = returnType.getMethodAnnotation(SuccessInfo.class);
+
         // 接口返回 void 时，默认返回成功
-        if (body == null)
-            return ResultDTO.OK;
+        if (body == null) {
+            // 无注解
+            if (successInfo == null)
+                return ResultDTO.OK;
+            // 有注解
+            return ResultDTO.ok()
+                    .businessType(successInfo.businessType())
+                    .message(successInfo.message())
+                    .build();
+        }
 
         // 接口返回 Object 时，视为 data 部分，包装返回
-        return ResultDTO.ok().data(body).build();
+        return ResultDTO.ok()
+                .businessType(successInfo == null ? "" : successInfo.businessType())
+                .message(successInfo == null ? "" : successInfo.message())
+                .data(body)
+                .build();
     }
 
 }
