@@ -95,20 +95,20 @@ public class AuthServiceImpl implements AuthService {
         ActivationToken activationToken = activationTokenMapper.selectByToken(token);
         // 有效验证
         if (activationToken == null)
-            throw new BusinessException("激活码无效");
+            throw new BusinessException("链接失效，激活失败");
         // 过期验证
         if (LocalDateTime.now().isAfter(activationToken.getExpireTime())) {
-            throw new BusinessException("激活码无效");
+            throw new BusinessException("链接失效，激活失败");
         }
 
         // 查询需要激活的账户
         User user = userMapper.selectById(activationToken.getUserId());
         // 账户检查（是否已注销）
         if (user == null)
-            throw new BusinessException("激活码无效");
-        // 已激活，视为激活成功
+            throw new BusinessException("链接失效，激活失败");
+        // 账户检查（是否已激活）
         if (user.getIsActivated())
-            return;
+            throw new BusinessException("链接失效，激活失败");
 
         // 用户存在，且未激活，激活账户
         userMapper.update(new LambdaUpdateWrapper<User>()

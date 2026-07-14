@@ -8,6 +8,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
+import pers.liaohaolong.mokulibserver.annotation.SuccessInfo;
 import pers.liaohaolong.mokulibserver.dto.GetEmailCaptchaResultDTO;
 import pers.liaohaolong.mokulibserver.dto.RegisterDTO;
 import pers.liaohaolong.mokulibserver.dto.ResultDTO;
@@ -48,6 +49,7 @@ public class AuthController {
     }
 
     @PostMapping("activate/{token}")
+    @SuccessInfo(message = "激活成功，欢迎使用")
     public void activate(@PathVariable @NotNull @NotBlank String token) throws BusinessException {
         authService.activate(token);
     }
