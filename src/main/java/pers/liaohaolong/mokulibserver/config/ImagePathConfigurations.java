@@ -7,6 +7,8 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.stereotype.Component;
 import pers.liaohaolong.mokulibserver.config.properties.ImagePathProperties;
 
+import java.util.List;
+
 @Data
 @Configuration
 @ConfigurationProperties(prefix = "mokulib.image-path")
@@ -18,5 +20,9 @@ public class ImagePathConfigurations {
 
     @NestedConfigurationProperty
     private ImagePathProperties books;
+
+    public List<ImagePathProperties> getAll() {
+        return List.of(avatars, books);
+    }
 
 }

@@ -12,7 +12,9 @@ mokulib:
   image-path:
     avatars:
       path-mode: absolute
-      path: F:/moku/avatars/
+      save-path: F:/moku/avatars/
+      visit-path: avatars
     books:
       path-mode: absolute
-      path: F:/moku/books/
+      save-path: F:/moku/books/
+      visit-path: books
