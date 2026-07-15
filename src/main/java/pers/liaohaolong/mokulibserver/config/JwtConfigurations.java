@@ -1,17 +1,15 @@
 package pers.liaohaolong.mokulibserver.config;
 
-import lombok.Getter;
-import lombok.Setter;
+import lombok.Data;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Configuration;
 
 /**
  * 从 application.properties 中读取 jwt 配置
  */
+@Data
 @Configuration
-@ConfigurationProperties(prefix = "mokulibserver.jwt")
-@Getter
-@Setter
+@ConfigurationProperties(prefix = "mokulib.jwt")
 public class JwtConfigurations {
 
     /**

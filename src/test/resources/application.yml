@@ -6,3 +6,13 @@ spring:
     url: jdbc:h2:mem:testdb;MODE=MySQL;DB_CLOSE_DELAY=-1;NON_KEYWORDS=USER
     username: sa
     password:
+
+
+mokulib:
+  image-path:
+    avatars:
+      path-mode: absolute
+      path: F:/moku/avatars/
+    books:
+      path-mode: absolute
+      path: F:/moku/books/

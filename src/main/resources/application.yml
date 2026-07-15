@@ -9,6 +9,16 @@ spring:
     active: local
 
 
+mokulib:
+  image-path:
+    avatars:
+      path-mode: absolute
+      path: F:/moku/avatars/
+    books:
+      path-mode: absolute
+      path: F:/moku/books/
+
+
 logging:
   level:
     pers.liaohaolong.mokulibserver: DEBUG
