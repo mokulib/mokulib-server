@@ -88,7 +88,7 @@ CREATE TABLE IF NOT EXISTS `borrow_record`
     `book_copy_id` INT                                   NOT NULL,
     `is_renewed`   BOOLEAN     DEFAULT FALSE             NOT NULL,
     `close_status` VARCHAR(16) DEFAULT 'OPEN'            NOT NULL,
-    `create_time`  DATETIME    DEFAULT CURRENT_TIMESTAMP NOT NULL,
+    `create_time`  DATETIME                              NOT NULL,
     `due_time`     DATETIME                              NOT NULL,
     `close_time`   DATETIME
 );

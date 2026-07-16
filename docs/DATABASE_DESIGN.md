@@ -95,16 +95,16 @@ status: 'AVAILABLE', 'UNAVAILABLE', 'WITHDRAWN'
 
 ## borrow_record (借阅记录)
 
-| Name         | DataType    | Default           | AutoInc | PK/UK/IDX | NotNull |
-|:-------------|:------------|:------------------|:--------|:----------|:--------|
-| id           | int         |                   | Y       | PK        | Y       |
-| user_id      | int         |                   |         |           | Y       |
-| book_copy_id | int         |                   |         |           | Y       |
-| is_renewed   | boolean     | false             |         |           | Y       |
-| close_status | varchar(16) | 'OPEN'            |         |           | Y       |
-| create_time  | datetime    | current_timestamp |         |           | Y       |
-| due_time     | datetime    |                   |         |           | Y       |
-| close_time   | datetime    |                   |         |           |         |
+| Name         | DataType    | Default | AutoInc | PK/UK/IDX | NotNull |
+|:-------------|:------------|:--------|:--------|:----------|:--------|
+| id           | int         |         | Y       | PK        | Y       |
+| user_id      | int         |         |         |           | Y       |
+| book_copy_id | int         |         |         |           | Y       |
+| is_renewed   | boolean     | false   |         |           | Y       |
+| close_status | varchar(16) | 'OPEN'  |         |           | Y       |
+| create_time  | datetime    |         |         |           | Y       |
+| due_time     | datetime    |         |         |           | Y       |
+| close_time   | datetime    |         |         |           |         |
 
 close_status: 'OPEN', 'CLOSED', 'LOST', 'DAMAGED'
 
