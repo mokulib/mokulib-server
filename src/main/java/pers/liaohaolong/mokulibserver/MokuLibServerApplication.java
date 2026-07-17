@@ -44,7 +44,7 @@ public class MokuLibServerApplication implements WebMvcConfigurer {
 
             registry.addResourceHandler(visitPath).addResourceLocations(savePath);
 
-            log.info("addResourceHandler: {} -> {}", visitPath, savePath);
+            log.info("Registering resource handler: mapping URL path {} to physical location {}.", visitPath, savePath);
         });
     }
 
