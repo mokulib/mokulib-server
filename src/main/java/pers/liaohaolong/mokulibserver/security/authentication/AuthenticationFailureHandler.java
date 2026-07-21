@@ -9,6 +9,7 @@ import org.jspecify.annotations.NonNull;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.LockedException;
 import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Component;
 import pers.liaohaolong.mokulibserver.config.RegexpConfigurations;
 import pers.liaohaolong.mokulibserver.dto.ResultDTO;
@@ -35,10 +36,12 @@ public class AuthenticationFailureHandler implements org.springframework.securit
         String password = request.getParameter("password");
         ResultDTO result = null;
 
-        // 在本项目的邮箱密码登录方式中，可能抛出 BadCredentialsException 或 LockedException
+        // 在本项目的邮箱密码登录方式中，可能抛出 UsernameNotFoundException、BadCredentialsException 或 LockedException
         if (password.matches(RegexpConfigurations.PASSWORD_REGEXP)) {
-            if (exception instanceof BadCredentialsException) // 包括 UsernameNotFoundException 和 BadCredentialsException
-                result = createFailureResult("邮箱不存在或密码错误");
+            if (exception instanceof UsernameNotFoundException)
+                result = createFailureResult("注册成功！激活邮件已发送，点击链接即可激活账户。");
+            if (exception instanceof BadCredentialsException)
+                result = createFailureResult("密码错误");
             else if (exception instanceof LockedException)
                 result = createFailureResult("账户未激活，请先激活账户");
         }
