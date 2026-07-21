@@ -1,6 +1,5 @@
 package pers.liaohaolong.mokulibserver.controller.api;
 
-import jakarta.validation.Valid;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -11,7 +10,6 @@ import org.springframework.web.bind.annotation.*;
 import pers.liaohaolong.mokulibserver.annotation.SuccessInfo;
 import pers.liaohaolong.mokulibserver.dto.GetEmailCaptchaResultDTO;
 import pers.liaohaolong.mokulibserver.dto.ResultDTO;
-import pers.liaohaolong.mokulibserver.dto.request.RegisterDTO;
 import pers.liaohaolong.mokulibserver.exception.BusinessException;
 import pers.liaohaolong.mokulibserver.model.EmailCaptcha;
 import pers.liaohaolong.mokulibserver.model.User;
@@ -41,11 +39,6 @@ public class AuthController {
                 .message(resultDTO.isSent() ? "验证码已发送，请注意查收" : "请求过于频繁，请稍后再试")
                 .data(Map.of("codePrefix", resultDTO.getCodePrefix(), "coolingTime", resultDTO.getCoolingTime()))
                 .build();
-    }
-
-    @PostMapping("register")
-    public void register(@RequestBody @Valid RegisterDTO registerDTO) throws BusinessException {
-        authService.register(registerDTO.getEmail(), registerDTO.getPassword(), registerDTO.getUsername());
     }
 
     @PostMapping("activate/{token}")

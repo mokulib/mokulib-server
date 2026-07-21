@@ -7,7 +7,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.thymeleaf.context.Context;
 import pers.liaohaolong.mokulibserver.dao.ActivationTokenMapper;
 import pers.liaohaolong.mokulibserver.dao.EmailCaptchaMapper;
 import pers.liaohaolong.mokulibserver.dao.UserMapper;
@@ -22,8 +21,6 @@ import pers.liaohaolong.mokulibserver.service.base.MailService;
 import pers.liaohaolong.mokulibserver.service.business.AuthService;
 
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
-import java.util.UUID;
 
 @Slf4j
 @Service
@@ -53,40 +50,6 @@ public class AuthServiceImpl implements AuthService {
             throw new BusinessException("账户未激活，请先激活账户");
 
         return emailCaptchaBaseService.getEmailCaptcha(user.getId(), email, BusinessType.LOGIN);
-    }
-
-    @Override
-    @Transactional
-    public void register(String email, String password, String username) throws BusinessException {
-        // 查询用户
-        if (userMapper.exists(new LambdaQueryWrapper<User>().eq(User::getEmail, email)))
-            throw new BusinessException("邮箱已被注册");
-
-        // 保存用户
-        User user = new User();
-        user.setEmail(email);
-        user.setPassword(passwordEncoder.encode(password));
-        user.setUsername(User.regularizeNickname(username));
-        userMapper.insert(user);
-
-        user = userMapper.selectByEmail(email);
-
-        // 使用用户 ID 创建激活码
-        ActivationToken activationToken = new ActivationToken();
-        activationToken.setUserId(user.getId());
-        activationToken.setToken(UUID.randomUUID().toString().replace("-", ""));
-        activationToken.setExpireTime(user.getCreateTime().plusDays(7));
-        activationTokenMapper.insert(activationToken);
-
-        activationToken = activationTokenMapper.selectById(user.getId());
-
-        // 发送邮件
-        Context context = new Context();
-        context.setVariable("activationCode", activationToken.getToken());
-        context.setVariable("textExpiredAt", DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss").format(activationToken.getExpireTime()));
-        mailService.sendMail(email, "激活您的账户", "register", context);
-
-        log.debug("发送激活邮件：邮箱={}, 激活码={}", email, activationToken.getToken());
     }
 
     @Override

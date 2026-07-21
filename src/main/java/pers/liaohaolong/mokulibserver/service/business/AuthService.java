@@ -8,8 +8,6 @@ public interface AuthService {
 
     GetEmailCaptchaResultDTO getLoginCaptcha(String email) throws BusinessException;
 
-    void register(String email, String password, String username) throws BusinessException;
-
     void activate(String token) throws BusinessException;
 
     GetEmailCaptchaResultDTO getCloseAccountCaptcha(User user);
