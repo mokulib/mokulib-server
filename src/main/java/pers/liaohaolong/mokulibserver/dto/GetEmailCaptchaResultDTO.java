@@ -9,7 +9,7 @@ import java.time.LocalDateTime;
 /**
  * <h3>获取验证码数据传输对象</h3>
  *
- * <p>Service -> Service / Controller</p>
+ * <p>Service -> Service, Service -> Controller</p>
  */
 @Data
 @NoArgsConstructor

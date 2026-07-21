@@ -48,7 +48,7 @@ public class GlobalResponseHandler implements ResponseBodyAdvice<Object> {
         if (body == null) {
             // 无注解
             if (successInfo == null)
-                return ResultDTO.OK;
+                return ResultDTO.ok().build();
             // 有注解
             return ResultDTO.ok()
                     .businessType(successInfo.businessType())

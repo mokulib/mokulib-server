@@ -16,6 +16,7 @@ import pers.liaohaolong.mokulibserver.config.ImageCaptchaConfigurations;
 import pers.liaohaolong.mokulibserver.config.LoginFilterConfigurations;
 import pers.liaohaolong.mokulibserver.dto.ResultDTO;
 import pers.liaohaolong.mokulibserver.service.business.ImageCaptchaService;
+import tools.jackson.databind.ObjectMapper;
 
 import java.io.IOException;
 import java.util.List;
@@ -36,6 +37,8 @@ public class ImageCaptchaFilter extends OncePerRequestFilter {
 
     private final ImageCaptchaService imageCaptchaService;
 
+    private final ObjectMapper objectMapper;
+
     @Override
     protected void doFilterInternal(@NotNull HttpServletRequest request, @NotNull HttpServletResponse response, @NotNull FilterChain filterChain) throws ServletException, IOException {
         if (requiresAuthenticationRequestMatchers.stream().anyMatch(requestMatcher -> requestMatcher.matches(request))) {
@@ -47,7 +50,7 @@ public class ImageCaptchaFilter extends OncePerRequestFilter {
                 // response.sendError(HttpServletResponse.SC_BAD_REQUEST); // 不要使用这种方法，这种方法会将请求转发到 /error
                 response.setStatus(HttpServletResponse.SC_OK);
                 response.setContentType("application/json;charset=UTF-8");
-                response.getWriter().write(ResultDTO.error().businessType("验证码").message("验证码错误，请重新输入").build().toJson());
+                response.getWriter().write(ResultDTO.error().businessType("验证码").message("验证码错误，请重新输入").build().toJson(objectMapper));
                 response.getWriter().flush(); // 确保响应立即发送
                 return; // 直接返回，不继续执行后续的过滤器
             }

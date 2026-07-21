@@ -1,15 +1,13 @@
 package pers.liaohaolong.mokulibserver.dto;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import tools.jackson.databind.ObjectMapper;
 
 /**
  * <h3>结果数据传输对象</h3>
  *
- * <p>后端 -> 前端</p>
+ * <p>Controller -> Frontend</p>
  * <p>后端所有接口均统一返回此类的实体。</p>
  */
 @Data
@@ -20,12 +18,6 @@ public class ResultDTO {
     public static final String ERROR_STATUS = "ERROR";
     public static final String TOO_FREQUENT = "TOO_FREQUENT";
 
-    public static final ResultDTO OK = new ResultDTO(OK_STATUS, "", "", null);
-    public static final ResultDTO ERROR = new ResultDTO(ERROR_STATUS, "", "", null);
-    public static final ResultDTO BAD_REQUEST = new ResultDTO(ERROR_STATUS, "", "请求错误", null);
-
-    private static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
-
     private String status;
 
     private String businessType;
@@ -34,8 +26,8 @@ public class ResultDTO {
 
     private Object data;
 
-    public String toJson() throws JsonProcessingException {
-        return OBJECT_MAPPER.writeValueAsString(this);
+    public String toJson(ObjectMapper objectMapper) {
+        return objectMapper.writeValueAsString(this);
     }
 
     public static ResultBuilder builder() {
@@ -84,10 +76,6 @@ public class ResultDTO {
             return new ResultDTO(status, businessType, message, data);
         }
 
-    }
-
-    static {
-        OBJECT_MAPPER.registerModule(new JavaTimeModule());
     }
 
 }

@@ -2,6 +2,7 @@ package pers.liaohaolong.mokulibserver.security.authentication;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.jetbrains.annotations.NotNull;
 import org.jspecify.annotations.NonNull;
@@ -11,12 +12,16 @@ import org.springframework.security.core.AuthenticationException;
 import org.springframework.stereotype.Component;
 import pers.liaohaolong.mokulibserver.config.RegexpConfigurations;
 import pers.liaohaolong.mokulibserver.dto.ResultDTO;
+import tools.jackson.databind.ObjectMapper;
 
 import java.io.IOException;
 
 @Slf4j
 @Component
+@AllArgsConstructor
 public class AuthenticationFailureHandler implements org.springframework.security.web.authentication.AuthenticationFailureHandler {
+
+    private final ObjectMapper objectMapper;
 
     @Override
     public void onAuthenticationFailure(HttpServletRequest request, @NotNull HttpServletResponse response, @NonNull AuthenticationException exception) throws IOException {
@@ -48,7 +53,7 @@ public class AuthenticationFailureHandler implements org.springframework.securit
         assert result != null;
 
         // 输出响应
-        response.getWriter().write(result.toJson());
+        response.getWriter().write(result.toJson(objectMapper));
         response.getWriter().flush();
     }
 

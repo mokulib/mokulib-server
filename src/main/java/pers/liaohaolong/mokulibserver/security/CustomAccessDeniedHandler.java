@@ -2,16 +2,21 @@ package pers.liaohaolong.mokulibserver.security;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import lombok.AllArgsConstructor;
 import org.jspecify.annotations.NonNull;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.web.access.AccessDeniedHandler;
 import org.springframework.stereotype.Component;
 import pers.liaohaolong.mokulibserver.dto.ResultDTO;
+import tools.jackson.databind.ObjectMapper;
 
 import java.io.IOException;
 
 @Component
+@AllArgsConstructor
 public class CustomAccessDeniedHandler implements AccessDeniedHandler {
+
+    private final ObjectMapper objectMapper;
 
     @Override
     public void handle(@NonNull HttpServletRequest request, HttpServletResponse response, @NonNull AccessDeniedException accessDeniedException) throws IOException {
@@ -22,7 +27,7 @@ public class CustomAccessDeniedHandler implements AccessDeniedHandler {
 
         response.setStatus(HttpServletResponse.SC_FORBIDDEN);
         response.setContentType("text/plain;charset=UTF-8");
-        response.getWriter().write(result.toJson());
+        response.getWriter().write(result.toJson(objectMapper));
         response.getWriter().flush();
     }
 

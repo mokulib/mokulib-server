@@ -1,4 +1,4 @@
-package pers.liaohaolong.mokulibserver.dto;
+package pers.liaohaolong.mokulibserver.dto.request;
 
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
@@ -7,11 +7,6 @@ import jakarta.validation.constraints.Pattern;
 import lombok.Data;
 import pers.liaohaolong.mokulibserver.config.RegexpConfigurations;
 
-/**
- * <h3>注册数据传输对象</h3>
- *
- * <p>用于接收用户传来的注册信息。</p>
- */
 @Data
 public class RegisterDTO {
 

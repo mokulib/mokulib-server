@@ -1,7 +1,5 @@
 package pers.liaohaolong.mokulibserver.util;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
@@ -14,6 +12,7 @@ import org.springframework.stereotype.Component;
 import pers.liaohaolong.mokulibserver.config.JwtConfigurations;
 import pers.liaohaolong.mokulibserver.dto.JwtUserDTO;
 import pers.liaohaolong.mokulibserver.model.User;
+import tools.jackson.databind.ObjectMapper;
 
 import javax.crypto.SecretKey;
 import java.util.Date;
@@ -41,7 +40,7 @@ public class JwtUtils {
     }
 
     // 生成 JWT
-    public String generateToken(@NotNull UserDetails userDetails) throws JsonProcessingException {
+    public String generateToken(@NotNull UserDetails userDetails) {
         HashMap<String, Object> claims = new HashMap<>();
         claims.put("user", objectMapper.writeValueAsString(new JwtUserDTO((User) userDetails)));
         return Jwts.builder()
@@ -54,7 +53,7 @@ public class JwtUtils {
     }
 
     // 从 JWT 中提取用户
-    public UserDetails extractUserDetails(String token) throws JwtException, IllegalArgumentException, JsonProcessingException {
+    public UserDetails extractUserDetails(String token) throws JwtException, IllegalArgumentException {
         String user = extractClaim(token, claims -> claims.get("user", String.class));
         return objectMapper.readValue(user, JwtUserDTO.class).toUser();
     }

@@ -4,11 +4,13 @@ import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 import pers.liaohaolong.mokulibserver.dto.ResultDTO;
+import tools.jackson.databind.ObjectMapper;
 
 import java.io.IOException;
 
@@ -21,7 +23,10 @@ import static pers.liaohaolong.mokulibserver.config.LoginFilterConfigurations.*;
  */
 @Slf4j
 @Component
+@AllArgsConstructor
 public class InvalidLoginRequestFilter extends OncePerRequestFilter {
+
+    private final ObjectMapper objectMapper;
 
     @Override
     protected void doFilterInternal(@NotNull HttpServletRequest request, @NotNull HttpServletResponse response, @NotNull FilterChain filterChain) throws ServletException, IOException {
@@ -32,7 +37,7 @@ public class InvalidLoginRequestFilter extends OncePerRequestFilter {
                 // 如果均不匹配，则返回请求错误
                 response.setStatus(HttpServletResponse.SC_OK);
                 response.setContentType("application/json;charset=UTF-8");
-                response.getWriter().write(ResultDTO.BAD_REQUEST.toJson());
+                response.getWriter().write(ResultDTO.error().message("请求错误").build().toJson(objectMapper));
                 return;
             }
         }
