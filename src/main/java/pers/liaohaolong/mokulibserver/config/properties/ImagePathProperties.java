@@ -1,8 +1,14 @@
 package pers.liaohaolong.mokulibserver.config.properties;
 
 import jakarta.servlet.ServletContext;
+import lombok.AccessLevel;
 import lombok.Data;
+import lombok.Setter;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.core.io.ClassPathResource;
+import org.springframework.core.io.Resource;
 
+@Slf4j
 @Data
 public class ImagePathProperties {
 
@@ -21,6 +27,27 @@ public class ImagePathProperties {
      */
     private String visitPath;
 
+    /**
+     * 默认图片资源
+     */
+    @Setter(AccessLevel.NONE)
+    private Resource resource;
+
+    public void init() {
+        this.resource = new ClassPathResource("static/default-" + visitPath + ".png");
+    }
+
+    public String getFullSavePath(ServletContext servletContext) {
+        if (pathMode == PathMode.ABSOLUTE)
+            return "file:" + savePath; // 绝对路径
+        else
+            return "file:" + servletContext.getRealPath("/" + savePath + "/"); // 相对路径需要通过 ServletContext 动态获取
+    }
+
+    public String getFullVisitPath() {
+        return "/" + visitPath + "/**";
+    }
+
     public enum PathMode {
 
         /**
@@ -33,17 +60,6 @@ public class ImagePathProperties {
          */
         RELATIVE,
 
-    }
-
-    public String getFullSavePath(ServletContext servletContext) {
-        if (pathMode == PathMode.ABSOLUTE)
-            return "file:" + savePath; // 绝对路径
-        else
-            return "file:" + servletContext.getRealPath("/" + savePath + "/"); // 相对路径需要通过 ServletContext 动态获取
-    }
-
-    public String getFullVisitPath() {
-        return "/" + visitPath + "/**";
     }
 
 }

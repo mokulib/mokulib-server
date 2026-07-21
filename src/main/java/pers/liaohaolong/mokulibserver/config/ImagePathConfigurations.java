@@ -1,5 +1,6 @@
 package pers.liaohaolong.mokulibserver.config;
 
+import jakarta.annotation.PostConstruct;
 import lombok.Data;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.boot.context.properties.NestedConfigurationProperty;
@@ -20,6 +21,12 @@ public class ImagePathConfigurations {
 
     @NestedConfigurationProperty
     private ImagePathProperties books;
+
+    @PostConstruct
+    public void init() {
+        // 初始化
+        getAll().forEach(ImagePathProperties::init);
+    }
 
     public List<ImagePathProperties> getAll() {
         return List.of(avatars, books);
