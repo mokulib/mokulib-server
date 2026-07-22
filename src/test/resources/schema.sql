@@ -14,10 +14,8 @@ CREATE TABLE IF NOT EXISTS `user`
 
 CREATE TABLE IF NOT EXISTS `category`
 (
-    `id`        INT AUTO_INCREMENT PRIMARY KEY,
-    `parent_id` INT,
-    `order`     INT DEFAULT 0 NOT NULL,
-    `name`      VARCHAR(16)   NOT NULL
+    `id`   INT AUTO_INCREMENT PRIMARY KEY,
+    `name` VARCHAR(16) NOT NULL UNIQUE
 );
 
 CREATE TABLE IF NOT EXISTS `tag`

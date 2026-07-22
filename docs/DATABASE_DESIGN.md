@@ -22,8 +22,6 @@ role: 'ADMIN', 'USER'
 | Name      | DataType    | Default | AutoInc | PK/UK/IDX | NotNull |
 |:----------|:------------|:--------|:--------|:----------|:--------|
 | id        | int         |         | Y       | PK        | Y       |
-| parent_id | int         |         |         |           |         |
-| order     | int         | 0       |         |           | Y       |
 | name      | varchar(16) |         |         |           | Y       |
 
 ## tag (标签)

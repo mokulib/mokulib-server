@@ -14,10 +14,6 @@ public class Category {
     @TableId(type = IdType.AUTO)
     private Integer id;
 
-    private Integer parentId;
-
-    private Integer order;
-
     private String name;
 
 }
