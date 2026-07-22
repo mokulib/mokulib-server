@@ -37,6 +37,7 @@ role: 'ADMIN', 'USER'
 |:-------------|:-------------|:--------|:--------|:----------|:--------|
 | id           | int          |         | Y       | PK        | Y       |
 | isbn         | char(13)     |         |         | UK        | Y       |
+| category_id  | int          |         |         |           | Y       |
 | title        | varchar(128) |         |         |           | Y       |
 | subtitle     | varchar(128) |         |         |           |         |
 | author       | varchar(128) |         |         |           | Y       |

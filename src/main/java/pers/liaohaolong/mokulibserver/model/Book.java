@@ -23,6 +23,8 @@ public class Book {
 
     private String isbn;
 
+    private Integer categoryId;
+
     private String title;
 
     private String subtitle;
@@ -51,6 +53,7 @@ public class Book {
         Book book = new Book();
 
         book.setIsbn(dto.getIsbn());
+        book.setCategoryId(dto.getCategoryId());
         book.setTitle(dto.getTitle());
         book.setSubtitle(dto.getSubtitle());
         book.setAuthor(dto.getAuthor());

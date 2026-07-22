@@ -15,6 +15,9 @@ public class BookDTO {
     @NotBlank(message = "ISBN不能为空")
     private String isbn;
 
+    @NotNull(message = "分类不能为空")
+    private Integer categoryId;
+
     @NotNull(message = "书名不能为空")
     @NotBlank(message = "书名不能为空")
     private String title;

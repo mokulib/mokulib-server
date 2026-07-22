@@ -28,6 +28,7 @@ CREATE TABLE IF NOT EXISTS `book`
 (
     `id`           INT AUTO_INCREMENT PRIMARY KEY,
     `isbn`         CHAR(13)      NOT NULL UNIQUE,
+    `category_id`  INT           NOT NULL,
     `title`        VARCHAR(128)  NOT NULL,
     `subtitle`     VARCHAR(128),
     `author`       VARCHAR(128)  NOT NULL,
