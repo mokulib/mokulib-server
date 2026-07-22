@@ -6,7 +6,7 @@ import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
 
 @Data
-@TableName
+@TableName(Tag.TABLE_NAME)
 public class Tag {
 
     public static final String TABLE_NAME = "tag";

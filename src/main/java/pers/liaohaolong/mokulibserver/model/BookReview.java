@@ -8,7 +8,7 @@ import lombok.Data;
 import java.time.LocalDateTime;
 
 @Data
-@TableName
+@TableName(BookReview.TABLE_NAME)
 public class BookReview {
 
     public static final String TABLE_NAME = "book_review";

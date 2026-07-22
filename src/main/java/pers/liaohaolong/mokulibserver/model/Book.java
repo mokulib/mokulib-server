@@ -12,7 +12,7 @@ import java.time.LocalDate;
 import java.util.Locale;
 
 @Data
-@TableName(autoResultMap = true)
+@TableName(value = Book.TABLE_NAME, autoResultMap = true)
 public class Book {
 
     public static final String TABLE_NAME = "book";
