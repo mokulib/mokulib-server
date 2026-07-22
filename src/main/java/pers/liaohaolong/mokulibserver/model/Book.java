@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
+import pers.liaohaolong.mokulibserver.dto.request.BookDTO;
 import pers.liaohaolong.mokulibserver.model.type.LocaleTypeHandler;
 
 import java.math.BigDecimal;
@@ -42,5 +43,26 @@ public class Book {
     private String description;
 
     private BigDecimal price;
+
+    public static Book fromDTO(BookDTO dto) {
+        if (dto == null)
+            return null;
+
+        Book book = new Book();
+
+        book.setIsbn(dto.getIsbn());
+        book.setTitle(dto.getTitle());
+        book.setSubtitle(dto.getSubtitle());
+        book.setAuthor(dto.getAuthor());
+        book.setPublisher(dto.getPublisher());
+        book.setPublishDate(dto.getPublishDate());
+        book.setEdition(dto.getEdition());
+        book.setPageCount(dto.getPageCount());
+        book.setLanguage(dto.getLanguage());
+        book.setDescription(dto.getDescription());
+        book.setPrice(dto.getPrice());
+
+        return book;
+    }
 
 }
