@@ -5,6 +5,8 @@ import org.jetbrains.annotations.NotNull;
 import org.springframework.context.MessageSourceResolvable;
 import org.springframework.context.support.DefaultMessageSourceResolvable;
 import org.springframework.dao.DataAccessException;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.security.authorization.AuthorizationDeniedException;
 import org.springframework.web.HttpRequestMethodNotSupportedException;
@@ -38,8 +40,8 @@ public class GlobalExceptionHandler {
      * @return {@link ResultDTO}
      */
     @ExceptionHandler({AuthorizationDeniedException.class})
-    public ResultDTO authorizationDeniedException(AuthorizationDeniedException ignore) {
-        return ResultDTO.error().businessType("认证").message("访问拒绝.").build();
+    public ResponseEntity<ResultDTO> authorizationDeniedException(AuthorizationDeniedException ignore) {
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(ResultDTO.error().businessType("认证").message("访问拒绝.").build());
     }
 
     /**
