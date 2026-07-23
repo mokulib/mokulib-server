@@ -42,12 +42,20 @@ public class BookServiceImpl implements BookService {
 
     @Override
     @Transactional
-    public void update(Integer id, BookDTO bookDTO) throws BusinessException {
+    public Book update(Integer id, BookDTO bookDTO) throws BusinessException {
         Book book = Book.fromDTO(bookDTO);
 
         book.setId(id);
 
+        if (bookMapper.exists(new LambdaQueryWrapper<Book>()
+                .ne(Book::getId, book.getId())
+                .eq(Book::getIsbn, book.getIsbn())
+        ))
+            throw new BusinessException("ISBN 重复");
+
         bookMapper.updateById(book);
+
+        return book;
     }
 
     @Override
@@ -55,9 +63,8 @@ public class BookServiceImpl implements BookService {
     public Book get(String id) throws BusinessException {
         Book book = bookMapper.selectById(id);
 
-        if (book == null) {
+        if (book == null)
             throw new BusinessException("图书不存在");
-        }
 
         return book;
     }

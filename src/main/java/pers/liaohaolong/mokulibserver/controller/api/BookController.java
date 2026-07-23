@@ -7,6 +7,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+import pers.liaohaolong.mokulibserver.annotation.SuccessInfo;
 import pers.liaohaolong.mokulibserver.dto.request.BookDTO;
 import pers.liaohaolong.mokulibserver.exception.BusinessException;
 import pers.liaohaolong.mokulibserver.model.Book;
@@ -34,8 +35,9 @@ public class BookController {
 
     @PutMapping("/{id}")
     @PreAuthorize("hasAnyRole('ADMIN')")
-    public void update(@PathVariable @NotNull Integer id, @RequestBody @Valid BookDTO bookDTO) {
-        bookService.update(id, bookDTO);
+    @SuccessInfo(message = "更新成功")
+    public Book update(@PathVariable @NotNull Integer id, @RequestBody @Valid BookDTO bookDTO) {
+        return bookService.update(id, bookDTO);
     }
 
     @GetMapping("/{id}")

@@ -10,7 +10,7 @@ public interface BookService {
 
     void delete(Integer id) throws BusinessException;
 
-    void update(Integer id, BookDTO bookDTO) throws BusinessException;
+    Book update(Integer id, BookDTO bookDTO) throws BusinessException;
 
     Book get(String id) throws BusinessException;
 
