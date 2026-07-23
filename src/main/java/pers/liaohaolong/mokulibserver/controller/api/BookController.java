@@ -14,7 +14,7 @@ import pers.liaohaolong.mokulibserver.service.business.BookService;
 
 @Slf4j
 @RestController
-@RequestMapping("/api/book")
+@RequestMapping("/api/books")
 @RequiredArgsConstructor
 public class BookController {
 
