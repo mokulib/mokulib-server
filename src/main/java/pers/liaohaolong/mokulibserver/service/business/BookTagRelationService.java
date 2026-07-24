@@ -7,7 +7,7 @@ import java.util.List;
 
 public interface BookTagRelationService {
 
-    void add(Integer bookId, List<Integer> tagsId) throws BusinessException;
+    void add(Integer bookId, List<Integer> tagIds) throws BusinessException;
 
     void delete(Integer bookId, Integer tagId) throws BusinessException;
 

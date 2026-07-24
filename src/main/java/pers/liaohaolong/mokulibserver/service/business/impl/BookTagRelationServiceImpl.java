@@ -30,13 +30,16 @@ public class BookTagRelationServiceImpl implements BookTagRelationService {
 
     @Override
     @Transactional
-    public void add(Integer bookId, List<Integer> tagsId) throws BusinessException {
+    public void add(Integer bookId, List<Integer> tagIds) throws BusinessException {
         if (!bookMapper.exists(new LambdaQueryWrapper<Book>().eq(Book::getId, bookId)))
             throw new BusinessException("图书不存在");
 
+        // 去重
+        tagIds = tagIds.stream().distinct().toList();
+
         List<BookTagRelation> bookTagRelations = new ArrayList<>();
 
-        for (Integer tagId : tagsId) {
+        for (Integer tagId : tagIds) {
             if (!tagMapper.exists(new LambdaQueryWrapper<Tag>().eq(Tag::getId, tagId)))
                 throw new BusinessException("标签不存在");
 
