@@ -6,6 +6,7 @@ import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
 import lombok.Getter;
+import pers.liaohaolong.mokulibserver.dto.request.BookCopyDTO;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -20,7 +21,7 @@ public class BookCopy {
     @TableId(type = IdType.AUTO)
     private Integer id;
 
-    private Integer book_id;
+    private Integer bookId;
 
     private BigDecimal purchasePrice;
 
@@ -35,6 +36,20 @@ public class BookCopy {
     private LocalDateTime createTime;
 
     private LocalDateTime removeTime;
+
+    public static BookCopy fromDTO(BookCopyDTO dto) {
+        if (dto == null)
+            return null;
+
+        BookCopy bookCopy = new BookCopy();
+
+        bookCopy.setBookId(dto.getBookId());
+        bookCopy.setPurchasePrice(dto.getPurchasePrice());
+        bookCopy.setPurchaseDate(dto.getPurchaseDate());
+        bookCopy.setSource(dto.getSource());
+
+        return bookCopy;
+    }
 
     @Getter
     public enum Status {
