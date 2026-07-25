@@ -6,12 +6,16 @@ import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import pers.liaohaolong.mokulibserver.annotation.SuccessInfo;
 import pers.liaohaolong.mokulibserver.dto.request.BookDTO;
 import pers.liaohaolong.mokulibserver.exception.BusinessException;
 import pers.liaohaolong.mokulibserver.model.Book;
+import pers.liaohaolong.mokulibserver.model.User;
 import pers.liaohaolong.mokulibserver.service.business.BookService;
+
+import java.util.List;
 
 @Slf4j
 @RestController
@@ -43,6 +47,16 @@ public class BookController {
     @GetMapping("/{id}")
     public Book get(@PathVariable @NotNull @NotBlank String id) throws BusinessException {
         return bookService.get(id);
+    }
+
+    @GetMapping("/{bookId}/book-copies")
+    @PreAuthorize("isAuthenticated()")
+    public List<?> getBookCopies(@AuthenticationPrincipal User user, @PathVariable @NotNull Integer bookId) throws BusinessException {
+        if (user.getRole() == User.Role.USER)
+            return bookService.getUserBookCopies(user.getId(), bookId);
+        else if (user.getRole() == User.Role.ADMIN)
+            return bookService.getAdminBookCopies(user.getId(), bookId);
+        throw new BusinessException("用户角色错误");
     }
 
 }
