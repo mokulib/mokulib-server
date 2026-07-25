@@ -1,11 +1,14 @@
 package pers.liaohaolong.mokulibserver.service.business;
 
+import pers.liaohaolong.mokulibserver.dto.response.WishlistDTO;
+import pers.liaohaolong.mokulibserver.exception.BusinessException;
+
 public interface WishlistService {
 
-    void add(Integer userId, Integer bookId);
+    WishlistDTO add(Integer userId, Integer bookId) throws BusinessException;
 
-    void delete(Integer userId, Integer bookId);
+    WishlistDTO delete(Integer userId, Integer bookId) throws BusinessException;
 
-    boolean isInWishlist(Integer userId, Integer bookId);
+    WishlistDTO isInWishlist(Integer userId, Integer bookId);
 
 }
