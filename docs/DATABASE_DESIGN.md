@@ -51,19 +51,21 @@ role: 'ADMIN', 'USER'
 
 ## book_copy (图书副本)
 
-| Name           | DataType     | Default           | AutoInc | PK/UK/IDX | NotNull |
-|:---------------|:-------------|:------------------|:--------|:----------|:--------|
-| id             | int          |                   | Y       | PK        | Y       |
-| book_id        | int          |                   |         |           | Y       |
-| purchase_price | decimal(8,2) |                   |         |           | Y       |
-| purchase_date  | date         |                   |         |           | Y       |
-| source         | varchar(64)  |                   |         |           | Y       |
-| status         | varchar(16)  | 'AVAILABLE'       |         |           | Y       |
-| entry_by       | int          |                   |         |           | Y       |
-| create_time    | datetime     | current_timestamp |         |           | Y       |
-| remove_time    | datetime     |                   |         |           |         |
+| Name             | DataType     | Default           | AutoInc | PK/UK/IDX | NotNull |
+|:-----------------|:-------------|:------------------|:--------|:----------|:--------|
+| id               | int          |                   | Y       | PK        | Y       |
+| book_id          | int          |                   |         |           | Y       |
+| purchase_price   | decimal(8,2) |                   |         |           | Y       |
+| purchase_date    | date         |                   |         |           | Y       |
+| source           | varchar(64)  |                   |         |           | Y       |
+| status           | varchar(16)  | 'AVAILABLE'       |         |           | Y       |
+| entry_by         | int          |                   |         |           | Y       |
+| withdrawn_reason | varchar(16)  |                   |         |           |         |
+| create_time      | datetime     | current_timestamp |         |           | Y       |
+| withdrawn_time   | datetime     |                   |         |           |         |
 
 status: 'AVAILABLE', 'UNAVAILABLE', 'WITHDRAWN'
+withdrawn_reason: 'LOST', 'DAMAGED', 'OTHER'
 
 ## book_review (书评)
 

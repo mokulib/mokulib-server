@@ -33,9 +33,11 @@ public class BookCopy {
 
     private Integer entryBy;
 
+    private WithdrawnReason withdrawnReason;
+
     private LocalDateTime createTime;
 
-    private LocalDateTime removeTime;
+    private LocalDateTime withdrawnTime;
 
     public static BookCopy fromDTO(BookCopyDTO dto) {
         if (dto == null)
@@ -64,6 +66,25 @@ public class BookCopy {
         private final String desc;
 
         Status(String code, String desc) {
+            this.code = code;
+            this.desc = desc;
+        }
+
+    }
+
+    @Getter
+    public enum WithdrawnReason {
+
+        LOST("LOST", "已丢失"),
+        DAMAGED("DAMAGED", "已损坏"),
+        OTHER("OTHER", "其他图书馆原因");
+
+        @EnumValue
+        private final String code;
+
+        private final String desc;
+
+        WithdrawnReason(String code, String desc) {
             this.code = code;
             this.desc = desc;
         }

@@ -43,15 +43,16 @@ CREATE TABLE IF NOT EXISTS `book`
 
 CREATE TABLE IF NOT EXISTS `book_copy`
 (
-    `id`             INT AUTO_INCREMENT PRIMARY KEY,
-    `book_id`        INT                                   NOT NULL,
-    `purchase_price` DECIMAL(8, 2)                         NOT NULL,
-    `purchase_date`  DATE                                  NOT NULL,
-    `source`         VARCHAR(64)                           NOT NULL,
-    `status`         VARCHAR(16) DEFAULT 'AVAILABLE'       NOT NULL,
-    `entry_by`       INT                                   NOT NULL,
-    `create_time`    DATETIME    DEFAULT CURRENT_TIMESTAMP NOT NULL,
-    `remove_time`    DATETIME
+    `id`               INT AUTO_INCREMENT PRIMARY KEY,
+    `book_id`          INT                                   NOT NULL,
+    `purchase_price`   DECIMAL(8, 2)                         NOT NULL,
+    `purchase_date`    DATE                                  NOT NULL,
+    `source`           VARCHAR(64)                           NOT NULL,
+    `status`           VARCHAR(16) DEFAULT 'AVAILABLE'       NOT NULL,
+    `entry_by`         INT                                   NOT NULL,
+    `withdrawn_reason` VARCHAR(16),
+    `create_time`      DATETIME    DEFAULT CURRENT_TIMESTAMP NOT NULL,
+    `withdrawn_time`   DATETIME
 );
 
 CREATE TABLE IF NOT EXISTS `book_review`
