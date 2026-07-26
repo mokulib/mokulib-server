@@ -1,0 +1,33 @@
+package pers.liaohaolong.mokulibserver.controller.api;
+
+import jakarta.validation.constraints.NotNull;
+import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+import pers.liaohaolong.mokulibserver.annotation.SuccessInfo;
+import pers.liaohaolong.mokulibserver.exception.BusinessException;
+import pers.liaohaolong.mokulibserver.model.BorrowRecord;
+import pers.liaohaolong.mokulibserver.model.User;
+import pers.liaohaolong.mokulibserver.service.business.BorrowRecordService;
+
+@Slf4j
+@RestController
+@RequestMapping("/api/borrow-records")
+@AllArgsConstructor
+public class BorrowRecordController {
+
+    private final BorrowRecordService borrowRecordService;
+
+    @PostMapping("/{id}/renew")
+    @PreAuthorize("isAuthenticated()")
+    @SuccessInfo(message = "续借成功")
+    public BorrowRecord renew(@AuthenticationPrincipal User user, @PathVariable @NotNull Integer id) throws BusinessException {
+        return borrowRecordService.renew(user, id);
+    }
+
+}

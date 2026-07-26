@@ -1,0 +1,49 @@
+package pers.liaohaolong.mokulibserver.service.business.impl;
+
+import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
+import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import pers.liaohaolong.mokulibserver.dao.BorrowRecordMapper;
+import pers.liaohaolong.mokulibserver.exception.BusinessException;
+import pers.liaohaolong.mokulibserver.model.BorrowRecord;
+import pers.liaohaolong.mokulibserver.model.User;
+import pers.liaohaolong.mokulibserver.service.business.BorrowRecordService;
+
+import java.util.Objects;
+
+@Slf4j
+@Service
+@AllArgsConstructor
+public class BorrowRecordServiceImpl implements BorrowRecordService {
+
+    private final BorrowRecordMapper borrowRecordMapper;
+
+    @Override
+    @Transactional
+    public BorrowRecord renew(User user, Integer id) throws BusinessException {
+        // 获取借阅记录
+        BorrowRecord borrowRecord = borrowRecordMapper.selectById(id);
+
+        // 验证
+        if (borrowRecord == null)
+            throw new RuntimeException("借阅记录不存在");
+        if (user.getRole() == User.Role.USER && !Objects.equals(borrowRecord.getUserId(), user.getId()))
+            throw new RuntimeException("您没有权限续借此图书");
+        if (borrowRecord.getCloseStatus() != BorrowRecord.CloseStatus.OPEN)
+            throw new RuntimeException("图书已归还，无法续借");
+        if (borrowRecord.getIsRenewed())
+            throw new RuntimeException("已续借一次，不能再次续借");
+
+        // 续借
+        borrowRecordMapper.update(new LambdaUpdateWrapper<BorrowRecord>()
+                .eq(BorrowRecord::getId, id)
+                .set(BorrowRecord::getIsRenewed, true) // 设置已续借
+                .set(BorrowRecord::getDueTime, borrowRecord.getDueTime().plusDays(7)) // 续借 7 天
+        );
+
+        return borrowRecordMapper.selectById(id);
+    }
+
+}
