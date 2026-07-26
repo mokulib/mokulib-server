@@ -10,7 +10,6 @@ import pers.liaohaolong.mokulibserver.dao.BookMapper;
 import pers.liaohaolong.mokulibserver.dao.BorrowRecordMapper;
 import pers.liaohaolong.mokulibserver.dto.request.BookDTO;
 import pers.liaohaolong.mokulibserver.dto.response.BookCopyAdminDTO;
-import pers.liaohaolong.mokulibserver.dto.response.BookCopyMyBorrowDTO;
 import pers.liaohaolong.mokulibserver.dto.response.BookCopyUserDTO;
 import pers.liaohaolong.mokulibserver.exception.BusinessException;
 import pers.liaohaolong.mokulibserver.model.Book;
@@ -21,7 +20,6 @@ import pers.liaohaolong.mokulibserver.service.business.BookService;
 
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -108,14 +106,11 @@ public class BookServiceImpl implements BookService {
 
         // 收集结果并返回
         return bookCopies.stream().map(bookCopy -> {
-            // 获取此副本的我的借阅记录（不一定存在）
-            BorrowRecord borrowRecord = borrowRecordMap.get(bookCopy.getId());
-            // 创建 DTO
             BookCopyUserDTO bookCopyUserDTO = new BookCopyUserDTO();
             bookCopyUserDTO.setId(bookCopy.getId());
             bookCopyUserDTO.setRole(User.Role.USER);
             bookCopyUserDTO.setStatus(bookCopy.getStatus());
-            bookCopyUserDTO.setMyBorrow(borrowRecord == null ? null : new BookCopyMyBorrowDTO(borrowRecord.getIsRenewed(), borrowRecord.getDueTime()));
+            bookCopyUserDTO.setCurrentBorrowRecord(borrowRecordMap.get(bookCopy.getId())); // 获取此副本的我的借阅记录（不一定存在）
             return bookCopyUserDTO;
         }).toList();
     }
@@ -139,14 +134,11 @@ public class BookServiceImpl implements BookService {
 
         // 收集结果并返回
         return bookCopies.stream().map(bookCopy -> {
-            // 获取此副本的当前借阅记录（不一定存在）
-            BorrowRecord borrowRecord = borrowRecordMap.get(bookCopy.getId());
-            // 创建 DTO
             BookCopyAdminDTO bookCopyAdminDTO = new BookCopyAdminDTO();
             bookCopyAdminDTO.setId(bookCopy.getId());
             bookCopyAdminDTO.setRole(User.Role.ADMIN);
             bookCopyAdminDTO.setStatus(bookCopy.getStatus());
-            bookCopyAdminDTO.setMyBorrow(borrowRecord == null || !Objects.equals(borrowRecord.getUserId(), userId) ? null : new BookCopyMyBorrowDTO(borrowRecord.getIsRenewed(), borrowRecord.getDueTime()));
+            bookCopyAdminDTO.setCurrentBorrowRecord(borrowRecordMap.get(bookCopy.getId())); // 获取此副本的当前借阅记录（不一定存在）
             bookCopyAdminDTO.setPurchasePrice(bookCopy.getPurchasePrice());
             bookCopyAdminDTO.setPurchaseDate(bookCopy.getPurchaseDate());
             bookCopyAdminDTO.setSource(bookCopy.getSource());
@@ -154,7 +146,6 @@ public class BookServiceImpl implements BookService {
             bookCopyAdminDTO.setWithdrawnReason(bookCopy.getWithdrawnReason());
             bookCopyAdminDTO.setCreateTime(bookCopy.getCreateTime());
             bookCopyAdminDTO.setWithdrawnTime(bookCopy.getWithdrawnTime());
-            bookCopyAdminDTO.setCurrentBorrowRecord(borrowRecord);
             return bookCopyAdminDTO;
         }).toList();
     }

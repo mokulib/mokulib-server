@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import pers.liaohaolong.mokulibserver.model.BookCopy;
+import pers.liaohaolong.mokulibserver.model.BorrowRecord;
 import pers.liaohaolong.mokulibserver.model.User;
 
 @Data
@@ -17,6 +18,6 @@ public class BookCopyUserDTO {
 
     private BookCopy.Status status;
 
-    private BookCopyMyBorrowDTO myBorrow;
+    private BorrowRecord currentBorrowRecord;
 
 }
