@@ -20,4 +20,15 @@ public class BookCopyUserDTO {
 
     private BorrowRecord currentBorrowRecord;
 
+    public static BookCopyUserDTO fromBookCopy(BookCopy bookCopy) {
+        BookCopyUserDTO bookCopyUserDTO = new BookCopyUserDTO();
+
+        bookCopyUserDTO.setId(bookCopy.getId());
+        bookCopyUserDTO.setRole(User.Role.USER);
+        bookCopyUserDTO.setStatus(bookCopy.getStatus());
+        // currentBorrowRecord 不进行设置
+
+        return bookCopyUserDTO;
+    }
+
 }
