@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 import pers.liaohaolong.mokulibserver.dao.UserMapper;
 import pers.liaohaolong.mokulibserver.dto.response.UsernameDTO;
 import pers.liaohaolong.mokulibserver.exception.BusinessException;
+import pers.liaohaolong.mokulibserver.model.User;
 import pers.liaohaolong.mokulibserver.service.business.UserService;
 
 import java.util.List;
@@ -21,6 +22,26 @@ public class UserServiceImpl implements UserService {
     @Override
     public List<UsernameDTO> getUsernames(@NonNull List<Integer> ids) throws BusinessException {
         return userMapper.selectByIds(ids.stream().distinct().toList()).stream().map(user -> new UsernameDTO(user.getId(), user.getUsername())).toList();
+    }
+
+    @Override
+    public User get(@NonNull Integer id) throws BusinessException {
+        User user = userMapper.selectById(id);
+
+        if (user == null)
+            throw new BusinessException("用户不存在");
+
+        return user;
+    }
+
+    @Override
+    public User get(@NonNull String email) throws BusinessException {
+        User user = userMapper.selectByEmail(email);
+
+        if (user == null)
+            throw new BusinessException("用户不存在");
+
+        return user;
     }
 
 }
