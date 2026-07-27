@@ -5,8 +5,12 @@ import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import pers.liaohaolong.mokulibserver.dao.BookCopyMapper;
 import pers.liaohaolong.mokulibserver.dao.BorrowRecordMapper;
+import pers.liaohaolong.mokulibserver.dto.request.ReturnBookDTO;
+import pers.liaohaolong.mokulibserver.dto.response.BookCopyAdminDTO;
 import pers.liaohaolong.mokulibserver.exception.BusinessException;
+import pers.liaohaolong.mokulibserver.model.BookCopy;
 import pers.liaohaolong.mokulibserver.model.BorrowRecord;
 import pers.liaohaolong.mokulibserver.model.User;
 import pers.liaohaolong.mokulibserver.service.business.BorrowRecordService;
@@ -19,6 +23,8 @@ import java.util.Objects;
 public class BorrowRecordServiceImpl implements BorrowRecordService {
 
     private final BorrowRecordMapper borrowRecordMapper;
+
+    private final BookCopyMapper bookCopyMapper;
 
     @Override
     @Transactional
@@ -44,6 +50,45 @@ public class BorrowRecordServiceImpl implements BorrowRecordService {
         );
 
         return borrowRecordMapper.selectById(id);
+    }
+
+    @Override
+    public BookCopyAdminDTO returnBook(Integer id, ReturnBookDTO returnBookDTO) throws BusinessException {
+        // 获取借阅记录
+        BorrowRecord borrowRecord = borrowRecordMapper.selectById(id);
+
+        // 验证
+        if (borrowRecord == null)
+            throw new RuntimeException("借阅记录不存在");
+        if (borrowRecord.getCloseStatus() != BorrowRecord.CloseStatus.OPEN)
+            throw new RuntimeException("图书已归还，请勿重复操作");
+        if (borrowRecord.getCreateTime().isAfter(returnBookDTO.getCloseTime()))
+            throw new RuntimeException("归还时间不能早于借阅时间");
+
+        // 归还
+        borrowRecordMapper.update(new LambdaUpdateWrapper<BorrowRecord>()
+                .eq(BorrowRecord::getId, id)
+                .set(BorrowRecord::getCloseStatus, returnBookDTO.getCloseStatus())
+                .set(BorrowRecord::getCloseTime, returnBookDTO.getCloseTime())
+        );
+
+        // 正常归还
+        if (returnBookDTO.getCloseStatus() == BorrowRecord.CloseStatus.CLOSE) {
+            bookCopyMapper.update(new LambdaUpdateWrapper<BookCopy>()
+                    .eq(BookCopy::getId, borrowRecord.getBookCopyId())
+                    .set(BookCopy::getStatus, BookCopy.Status.AVAILABLE)
+            );
+            return BookCopyAdminDTO.fromBookCopy(bookCopyMapper.selectById(borrowRecord.getBookCopyId()));
+        }
+
+        // 异常归还
+        bookCopyMapper.update(new LambdaUpdateWrapper<BookCopy>()
+                .eq(BookCopy::getId, borrowRecord.getBookCopyId())
+                .set(BookCopy::getStatus, BookCopy.Status.WITHDRAWN)
+                .set(BookCopy::getWithdrawnReason, returnBookDTO.toWithdrawnReason())
+                .set(BookCopy::getWithdrawnTime, returnBookDTO.getCloseTime())
+        );
+        return BookCopyAdminDTO.fromBookCopy(bookCopyMapper.selectById(borrowRecord.getBookCopyId()));
     }
 
 }
