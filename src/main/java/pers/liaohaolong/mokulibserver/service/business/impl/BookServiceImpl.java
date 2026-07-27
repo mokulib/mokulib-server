@@ -94,6 +94,10 @@ public class BookServiceImpl implements BookService {
         // 获取全部非下架副本数据
         List<BookCopy> bookCopies = bookCopyMapper.selectList(new LambdaQueryWrapper<BookCopy>().eq(BookCopy::getBookId, bookId).ne(BookCopy::getStatus, BookCopy.Status.WITHDRAWN));
 
+        // 判空
+        if (bookCopies.isEmpty())
+            return List.of();
+
         // 查询每个副本的当前借阅信息（限定为当前用户借阅的，正常情况下，只会返回一条记录，即一个用户同时最多只借一本书）
         List<BorrowRecord> borrowRecords = borrowRecordMapper.selectList(new LambdaQueryWrapper<BorrowRecord>()
                 .eq(BorrowRecord::getUserId, userId)
@@ -122,6 +126,10 @@ public class BookServiceImpl implements BookService {
 
         // 获取全部副本数据
         List<BookCopy> bookCopies = bookCopyMapper.selectList(new LambdaQueryWrapper<BookCopy>().eq(BookCopy::getBookId, bookId));
+
+        // 判空
+        if (bookCopies.isEmpty())
+            return List.of();
 
         // 查询每个副本的当前借阅信息（不限定借阅用户）
         List<BorrowRecord> borrowRecords = borrowRecordMapper.selectList(new LambdaQueryWrapper<BorrowRecord>()
