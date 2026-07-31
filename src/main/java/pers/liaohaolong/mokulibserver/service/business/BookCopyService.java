@@ -14,4 +14,8 @@ public interface BookCopyService {
 
     BookCopyAdminDTO borrow(Integer id, BorrowDTO borrowDTO) throws BusinessException;
 
+    BookCopyAdminDTO withdrawn(Integer id) throws BusinessException;
+
+    BookCopyAdminDTO relist(Integer id) throws BusinessException;
+
 }

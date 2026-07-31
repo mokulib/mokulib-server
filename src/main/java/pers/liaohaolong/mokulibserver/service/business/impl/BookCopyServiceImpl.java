@@ -97,4 +97,48 @@ public class BookCopyServiceImpl implements BookCopyService {
         return bookCopyAdminDTO;
     }
 
+    @Override
+    public BookCopyAdminDTO withdrawn(Integer id) throws BusinessException {
+        BookCopy bookCopy = bookCopyMapper.selectById(id);
+
+        if (bookCopy == null)
+            throw new BusinessException("图书不存在，下架失败");
+        if (bookCopy.getStatus() == BookCopy.Status.WITHDRAWN)
+            throw new BusinessException("该书已下架，下架失败");
+        if (bookCopy.getStatus() == BookCopy.Status.UNAVAILABLE)
+            throw new BusinessException("该书已借出，下架失败");
+
+        bookCopyMapper.update(new LambdaUpdateWrapper<BookCopy>()
+                .eq(BookCopy::getId, id)
+                .set(BookCopy::getStatus, BookCopy.Status.WITHDRAWN)
+                .set(BookCopy::getWithdrawnReason, BookCopy.WithdrawnReason.OTHER)
+                .set(BookCopy::getWithdrawnTime, LocalDateTime.now())
+        );
+
+        return BookCopyAdminDTO.fromBookCopy(bookCopyMapper.selectById(id));
+    }
+
+    @Override
+    public BookCopyAdminDTO relist(Integer id) throws BusinessException {
+        BookCopy bookCopy = bookCopyMapper.selectById(id);
+
+        if (bookCopy == null)
+            throw new BusinessException("图书不存在，重新上架失败");
+        if (bookCopy.getStatus() == BookCopy.Status.AVAILABLE)
+            throw new BusinessException("该书已上架，重新上架失败");
+        if (bookCopy.getStatus() == BookCopy.Status.UNAVAILABLE)
+            throw new BusinessException("该书已借出，重新上架失败");
+        if (bookCopy.getWithdrawnReason() != BookCopy.WithdrawnReason.OTHER)
+            throw new BusinessException("非其他图书馆原因下架，重新上架失败");
+
+        bookCopyMapper.update(new LambdaUpdateWrapper<BookCopy>()
+                .eq(BookCopy::getId, id)
+                .set(BookCopy::getStatus, BookCopy.Status.AVAILABLE)
+                .set(BookCopy::getWithdrawnReason, null)
+                .set(BookCopy::getWithdrawnTime, null)
+        );
+
+        return BookCopyAdminDTO.fromBookCopy(bookCopyMapper.selectById(id));
+    }
+
 }

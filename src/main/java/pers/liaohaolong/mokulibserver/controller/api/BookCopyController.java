@@ -44,4 +44,18 @@ public class BookCopyController {
         return bookCopyService.borrow(id, borrowDTO);
     }
 
+    @PostMapping("/{id}/withdrawn")
+    @PreAuthorize("hasAnyRole('ADMIN')")
+    @SuccessInfo(message = "下架成功")
+    public BookCopyAdminDTO withdrawn(@PathVariable @NotNull Integer id) throws BusinessException {
+        return bookCopyService.withdrawn(id);
+    }
+
+    @PostMapping("/{id}/relist")
+    @PreAuthorize("hasAnyRole('ADMIN')")
+    @SuccessInfo(message = "重新上架成功")
+    public BookCopyAdminDTO relist(@PathVariable @NotNull Integer id) throws BusinessException {
+        return bookCopyService.relist(id);
+    }
+
 }
