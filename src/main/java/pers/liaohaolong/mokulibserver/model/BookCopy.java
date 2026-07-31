@@ -6,7 +6,7 @@ import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
 import lombok.Getter;
-import pers.liaohaolong.mokulibserver.dto.request.BookCopyDTO;
+import pers.liaohaolong.mokulibserver.dto.request.AddBookCopyDTO;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -39,7 +39,7 @@ public class BookCopy {
 
     private LocalDateTime withdrawnTime;
 
-    public static BookCopy fromDTO(BookCopyDTO dto) {
+    public static BookCopy fromDTO(AddBookCopyDTO dto) {
         if (dto == null)
             return null;
 

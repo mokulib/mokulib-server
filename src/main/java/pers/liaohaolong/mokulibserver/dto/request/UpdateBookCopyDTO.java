@@ -1,0 +1,27 @@
+package pers.liaohaolong.mokulibserver.dto.request;
+
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+import java.math.BigDecimal;
+import java.time.LocalDate;
+
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+public class UpdateBookCopyDTO {
+
+    @NotNull(message = "购入价格不能为空")
+    private BigDecimal purchasePrice;
+
+    @NotNull(message = "购入日期不能为空")
+    private LocalDate purchaseDate;
+
+    @NotNull(message = "来源不能为空")
+    @NotBlank(message = "来源不能为空")
+    private String source;
+
+}

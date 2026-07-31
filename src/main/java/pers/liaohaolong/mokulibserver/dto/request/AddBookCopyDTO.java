@@ -8,7 +8,7 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 
 @Data
-public class BookCopyDTO {
+public class AddBookCopyDTO {
 
     @NotNull(message = "图书 ID 不能为空")
     private Integer bookId;

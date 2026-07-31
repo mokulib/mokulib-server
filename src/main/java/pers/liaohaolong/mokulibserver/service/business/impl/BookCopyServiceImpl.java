@@ -1,5 +1,6 @@
 package pers.liaohaolong.mokulibserver.service.business.impl;
 
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -7,8 +8,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import pers.liaohaolong.mokulibserver.dao.BookCopyMapper;
 import pers.liaohaolong.mokulibserver.dao.BorrowRecordMapper;
-import pers.liaohaolong.mokulibserver.dto.request.BookCopyDTO;
+import pers.liaohaolong.mokulibserver.dto.request.AddBookCopyDTO;
 import pers.liaohaolong.mokulibserver.dto.request.BorrowDTO;
+import pers.liaohaolong.mokulibserver.dto.request.UpdateBookCopyDTO;
 import pers.liaohaolong.mokulibserver.dto.response.BookCopyAdminDTO;
 import pers.liaohaolong.mokulibserver.exception.BusinessException;
 import pers.liaohaolong.mokulibserver.model.BookCopy;
@@ -28,8 +30,8 @@ public class BookCopyServiceImpl implements BookCopyService {
 
     @Override
     @Transactional
-    public BookCopyAdminDTO add(Integer entryBy, BookCopyDTO bookCopyDTO) {
-        BookCopy bookCopy = BookCopy.fromDTO(bookCopyDTO);
+    public BookCopyAdminDTO add(Integer entryBy, AddBookCopyDTO addBookCopyDTO) {
+        BookCopy bookCopy = BookCopy.fromDTO(addBookCopyDTO);
 
         bookCopy.setEntryBy(entryBy);
 
@@ -37,6 +39,28 @@ public class BookCopyServiceImpl implements BookCopyService {
 
         return BookCopyAdminDTO.fromBookCopy(bookCopyMapper.selectById(bookCopy.getId()));
     }
+
+    @Override
+    @Transactional
+    public BookCopyAdminDTO update(Integer id, UpdateBookCopyDTO updateBookCopyDTO) throws BusinessException {
+        if (!bookCopyMapper.exists(new LambdaQueryWrapper<BookCopy>().eq(BookCopy::getId, id)))
+            throw new BusinessException("图书不存在，修改失败");
+
+        bookCopyMapper.update(new LambdaUpdateWrapper<BookCopy>()
+                .eq(BookCopy::getId, id)
+                .set(BookCopy::getPurchasePrice, updateBookCopyDTO.getPurchasePrice())
+                .set(BookCopy::getPurchaseDate, updateBookCopyDTO.getPurchaseDate())
+                .set(BookCopy::getSource, updateBookCopyDTO.getSource())
+        );
+
+        BookCopyAdminDTO bookCopyAdminDTO = BookCopyAdminDTO.fromBookCopy(bookCopyMapper.selectById(id));
+        bookCopyAdminDTO.setCurrentBorrowRecord(borrowRecordMapper.selectOne(new LambdaQueryWrapper<BorrowRecord>()
+                .eq(BorrowRecord::getBookCopyId, id)
+                .eq(BorrowRecord::getCloseStatus, BorrowRecord.CloseStatus.OPEN)
+        ));
+        return bookCopyAdminDTO;
+    }
+
 
     @Override
     @Transactional

@@ -7,8 +7,9 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import pers.liaohaolong.mokulibserver.annotation.SuccessInfo;
-import pers.liaohaolong.mokulibserver.dto.request.BookCopyDTO;
+import pers.liaohaolong.mokulibserver.dto.request.AddBookCopyDTO;
 import pers.liaohaolong.mokulibserver.dto.request.BorrowDTO;
+import pers.liaohaolong.mokulibserver.dto.request.UpdateBookCopyDTO;
 import pers.liaohaolong.mokulibserver.dto.response.BookCopyAdminDTO;
 import pers.liaohaolong.mokulibserver.exception.BusinessException;
 import pers.liaohaolong.mokulibserver.model.User;
@@ -25,8 +26,15 @@ public class BookCopyController {
     @PostMapping
     @PreAuthorize("hasAnyRole('ADMIN')")
     @SuccessInfo(message = "添加成功")
-    public BookCopyAdminDTO add(@AuthenticationPrincipal User user, @RequestBody BookCopyDTO bookCopyDTO) {
-        return bookCopyService.add(user.getId(), bookCopyDTO);
+    public BookCopyAdminDTO add(@AuthenticationPrincipal User user, @RequestBody AddBookCopyDTO addBookCopyDTO) {
+        return bookCopyService.add(user.getId(), addBookCopyDTO);
+    }
+
+    @PutMapping("/{id}")
+    @PreAuthorize("hasAnyRole('ADMIN')")
+    @SuccessInfo(message = "修改成功")
+    public BookCopyAdminDTO update(@PathVariable @NotNull Integer id, @RequestBody UpdateBookCopyDTO updateBookCopyDTO) throws BusinessException {
+        return bookCopyService.update(id, updateBookCopyDTO);
     }
 
     @PostMapping("/{id}/borrow")
