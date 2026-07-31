@@ -15,12 +15,14 @@ spring:
 
 
 mokulib:
-  image-path:
+  image:
     avatars:
+      visit-path: avatars
       path-mode: absolute
       save-path: F:/moku/avatars/
-      visit-path: avatars
+      save-format: png
     books:
+      visit-path: books
       path-mode: absolute
       save-path: F:/moku/books/
-      visit-path: books
+      save-format: jpg
