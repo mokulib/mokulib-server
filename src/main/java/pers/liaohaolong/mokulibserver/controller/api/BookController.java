@@ -49,13 +49,20 @@ public class BookController {
         return bookService.get(id);
     }
 
-    @GetMapping("/{bookId}/book-copies")
+    @PostMapping(value = "/{id}/cover", consumes = "application/octet-stream")
+    @PreAuthorize("hasAnyRole('ADMIN')")
+    @SuccessInfo(message = "上传成功")
+    public void uploadCover(@PathVariable @NotNull Integer id, @RequestBody byte[] cover) {
+        bookService.uploadCover(id, cover);
+    }
+
+    @GetMapping("/{id}/book-copies")
     @PreAuthorize("isAuthenticated()")
-    public List<?> getBookCopies(@AuthenticationPrincipal User user, @PathVariable @NotNull Integer bookId) throws BusinessException {
+    public List<?> getBookCopies(@AuthenticationPrincipal User user, @PathVariable @NotNull Integer id) throws BusinessException {
         if (user.getRole() == User.Role.USER)
-            return bookService.getUserBookCopies(user.getId(), bookId);
+            return bookService.getUserBookCopies(user.getId(), id);
         else if (user.getRole() == User.Role.ADMIN)
-            return bookService.getAdminBookCopies(user.getId(), bookId);
+            return bookService.getAdminBookCopies(user.getId(), id);
         throw new BusinessException("用户角色错误");
     }
 

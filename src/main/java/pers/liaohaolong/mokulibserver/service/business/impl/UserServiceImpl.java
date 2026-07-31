@@ -4,10 +4,12 @@ import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.jspecify.annotations.NonNull;
 import org.springframework.stereotype.Service;
+import pers.liaohaolong.mokulibserver.config.ImageConfigurations;
 import pers.liaohaolong.mokulibserver.dao.UserMapper;
 import pers.liaohaolong.mokulibserver.dto.response.UsernameDTO;
 import pers.liaohaolong.mokulibserver.exception.BusinessException;
 import pers.liaohaolong.mokulibserver.model.User;
+import pers.liaohaolong.mokulibserver.service.base.ImageService;
 import pers.liaohaolong.mokulibserver.service.business.UserService;
 
 import java.util.List;
@@ -18,6 +20,13 @@ import java.util.List;
 public class UserServiceImpl implements UserService {
 
     private final UserMapper userMapper;
+
+    private final ImageService imageService;
+
+    @Override
+    public void uploadAvatar(Integer id, byte[] avatar) throws BusinessException {
+        imageService.save(ImageConfigurations.ImageType.AVATARS, String.valueOf(id), avatar);
+    }
 
     @Override
     public List<UsernameDTO> getUsernames(@NonNull List<Integer> ids) throws BusinessException {

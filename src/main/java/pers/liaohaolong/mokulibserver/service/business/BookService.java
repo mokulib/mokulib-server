@@ -18,6 +18,8 @@ public interface BookService {
 
     Book get(String id) throws BusinessException;
 
+    void uploadCover(Integer id, byte[] cover) throws BusinessException;
+
     List<BookCopyUserDTO> getUserBookCopies(Integer userId, Integer bookId) throws BusinessException;
 
     List<BookCopyAdminDTO> getAdminBookCopies(Integer userId, Integer bookId) throws BusinessException;

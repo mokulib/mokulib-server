@@ -5,6 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import pers.liaohaolong.mokulibserver.config.ImageConfigurations;
 import pers.liaohaolong.mokulibserver.dao.BookCopyMapper;
 import pers.liaohaolong.mokulibserver.dao.BookMapper;
 import pers.liaohaolong.mokulibserver.dao.BorrowRecordMapper;
@@ -15,6 +16,7 @@ import pers.liaohaolong.mokulibserver.exception.BusinessException;
 import pers.liaohaolong.mokulibserver.model.Book;
 import pers.liaohaolong.mokulibserver.model.BookCopy;
 import pers.liaohaolong.mokulibserver.model.BorrowRecord;
+import pers.liaohaolong.mokulibserver.service.base.ImageService;
 import pers.liaohaolong.mokulibserver.service.business.BookService;
 
 import java.util.List;
@@ -32,6 +34,8 @@ public class BookServiceImpl implements BookService {
     private final BookCopyMapper bookCopyMapper;
 
     private final BorrowRecordMapper borrowRecordMapper;
+
+    private final ImageService imageService;
 
     @Override
     @Transactional
@@ -82,6 +86,11 @@ public class BookServiceImpl implements BookService {
             throw new BusinessException("图书不存在");
 
         return book;
+    }
+
+    @Override
+    public void uploadCover(Integer id, byte[] cover) throws BusinessException {
+        imageService.save(ImageConfigurations.ImageType.BOOKS, String.valueOf(id), cover);
     }
 
     @Override

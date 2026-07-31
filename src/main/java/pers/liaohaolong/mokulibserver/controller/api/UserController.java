@@ -5,10 +5,9 @@ import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.web.bind.annotation.*;
+import pers.liaohaolong.mokulibserver.annotation.SuccessInfo;
 import pers.liaohaolong.mokulibserver.dto.response.UsernameDTO;
 import pers.liaohaolong.mokulibserver.exception.BusinessException;
 import pers.liaohaolong.mokulibserver.model.User;
@@ -23,6 +22,15 @@ import java.util.List;
 public class UserController {
 
     private final UserService userService;
+
+    @PostMapping(value = "/{id}/avatar", consumes = "application/octet-stream")
+    @PreAuthorize("isAuthenticated()")
+    @SuccessInfo(message = "上传成功")
+    public void uploadAvatar(@AuthenticationPrincipal User user, @PathVariable @NotNull Integer id, @RequestBody byte[] avatar) throws BusinessException {
+        if (!user.getId().equals(id))
+            throw new BusinessException("不能修改其他用户的头像");
+        userService.uploadAvatar(user.getId(), avatar);
+    }
 
     @GetMapping
     @PreAuthorize("hasAnyRole('ADMIN')")

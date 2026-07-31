@@ -9,6 +9,8 @@ import java.util.List;
 
 public interface UserService {
 
+    void uploadAvatar(Integer id, byte[] avatar) throws BusinessException;
+
     List<UsernameDTO> getUsernames(@NonNull List<Integer> ids) throws BusinessException;
 
     User get(@NonNull Integer id) throws BusinessException;
