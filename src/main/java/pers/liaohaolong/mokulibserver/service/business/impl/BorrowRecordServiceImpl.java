@@ -34,13 +34,13 @@ public class BorrowRecordServiceImpl implements BorrowRecordService {
 
         // 验证
         if (borrowRecord == null)
-            throw new RuntimeException("借阅记录不存在");
+            throw new BusinessException("借阅记录不存在");
         if (user.getRole() == User.Role.USER && !Objects.equals(borrowRecord.getUserId(), user.getId()))
-            throw new RuntimeException("您没有权限续借此图书");
+            throw new BusinessException("您没有权限续借此图书");
         if (borrowRecord.getCloseStatus() != BorrowRecord.CloseStatus.OPEN)
-            throw new RuntimeException("图书已归还，无法续借");
+            throw new BusinessException("图书已归还，无法续借");
         if (borrowRecord.getIsRenewed())
-            throw new RuntimeException("已续借一次，不能再次续借");
+            throw new BusinessException("已续借一次，不能再次续借");
 
         // 续借
         borrowRecordMapper.update(new LambdaUpdateWrapper<BorrowRecord>()
@@ -59,11 +59,11 @@ public class BorrowRecordServiceImpl implements BorrowRecordService {
 
         // 验证
         if (borrowRecord == null)
-            throw new RuntimeException("借阅记录不存在");
+            throw new BusinessException("借阅记录不存在");
         if (borrowRecord.getCloseStatus() != BorrowRecord.CloseStatus.OPEN)
-            throw new RuntimeException("图书已归还，请勿重复操作");
+            throw new BusinessException("图书已归还，请勿重复操作");
         if (borrowRecord.getCreateTime().isAfter(returnBookDTO.getCloseTime()))
-            throw new RuntimeException("归还时间不能早于借阅时间");
+            throw new BusinessException("归还时间不能早于借阅时间");
 
         // 归还
         borrowRecordMapper.update(new LambdaUpdateWrapper<BorrowRecord>()
