@@ -6,6 +6,7 @@ import org.jspecify.annotations.NonNull;
 import org.springframework.stereotype.Service;
 import pers.liaohaolong.mokulibserver.config.ImageConfigurations;
 import pers.liaohaolong.mokulibserver.dao.UserMapper;
+import pers.liaohaolong.mokulibserver.dto.response.NonsensitiveUserDTO;
 import pers.liaohaolong.mokulibserver.dto.response.UsernameDTO;
 import pers.liaohaolong.mokulibserver.exception.BusinessException;
 import pers.liaohaolong.mokulibserver.model.User;
@@ -34,23 +35,23 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User get(@NonNull Integer id) throws BusinessException {
+    public NonsensitiveUserDTO get(@NonNull Integer id) throws BusinessException {
         User user = userMapper.selectById(id);
 
         if (user == null)
             throw new BusinessException("用户不存在");
 
-        return user;
+        return NonsensitiveUserDTO.fromUser(user);
     }
 
     @Override
-    public User get(@NonNull String email) throws BusinessException {
+    public NonsensitiveUserDTO get(@NonNull String email) throws BusinessException {
         User user = userMapper.selectByEmail(email);
 
         if (user == null)
             throw new BusinessException("用户不存在");
 
-        return user;
+        return NonsensitiveUserDTO.fromUser(user);
     }
 
 }

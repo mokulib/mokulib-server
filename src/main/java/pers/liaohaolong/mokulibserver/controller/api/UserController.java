@@ -8,6 +8,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import pers.liaohaolong.mokulibserver.annotation.SuccessInfo;
+import pers.liaohaolong.mokulibserver.dto.response.NonsensitiveUserDTO;
 import pers.liaohaolong.mokulibserver.dto.response.UsernameDTO;
 import pers.liaohaolong.mokulibserver.exception.BusinessException;
 import pers.liaohaolong.mokulibserver.model.User;
@@ -34,7 +35,7 @@ public class UserController {
 
     @GetMapping
     @PreAuthorize("hasAnyRole('ADMIN')")
-    public User get(@RequestParam(required = false) Integer id, @RequestParam(required = false) String email) throws BusinessException {
+    public NonsensitiveUserDTO get(@RequestParam(required = false) Integer id, @RequestParam(required = false) String email) throws BusinessException {
         if (id != null)
             return userService.get(id);
         if (email != null)
