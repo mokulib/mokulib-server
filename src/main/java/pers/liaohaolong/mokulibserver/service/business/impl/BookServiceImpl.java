@@ -107,7 +107,7 @@ public class BookServiceImpl implements BookService {
 
         // 判空
         if (unavailableBookCopies.isEmpty())
-            return List.of();
+            return bookCopies.stream().map(BookCopyUserDTO::fromBookCopy).toList();
 
         // 查询已借出副本的当前借阅信息（限定为当前用户借阅的，正常情况下，只会返回一条记录，即一个用户同时最多只借一本书）
         List<BorrowRecord> borrowRecords = borrowRecordMapper.selectList(new LambdaQueryWrapper<BorrowRecord>()
@@ -140,7 +140,7 @@ public class BookServiceImpl implements BookService {
 
         // 判空
         if (unavailableBookCopies.isEmpty())
-            return List.of();
+            return bookCopies.stream().map(BookCopyAdminDTO::fromBookCopy).toList();
 
         // 查询已借出副本的当前借阅信息（不限定借阅用户）
         List<BorrowRecord> borrowRecords = borrowRecordMapper.selectList(new LambdaQueryWrapper<BorrowRecord>()
