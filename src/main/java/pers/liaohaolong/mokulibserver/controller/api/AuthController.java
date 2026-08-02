@@ -8,8 +8,8 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import pers.liaohaolong.mokulibserver.annotation.SuccessInfo;
-import pers.liaohaolong.mokulibserver.dto.GetEmailCaptchaResultDTO;
 import pers.liaohaolong.mokulibserver.dto.ResultDTO;
+import pers.liaohaolong.mokulibserver.dto.request.ChangePasswordDTO;
 import pers.liaohaolong.mokulibserver.exception.BusinessException;
 import pers.liaohaolong.mokulibserver.model.EmailCaptcha;
 import pers.liaohaolong.mokulibserver.model.User;
@@ -31,14 +31,7 @@ public class AuthController {
 
     @GetMapping("login")
     public ResultDTO getLoginCaptcha(@RequestParam @NotNull @NotBlank @Email String email) throws BusinessException {
-        GetEmailCaptchaResultDTO resultDTO = authService.getLoginCaptcha(email);
-
-        return ResultDTO.builder()
-                .status(resultDTO.isSent() ? ResultDTO.OK_STATUS : ResultDTO.TOO_FREQUENT)
-                .businessType(EmailCaptcha.BusinessType.LOGIN.getDesc())
-                .message(resultDTO.isSent() ? "验证码已发送，请注意查收" : "请求过于频繁，请稍后再试")
-                .data(Map.of("codePrefix", resultDTO.getCodePrefix(), "coolingTime", resultDTO.getCoolingTime()))
-                .build();
+        return authService.getLoginCaptcha(email).toResultDTO(EmailCaptcha.BusinessType.LOGIN);
     }
 
     @PostMapping("activate/{token}")
@@ -49,25 +42,30 @@ public class AuthController {
 
     @GetMapping("close-account")
     public ResultDTO getCloseAccountCaptcha(@AuthenticationPrincipal User user) {
-        GetEmailCaptchaResultDTO resultDTO = authService.getCloseAccountCaptcha(user);
-
-        return ResultDTO.builder()
-                .status(resultDTO.isSent() ? ResultDTO.OK_STATUS : ResultDTO.TOO_FREQUENT)
-                .businessType(EmailCaptcha.BusinessType.CLOSE_ACCOUNT.getDesc())
-                .message(resultDTO.isSent() ? "验证码已发送，请注意查收" : "请求过于频繁，请稍后再试")
-                .data(Map.of("codePrefix", resultDTO.getCodePrefix(), "coolingTime", resultDTO.getCoolingTime()))
-                .build();
+        return authService.getCloseAccountCaptcha(user).toResultDTO(EmailCaptcha.BusinessType.CLOSE_ACCOUNT);
     }
 
     @PostMapping("close-account")
-    public ResultDTO closeAccount(@AuthenticationPrincipal User user, @RequestParam("emailCaptcha") String emailCaptcha) throws BusinessException {
+    @SuccessInfo(message = "账户已关闭")
+    public Map<String, String> closeAccount(@AuthenticationPrincipal User user, @RequestParam("emailCaptcha") String emailCaptcha) throws BusinessException {
         // 关闭账户
         authService.closeAccount(user, emailCaptcha);
         // 签发无效 JWT
-        return ResultDTO.ok()
-                .message("账户已关闭")
-                .data(Map.of("jwt", ""))
-                .build();
+        return Map.of("jwt", "");
+    }
+
+    @GetMapping("change-password")
+    public ResultDTO getChangePasswordCaptcha(@AuthenticationPrincipal User user) {
+        return authService.getChangePasswordCaptcha(user).toResultDTO(EmailCaptcha.BusinessType.CHANGE_PASSWORD);
+    }
+
+    @PostMapping("change-password")
+    @SuccessInfo(message = "密码已修改，请重新登录")
+    public Map<String, String> changePassword(@AuthenticationPrincipal User user, @RequestParam("emailCaptcha") String emailCaptcha, @RequestBody @NotNull ChangePasswordDTO changePasswordDTO) {
+        // 修改密码
+        authService.changePassword(user, emailCaptcha, changePasswordDTO);
+        // 签发无效 JWT，强制重新登陆
+        return Map.of("jwt", "");
     }
 
 }
