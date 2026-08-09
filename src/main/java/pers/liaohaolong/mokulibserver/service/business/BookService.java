@@ -1,5 +1,6 @@
 package pers.liaohaolong.mokulibserver.service.business;
 
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import pers.liaohaolong.mokulibserver.dto.request.BookDTO;
 import pers.liaohaolong.mokulibserver.dto.response.BookCopyAdminDTO;
 import pers.liaohaolong.mokulibserver.dto.response.BookCopyUserDTO;
@@ -23,5 +24,7 @@ public interface BookService {
     List<BookCopyUserDTO> getUserBookCopies(Integer userId, Integer bookId) throws BusinessException;
 
     List<BookCopyAdminDTO> getAdminBookCopies(Integer userId, Integer bookId) throws BusinessException;
+
+    Page<Book> search(String keyword, String sortMode, Integer pageNum);
 
 }

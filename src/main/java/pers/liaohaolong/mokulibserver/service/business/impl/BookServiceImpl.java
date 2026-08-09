@@ -1,6 +1,7 @@
 package pers.liaohaolong.mokulibserver.service.business.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -89,6 +90,7 @@ public class BookServiceImpl implements BookService {
     }
 
     @Override
+    @Transactional
     public void uploadCover(Integer id, byte[] cover) throws BusinessException {
         imageService.save(ImageConfigurations.ImageType.BOOKS, String.valueOf(id), cover);
     }
@@ -128,6 +130,7 @@ public class BookServiceImpl implements BookService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public List<BookCopyAdminDTO> getAdminBookCopies(Integer userId, Integer bookId) throws BusinessException {
         if (!bookMapper.exists(new LambdaQueryWrapper<Book>().eq(Book::getId, bookId)))
             throw new BusinessException("图书不存在");
@@ -157,6 +160,20 @@ public class BookServiceImpl implements BookService {
             bookCopyAdminDTO.setCurrentBorrowRecord(borrowRecordMap.get(bookCopy.getId())); // 获取此副本的当前借阅记录（不一定存在）
             return bookCopyAdminDTO;
         }).toList();
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public Page<Book> search(String keyword, String sortMode, Integer pageNum) throws BusinessException {
+        LambdaQueryWrapper<Book> wrapper = new LambdaQueryWrapper<>();
+        wrapper.like(Book::getTitle, keyword);
+        switch (sortMode) {
+            case "publish_date_from_new_to_old" -> wrapper.orderByDesc(Book::getPublishDate);
+            case "publish_date_from_old_to_new" -> wrapper.orderByAsc(Book::getPublishDate);
+            case "price_from_low_to_high" -> wrapper.orderByAsc(Book::getPrice);
+            case "price_from_high_to_low" -> wrapper.orderByDesc(Book::getPrice);
+        }
+        return bookMapper.selectPage(new Page<>(pageNum, 3), wrapper);
     }
 
 }
