@@ -1,6 +1,7 @@
 package pers.liaohaolong.mokulibserver.service.business.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.jspecify.annotations.Nullable;
@@ -18,9 +19,7 @@ import java.time.LocalDateTime;
 @Slf4j
 @Service
 @RequiredArgsConstructor
-public class ImageCaptchaServiceImpl implements ImageCaptchaService {
-
-    private final ImageCaptchaMapper imageCaptchaMapper;
+public class ImageCaptchaServiceImpl extends ServiceImpl<ImageCaptchaMapper, ImageCaptcha> implements ImageCaptchaService {
 
     @Override
     @Transactional
@@ -34,7 +33,7 @@ public class ImageCaptchaServiceImpl implements ImageCaptchaService {
         imageCaptcha.setCaptcha(code);
         imageCaptcha.setExpireTime(LocalDateTime.now().plusMinutes(1));
         // 保存
-        imageCaptchaMapper.insert(imageCaptcha);
+        save(imageCaptcha);
         // 返回验证码 Token 和图片
         return new GetCaptchaDTO(imageCaptcha.getToken(), image);
     }
@@ -46,7 +45,7 @@ public class ImageCaptchaServiceImpl implements ImageCaptchaService {
             return false;
 
         // 尝试读取记录
-        ImageCaptcha imageCaptcha = imageCaptchaMapper.selectOne(new LambdaQueryWrapper<ImageCaptcha>()
+        ImageCaptcha imageCaptcha = getOne(new LambdaQueryWrapper<ImageCaptcha>()
                 .eq(ImageCaptcha::getToken, token)
                 .ge(ImageCaptcha::getExpireTime, LocalDateTime.now())
         );
@@ -55,7 +54,7 @@ public class ImageCaptchaServiceImpl implements ImageCaptchaService {
             return false;
 
         // 核对后无论成功与否都需要删除记录
-        imageCaptchaMapper.deleteById(token);
+        removeById(token);
         // 返回比较结果
         return imageCaptcha.getCaptcha().equalsIgnoreCase(captcha);
     }
@@ -63,7 +62,7 @@ public class ImageCaptchaServiceImpl implements ImageCaptchaService {
     @Override
     @Transactional
     public void clearExpired() {
-        imageCaptchaMapper.delete(new LambdaQueryWrapper<ImageCaptcha>()
+        remove(new LambdaQueryWrapper<ImageCaptcha>()
                 .lt(ImageCaptcha::getExpireTime, LocalDateTime.now())
         );
     }

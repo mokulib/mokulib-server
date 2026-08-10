@@ -1,11 +1,13 @@
 package pers.liaohaolong.mokulibserver.service.business;
 
+import com.baomidou.mybatisplus.extension.service.IService;
 import org.jspecify.annotations.Nullable;
 import pers.liaohaolong.mokulibserver.dto.GetCaptchaDTO;
+import pers.liaohaolong.mokulibserver.model.ImageCaptcha;
 
 import java.io.IOException;
 
-public interface ImageCaptchaService {
+public interface ImageCaptchaService extends IService<ImageCaptcha> {
 
     /**
      * <p>创建验证码，包括 Token、验证码以及图片。</p>
