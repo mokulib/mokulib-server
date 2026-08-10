@@ -23,9 +23,9 @@
 | /api/books/{bookId}/tags/{tagId} | DELETE   | 删除书籍的标签                |
 | /api/tags                        | GET      | 获取全部标签                  |
 | /api/tags                        | POST     | 新建标签                      |
-| /api/wishlists/{bookId}          | GET      | 用户是否将书籍添加到心愿单    |
-| /api/wishlists/{bookId}          | POST     | 将书籍添加到心愿单            |
-| /api/wishlists/{bookId}          | DELETE   | 将书籍从心愿单中移除          |
+| /api/favorites/{bookId}          | GET      | 用户是否收藏书籍              |
+| /api/favorites/{bookId}          | POST     | 收藏书籍                      |
+| /api/favorites/{bookId}          | DELETE   | 取消收藏                      |
 | /api/categories                  | GET      | 获取全部分类                  |
 | /api/categories                  | POST     | 新建分类                      |
 | /api/categories/{id}             | GET      | 获取分类信息                  |

@@ -78,7 +78,7 @@ withdrawn_reason: 'LOST', 'DAMAGED', 'OTHER'
 | content      | text     |                   |         |           | Y       |
 | create_time  | datetime | current_timestamp |         |           | Y       |
 
-## wishlist (心愿单)
+## favorite (收藏)
 
 | Name        | DataType | Default           | AutoInc | PK/UK/IDX | NotNull |
 |:------------|:---------|:------------------|:--------|:----------|:--------|
