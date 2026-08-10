@@ -2,7 +2,6 @@ package pers.liaohaolong.mokulibserver.service.business.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -15,7 +14,6 @@ import java.util.List;
 
 @Slf4j
 @Service
-@AllArgsConstructor
 public class TagServiceImpl extends ServiceImpl<TagMapper, Tag> implements TagService {
 
     @Override

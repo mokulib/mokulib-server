@@ -2,7 +2,7 @@ package pers.liaohaolong.mokulibserver.service.business.impl;
 
 import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import lombok.RequiredArgsConstructor;
+import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -22,7 +22,7 @@ import java.time.LocalDateTime;
 
 @Slf4j
 @Service
-@RequiredArgsConstructor
+@AllArgsConstructor
 public class AuthServiceImpl extends ServiceImpl<UserMapper, User> implements AuthService {
 
     private final ActivationTokenMapper activationTokenMapper;

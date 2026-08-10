@@ -3,7 +3,7 @@ package pers.liaohaolong.mokulibserver.service.base.impl;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import lombok.RequiredArgsConstructor;
+import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
@@ -19,7 +19,7 @@ import java.util.concurrent.ThreadLocalRandom;
 
 @Slf4j
 @Component
-@RequiredArgsConstructor
+@AllArgsConstructor
 public class EmailCaptchaBaseServiceImpl extends ServiceImpl<EmailCaptchaMapper, EmailCaptcha> implements EmailCaptchaBaseService {
 
     private final MailService mailService;

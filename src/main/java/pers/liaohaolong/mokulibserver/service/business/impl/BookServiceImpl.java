@@ -33,9 +33,7 @@ import java.util.stream.Collectors;
 public class BookServiceImpl extends ServiceImpl<BookMapper, Book> implements BookService {
 
     private final BookCopyMapper bookCopyMapper;
-
     private final BorrowRecordMapper borrowRecordMapper;
-
     private final ImageService imageService;
 
     @Override
