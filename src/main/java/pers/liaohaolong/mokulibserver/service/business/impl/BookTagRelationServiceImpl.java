@@ -1,6 +1,7 @@
 package pers.liaohaolong.mokulibserver.service.business.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -20,12 +21,9 @@ import java.util.List;
 @Slf4j
 @Service
 @AllArgsConstructor
-public class BookTagRelationServiceImpl implements BookTagRelationService {
-
-    private final BookTagRelationMapper bookTagRelationMapper;
+public class BookTagRelationServiceImpl extends ServiceImpl<BookTagRelationMapper, BookTagRelation> implements BookTagRelationService {
 
     private final BookMapper bookMapper;
-
     private final TagMapper tagMapper;
 
     @Override
@@ -36,14 +34,14 @@ public class BookTagRelationServiceImpl implements BookTagRelationService {
 
         // 去重
         tagIds = tagIds.stream().distinct().toList();
-
+        // 需要批量保存的图书标签关联
         List<BookTagRelation> bookTagRelations = new ArrayList<>();
-
+        // 生成需要保存的图书标签关联实体
         for (Integer tagId : tagIds) {
             if (!tagMapper.exists(new LambdaQueryWrapper<Tag>().eq(Tag::getId, tagId)))
                 throw new BusinessException("标签不存在");
-
-            if (!bookTagRelationMapper.exists(new LambdaQueryWrapper<BookTagRelation>()
+            // 仅在关联不存在时添加
+            if (!exists(new LambdaQueryWrapper<BookTagRelation>()
                     .eq(BookTagRelation::getBookId, bookId)
                     .eq(BookTagRelation::getTagId, tagId)
             )) {
@@ -54,7 +52,7 @@ public class BookTagRelationServiceImpl implements BookTagRelationService {
             }
         }
 
-        bookTagRelationMapper.insert(bookTagRelations);
+        saveBatch(bookTagRelations);
     }
 
     @Override
@@ -65,12 +63,12 @@ public class BookTagRelationServiceImpl implements BookTagRelationService {
         if (!tagMapper.exists(new LambdaQueryWrapper<Tag>().eq(Tag::getId, tagId)))
             throw new BusinessException("标签不存在");
 
-        if (!bookTagRelationMapper.exists(new LambdaQueryWrapper<BookTagRelation>()
+        if (!exists(new LambdaQueryWrapper<BookTagRelation>()
                 .eq(BookTagRelation::getBookId, bookId)
                 .eq(BookTagRelation::getTagId, tagId)))
             return;
 
-        bookTagRelationMapper.delete(new LambdaQueryWrapper<BookTagRelation>()
+        remove(new LambdaQueryWrapper<BookTagRelation>()
                 .eq(BookTagRelation::getBookId, bookId)
                 .eq(BookTagRelation::getTagId, tagId));
     }
@@ -81,7 +79,7 @@ public class BookTagRelationServiceImpl implements BookTagRelationService {
         if (!bookMapper.exists(new LambdaQueryWrapper<Book>().eq(Book::getId, bookId)))
             throw new BusinessException("图书不存在");
 
-        return bookTagRelationMapper.selectTags(bookId);
+        return getBaseMapper().selectTags(bookId);
     }
 
 }
