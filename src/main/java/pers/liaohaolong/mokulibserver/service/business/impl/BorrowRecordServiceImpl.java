@@ -1,6 +1,7 @@
 package pers.liaohaolong.mokulibserver.service.business.impl;
 
 import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
+import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -20,9 +21,7 @@ import java.util.Objects;
 @Slf4j
 @Service
 @AllArgsConstructor
-public class BorrowRecordServiceImpl implements BorrowRecordService {
-
-    private final BorrowRecordMapper borrowRecordMapper;
+public class BorrowRecordServiceImpl extends ServiceImpl<BorrowRecordMapper, BorrowRecord> implements BorrowRecordService {
 
     private final BookCopyMapper bookCopyMapper;
 
@@ -30,7 +29,7 @@ public class BorrowRecordServiceImpl implements BorrowRecordService {
     @Transactional
     public BorrowRecord renew(User user, Integer id) throws BusinessException {
         // 获取借阅记录
-        BorrowRecord borrowRecord = borrowRecordMapper.selectById(id);
+        BorrowRecord borrowRecord = getById(id);
 
         // 验证
         if (borrowRecord == null)
@@ -43,19 +42,20 @@ public class BorrowRecordServiceImpl implements BorrowRecordService {
             throw new BusinessException("已续借一次，不能再次续借");
 
         // 续借
-        borrowRecordMapper.update(new LambdaUpdateWrapper<BorrowRecord>()
+        update(new LambdaUpdateWrapper<BorrowRecord>()
                 .eq(BorrowRecord::getId, id)
                 .set(BorrowRecord::getIsRenewed, true) // 设置已续借
                 .set(BorrowRecord::getDueTime, borrowRecord.getDueTime().plusDays(7)) // 续借 7 天
         );
 
-        return borrowRecordMapper.selectById(id);
+        return getById(id);
     }
 
     @Override
+    @Transactional
     public BookCopyAdminDTO returnBook(Integer id, ReturnBookDTO returnBookDTO) throws BusinessException {
         // 获取借阅记录
-        BorrowRecord borrowRecord = borrowRecordMapper.selectById(id);
+        BorrowRecord borrowRecord = getById(id);
 
         // 验证
         if (borrowRecord == null)
@@ -66,7 +66,7 @@ public class BorrowRecordServiceImpl implements BorrowRecordService {
             throw new BusinessException("归还时间不能早于借阅时间");
 
         // 归还
-        borrowRecordMapper.update(new LambdaUpdateWrapper<BorrowRecord>()
+        update(new LambdaUpdateWrapper<BorrowRecord>()
                 .eq(BorrowRecord::getId, id)
                 .set(BorrowRecord::getCloseStatus, returnBookDTO.getCloseStatus())
                 .set(BorrowRecord::getCloseTime, returnBookDTO.getCloseTime())
