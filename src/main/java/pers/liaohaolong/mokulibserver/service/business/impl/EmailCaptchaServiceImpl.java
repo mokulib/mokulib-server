@@ -1,6 +1,7 @@
 package pers.liaohaolong.mokulibserver.service.business.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -14,14 +15,12 @@ import java.time.LocalDateTime;
 @Slf4j
 @Service
 @RequiredArgsConstructor
-public class EmailCaptchaServiceImpl implements EmailCaptchaService {
-
-    private final EmailCaptchaMapper emailCaptchaMapper;
+public class EmailCaptchaServiceImpl extends ServiceImpl<EmailCaptchaMapper, EmailCaptcha> implements EmailCaptchaService {
 
     @Override
     @Transactional
     public void clearExpired() {
-        emailCaptchaMapper.delete(new LambdaQueryWrapper<EmailCaptcha>()
+        remove(new LambdaQueryWrapper<EmailCaptcha>()
                 .lt(EmailCaptcha::getExpireTime, LocalDateTime.now())
         );
     }
