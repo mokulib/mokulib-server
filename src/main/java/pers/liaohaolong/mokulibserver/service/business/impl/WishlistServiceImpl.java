@@ -1,6 +1,7 @@
 package pers.liaohaolong.mokulibserver.service.business.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -16,11 +17,9 @@ import pers.liaohaolong.mokulibserver.service.business.WishlistService;
 @Slf4j
 @Service
 @AllArgsConstructor
-public class WishlistServiceImpl implements WishlistService {
+public class WishlistServiceImpl extends ServiceImpl<WishlistMapper, Wishlist> implements WishlistService {
 
     private final BookMapper bookMapper;
-
-    private final WishlistMapper wishlistMapper;
 
     @Override
     @Transactional
@@ -33,13 +32,13 @@ public class WishlistServiceImpl implements WishlistService {
         wishlist.setUserId(userId);
         wishlist.setBookId(bookId);
 
-        if (wishlistMapper.exists(new LambdaQueryWrapper<Wishlist>()
+        if (exists(new LambdaQueryWrapper<Wishlist>()
                 .eq(Wishlist::getUserId, userId)
                 .eq(Wishlist::getBookId, bookId)
         ))
             return WishlistDTO.IS_IN_WISHLIST;
 
-        wishlistMapper.insert(wishlist);
+        save(wishlist);
 
         return WishlistDTO.IS_IN_WISHLIST;
     }
@@ -47,13 +46,13 @@ public class WishlistServiceImpl implements WishlistService {
     @Override
     @Transactional
     public WishlistDTO delete(Integer userId, Integer bookId) throws BusinessException {
-        if (wishlistMapper.exists(new LambdaQueryWrapper<Wishlist>()
+        if (exists(new LambdaQueryWrapper<Wishlist>()
                 .eq(Wishlist::getUserId, userId)
                 .eq(Wishlist::getBookId, bookId)
         ))
             return WishlistDTO.NOT_IN_WISHLIST;
 
-        wishlistMapper.delete(new LambdaQueryWrapper<Wishlist>()
+        remove(new LambdaQueryWrapper<Wishlist>()
                 .eq(Wishlist::getUserId, userId)
                 .eq(Wishlist::getBookId, bookId)
         );
@@ -64,7 +63,7 @@ public class WishlistServiceImpl implements WishlistService {
     @Override
     @Transactional(readOnly = true)
     public WishlistDTO isInWishlist(Integer userId, Integer bookId) {
-        return WishlistDTO.of(wishlistMapper.exists(new LambdaQueryWrapper<Wishlist>()
+        return WishlistDTO.of(exists(new LambdaQueryWrapper<Wishlist>()
                 .eq(Wishlist::getUserId, userId)
                 .eq(Wishlist::getBookId, bookId)
         ));

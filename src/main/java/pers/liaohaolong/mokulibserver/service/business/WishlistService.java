@@ -1,9 +1,11 @@
 package pers.liaohaolong.mokulibserver.service.business;
 
+import com.baomidou.mybatisplus.extension.service.IService;
 import pers.liaohaolong.mokulibserver.dto.response.WishlistDTO;
 import pers.liaohaolong.mokulibserver.exception.BusinessException;
+import pers.liaohaolong.mokulibserver.model.Wishlist;
 
-public interface WishlistService {
+public interface WishlistService extends IService<Wishlist> {
 
     WishlistDTO add(Integer userId, Integer bookId) throws BusinessException;
 
