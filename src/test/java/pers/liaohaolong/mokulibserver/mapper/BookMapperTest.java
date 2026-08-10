@@ -6,7 +6,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import pers.liaohaolong.mokulibserver.MokuLibServerTest;
+import pers.liaohaolong.mokulibserver.annotation.MokuLibServerTest;
 import pers.liaohaolong.mokulibserver.dao.BookMapper;
 import pers.liaohaolong.mokulibserver.model.Book;
 

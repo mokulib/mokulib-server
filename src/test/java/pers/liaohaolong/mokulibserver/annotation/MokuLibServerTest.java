@@ -1,9 +1,10 @@
-package pers.liaohaolong.mokulibserver;
+package pers.liaohaolong.mokulibserver.annotation;
 
 import org.junit.jupiter.api.MethodOrderer;
 import org.junit.jupiter.api.TestMethodOrder;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.Import;
+import pers.liaohaolong.mokulibserver.config.MybatisPlusConfiguration;
 
 import java.lang.annotation.*;
 
