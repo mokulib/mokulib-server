@@ -11,6 +11,7 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import pers.liaohaolong.mokulibserver.annotation.SuccessInfo;
 import pers.liaohaolong.mokulibserver.dto.request.BookDTO;
+import pers.liaohaolong.mokulibserver.dto.request.SortModeDTO;
 import pers.liaohaolong.mokulibserver.dto.response.SearchResultsDTO;
 import pers.liaohaolong.mokulibserver.exception.BusinessException;
 import pers.liaohaolong.mokulibserver.model.Book;
@@ -69,7 +70,7 @@ public class BookController {
     }
 
     @GetMapping("/search")
-    public SearchResultsDTO<Book> search(@RequestParam @NotNull @NotBlank String keyword, @RequestParam String sortMode, @RequestParam @NotNull @Min(1) Integer pageNum) {
+    public SearchResultsDTO<Book> search(@RequestParam @NotNull @NotBlank String keyword, @RequestParam @NotNull SortModeDTO sortMode, @RequestParam @NotNull @Min(1) Integer pageNum) {
         return SearchResultsDTO.of(keyword, sortMode, bookService.search(keyword, sortMode, pageNum));
     }
 

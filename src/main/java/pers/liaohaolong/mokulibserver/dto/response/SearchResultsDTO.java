@@ -2,6 +2,7 @@ package pers.liaohaolong.mokulibserver.dto.response;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import lombok.Data;
+import pers.liaohaolong.mokulibserver.dto.request.SortModeDTO;
 import pers.liaohaolong.mokulibserver.model.Book;
 
 import java.util.Map;
@@ -18,9 +19,9 @@ public class SearchResultsDTO<T> {
 
     private Page<T> results;
 
-    public static SearchResultsDTO<Book> of(String keyword, String sortMode, Page<Book> results) {
+    public static SearchResultsDTO<Book> of(String keyword, SortModeDTO sortMode, Page<Book> results) {
         SearchResultsDTO<Book> response = new SearchResultsDTO<>();
-        response.setConditions(Map.of("keyword", keyword, "sortMode", sortMode));
+        response.setConditions(Map.of("keyword", keyword, "sortMode", sortMode.getCode()));
         response.setResults(results);
         return response;
     }

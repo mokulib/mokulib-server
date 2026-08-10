@@ -11,6 +11,7 @@ import pers.liaohaolong.mokulibserver.dao.BookCopyMapper;
 import pers.liaohaolong.mokulibserver.dao.BookMapper;
 import pers.liaohaolong.mokulibserver.dao.BorrowRecordMapper;
 import pers.liaohaolong.mokulibserver.dto.request.BookDTO;
+import pers.liaohaolong.mokulibserver.dto.request.SortModeDTO;
 import pers.liaohaolong.mokulibserver.dto.response.BookCopyAdminDTO;
 import pers.liaohaolong.mokulibserver.dto.response.BookCopyUserDTO;
 import pers.liaohaolong.mokulibserver.exception.BusinessException;
@@ -164,14 +165,14 @@ public class BookServiceImpl implements BookService {
 
     @Override
     @Transactional(readOnly = true)
-    public Page<Book> search(String keyword, String sortMode, Integer pageNum) throws BusinessException {
+    public Page<Book> search(String keyword, SortModeDTO sortMode, Integer pageNum) throws BusinessException {
         LambdaQueryWrapper<Book> wrapper = new LambdaQueryWrapper<>();
         wrapper.like(Book::getTitle, keyword);
         switch (sortMode) {
-            case "publish_date_from_new_to_old" -> wrapper.orderByDesc(Book::getPublishDate);
-            case "publish_date_from_old_to_new" -> wrapper.orderByAsc(Book::getPublishDate);
-            case "price_from_low_to_high" -> wrapper.orderByAsc(Book::getPrice);
-            case "price_from_high_to_low" -> wrapper.orderByDesc(Book::getPrice);
+            case PUBLISH_DATE_FROM_NEW_TO_OLD -> wrapper.orderByDesc(Book::getPublishDate);
+            case PUBLISH_DATE_FROM_OLD_TO_NEW -> wrapper.orderByAsc(Book::getPublishDate);
+            case PRICE_FROM_LOW_TO_HIGH -> wrapper.orderByAsc(Book::getPrice);
+            case PRICE_FROM_HIGH_TO_LOW -> wrapper.orderByDesc(Book::getPrice);
         }
         return bookMapper.selectPage(new Page<>(pageNum, 3), wrapper);
     }
