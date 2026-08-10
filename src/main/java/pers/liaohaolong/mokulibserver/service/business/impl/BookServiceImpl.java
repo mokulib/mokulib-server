@@ -2,6 +2,7 @@ package pers.liaohaolong.mokulibserver.service.business.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -29,9 +30,7 @@ import java.util.stream.Collectors;
 @Slf4j
 @Service
 @AllArgsConstructor
-public class BookServiceImpl implements BookService {
-
-    private final BookMapper bookMapper;
+public class BookServiceImpl extends ServiceImpl<BookMapper, Book> implements BookService {
 
     private final BookCopyMapper bookCopyMapper;
 
@@ -42,12 +41,12 @@ public class BookServiceImpl implements BookService {
     @Override
     @Transactional
     public int add(BookDTO bookDTO) throws BusinessException {
-        if (bookMapper.exists(new LambdaQueryWrapper<Book>().eq(Book::getIsbn, bookDTO.getIsbn())))
+        if (exists(new LambdaQueryWrapper<Book>().eq(Book::getIsbn, bookDTO.getIsbn())))
             throw new BusinessException("图书已存在");
 
         Book book = Book.fromDTO(bookDTO);
 
-        bookMapper.insert(book);
+        save(book);
 
         return book.getId();
     }
@@ -55,10 +54,9 @@ public class BookServiceImpl implements BookService {
     @Override
     @Transactional
     public void delete(Integer id) throws BusinessException {
-        if (!bookMapper.exists(new LambdaQueryWrapper<Book>().eq(Book::getId, id)))
+        if (!exists(new LambdaQueryWrapper<Book>().eq(Book::getId, id)))
             throw new BusinessException("图书不存在");
-
-        bookMapper.deleteById(id);
+        removeById(id);
     }
 
     @Override
@@ -68,13 +66,13 @@ public class BookServiceImpl implements BookService {
 
         book.setId(id);
 
-        if (bookMapper.exists(new LambdaQueryWrapper<Book>()
+        if (exists(new LambdaQueryWrapper<Book>()
                 .ne(Book::getId, book.getId())
                 .eq(Book::getIsbn, book.getIsbn())
         ))
             throw new BusinessException("ISBN 重复");
 
-        bookMapper.updateById(book);
+        updateById(book);
 
         return book;
     }
@@ -82,7 +80,7 @@ public class BookServiceImpl implements BookService {
     @Override
     @Transactional(readOnly = true)
     public Book get(String id) throws BusinessException {
-        Book book = bookMapper.selectById(id);
+        Book book = getById(id);
 
         if (book == null)
             throw new BusinessException("图书不存在");
@@ -99,7 +97,7 @@ public class BookServiceImpl implements BookService {
     @Override
     @Transactional(readOnly = true)
     public List<BookCopyUserDTO> getUserBookCopies(Integer userId, Integer bookId) throws BusinessException {
-        if (!bookMapper.exists(new LambdaQueryWrapper<Book>().eq(Book::getId, bookId)))
+        if (!exists(new LambdaQueryWrapper<Book>().eq(Book::getId, bookId)))
             throw new BusinessException("图书不存在");
 
         // 获取全部非下架副本数据
@@ -133,7 +131,7 @@ public class BookServiceImpl implements BookService {
     @Override
     @Transactional(readOnly = true)
     public List<BookCopyAdminDTO> getAdminBookCopies(Integer userId, Integer bookId) throws BusinessException {
-        if (!bookMapper.exists(new LambdaQueryWrapper<Book>().eq(Book::getId, bookId)))
+        if (!exists(new LambdaQueryWrapper<Book>().eq(Book::getId, bookId)))
             throw new BusinessException("图书不存在");
 
         // 获取全部副本数据
@@ -174,7 +172,7 @@ public class BookServiceImpl implements BookService {
             case PRICE_FROM_LOW_TO_HIGH -> wrapper.orderByAsc(Book::getPrice);
             case PRICE_FROM_HIGH_TO_LOW -> wrapper.orderByDesc(Book::getPrice);
         }
-        return bookMapper.selectPage(new Page<>(pageNum, 3), wrapper);
+        return page(new Page<>(pageNum, 5), wrapper);
     }
 
 }

@@ -1,6 +1,7 @@
 package pers.liaohaolong.mokulibserver.service.business;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.baomidou.mybatisplus.extension.service.IService;
 import pers.liaohaolong.mokulibserver.dto.request.BookDTO;
 import pers.liaohaolong.mokulibserver.dto.request.SortModeDTO;
 import pers.liaohaolong.mokulibserver.dto.response.BookCopyAdminDTO;
@@ -10,7 +11,7 @@ import pers.liaohaolong.mokulibserver.model.Book;
 
 import java.util.List;
 
-public interface BookService {
+public interface BookService extends IService<Book> {
 
     int add(BookDTO bookDTO) throws BusinessException;
 
