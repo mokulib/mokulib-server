@@ -2,6 +2,7 @@ package pers.liaohaolong.mokulibserver.service.base.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
+import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
@@ -19,9 +20,7 @@ import java.util.concurrent.ThreadLocalRandom;
 @Slf4j
 @Component
 @RequiredArgsConstructor
-public class EmailCaptchaBaseServiceImpl implements EmailCaptchaBaseService {
-
-    private final EmailCaptchaMapper emailCaptchaMapper;
+public class EmailCaptchaBaseServiceImpl extends ServiceImpl<EmailCaptchaMapper, EmailCaptcha> implements EmailCaptchaBaseService {
 
     private final MailService mailService;
 
@@ -34,7 +33,7 @@ public class EmailCaptchaBaseServiceImpl implements EmailCaptchaBaseService {
         LocalDateTime now = LocalDateTime.now();
 
         // 查询同用户同业务是否已有数据
-        EmailCaptcha emailCaptcha = emailCaptchaMapper.selectOne(new LambdaQueryWrapper<EmailCaptcha>()
+        EmailCaptcha emailCaptcha = getOne(new LambdaQueryWrapper<EmailCaptcha>()
                 .eq(EmailCaptcha::getUserId, userId)
                 .eq(EmailCaptcha::getBusinessType, businessType)
         );
@@ -57,7 +56,7 @@ public class EmailCaptchaBaseServiceImpl implements EmailCaptchaBaseService {
             newEmailCaptcha.setCoolingTime(coolingTime);
             newEmailCaptcha.setExpireTime(expireTime);
             // 保存验证码
-            emailCaptchaMapper.insertOrUpdate(newEmailCaptcha);
+            saveOrUpdate(newEmailCaptcha);
             // 异步发送
             Context context = new Context();
             context.setVariable("captcha", captcha);
@@ -80,7 +79,7 @@ public class EmailCaptchaBaseServiceImpl implements EmailCaptchaBaseService {
         }
 
         // 未使用过且超过发送冷却期，更新发送时间
-        emailCaptchaMapper.update(new LambdaUpdateWrapper<EmailCaptcha>()
+        update(new LambdaUpdateWrapper<EmailCaptcha>()
                 .eq(EmailCaptcha::getUserId, userId)
                 .eq(EmailCaptcha::getBusinessType, businessType.getCode())
                 .set(EmailCaptcha::getCoolingTime, now.plusMinutes(businessType.getEmailSendCoolingMinutes()))
@@ -94,6 +93,27 @@ public class EmailCaptchaBaseServiceImpl implements EmailCaptchaBaseService {
         resultDTO.setCodePrefix(emailCaptcha.getCaptcha().substring(0, 2));
         resultDTO.setCoolingTime(now.plusMinutes(businessType.getCaptchaValidationMinutes()));
         return resultDTO;
+    }
+
+    @Override
+    @Transactional
+    public boolean verifyEmailCaptcha(int userId, EmailCaptcha.BusinessType businessType, String captcha) {
+        // 加载验证码
+        EmailCaptcha emailCaptcha = getOne(new LambdaQueryWrapper<EmailCaptcha>()
+                .eq(EmailCaptcha::getUserId, userId)
+                .eq(EmailCaptcha::getBusinessType, businessType)
+        );
+        if (emailCaptcha == null || LocalDateTime.now().isAfter(emailCaptcha.getExpireTime()) || emailCaptcha.getIsUsed()) { // 过期验证码、重复使用验证码视为不存在
+            return false;
+        }
+        // 使用验证码
+        update(new LambdaUpdateWrapper<EmailCaptcha>()
+                .eq(EmailCaptcha::getUserId, userId)
+                .eq(EmailCaptcha::getBusinessType, businessType)
+                .set(EmailCaptcha::getIsUsed, true)
+        );
+        // 验证邮箱验证码
+        return captcha != null && captcha.equals(emailCaptcha.getCaptcha());
     }
 
 }
