@@ -9,6 +9,4 @@ public interface TagService extends IService<Tag> {
 
     List<Tag> add(List<String> tags);
 
-    List<Tag> getAll();
-
 }

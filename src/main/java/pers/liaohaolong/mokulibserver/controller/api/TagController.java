@@ -28,7 +28,7 @@ public class TagController {
 
     @GetMapping
     public List<Tag> getAll() {
-        return tagService.getAll();
+        return tagService.list();
     }
 
 }

@@ -10,8 +10,6 @@ import pers.liaohaolong.mokulibserver.exception.BusinessException;
 import pers.liaohaolong.mokulibserver.model.Category;
 import pers.liaohaolong.mokulibserver.service.business.CategoryService;
 
-import java.util.List;
-
 @Slf4j
 @Service
 public class CategoryServiceImpl extends ServiceImpl<CategoryMapper, Category> implements CategoryService {
@@ -32,12 +30,6 @@ public class CategoryServiceImpl extends ServiceImpl<CategoryMapper, Category> i
         // 插入并返回
         save(category);
         return category;
-    }
-
-    @Override
-    @Transactional(readOnly = true)
-    public List<Category> getAll() {
-        return list();
     }
 
     @Override

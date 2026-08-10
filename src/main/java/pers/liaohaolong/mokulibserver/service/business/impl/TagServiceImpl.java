@@ -40,10 +40,4 @@ public class TagServiceImpl extends ServiceImpl<TagMapper, Tag> implements TagSe
         return resultTags;
     }
 
-    @Override
-    @Transactional(readOnly = true)
-    public List<Tag> getAll() {
-        return list();
-    }
-
 }
