@@ -19,7 +19,6 @@ public class AddBookCopyDTO {
     @NotNull(message = "采购日期不能为空")
     private LocalDate purchaseDate;
 
-    @NotNull(message = "来源不能为空")
     @NotBlank(message = "来源不能为空")
     private String source;
 

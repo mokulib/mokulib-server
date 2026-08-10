@@ -22,7 +22,7 @@ public class TagController {
 
     @PostMapping
     @PreAuthorize("hasAnyRole('ADMIN')")
-    public List<Tag> add(@RequestBody @NotNull @NotEmpty List<@NotNull @NotBlank String> tags) {
+    public List<Tag> add(@RequestBody @NotNull @NotEmpty List<@NotBlank String> tags) {
         return tagService.add(tags);
     }
 

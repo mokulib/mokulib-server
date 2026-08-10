@@ -30,13 +30,13 @@ public class AuthController {
     }
 
     @GetMapping("login")
-    public ResultDTO getLoginCaptcha(@RequestParam @NotNull @NotBlank @Email String email) throws BusinessException {
+    public ResultDTO getLoginCaptcha(@RequestParam @NotBlank @Email String email) throws BusinessException {
         return authService.getLoginCaptcha(email).toResultDTO(EmailCaptcha.BusinessType.LOGIN);
     }
 
     @PostMapping("activate/{token}")
     @SuccessInfo(message = "激活成功，欢迎使用")
-    public void activate(@PathVariable @NotNull @NotBlank String token) throws BusinessException {
+    public void activate(@PathVariable @NotBlank String token) throws BusinessException {
         authService.activate(token);
     }
 

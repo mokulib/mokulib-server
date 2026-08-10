@@ -48,7 +48,7 @@ public class BookController {
     }
 
     @GetMapping("/{id}")
-    public Book get(@PathVariable @NotNull @NotBlank String id) throws BusinessException {
+    public Book get(@PathVariable @NotBlank String id) throws BusinessException {
         return bookService.get(id);
     }
 
@@ -70,7 +70,7 @@ public class BookController {
     }
 
     @GetMapping("/search")
-    public SearchResultsDTO<Book> search(@RequestParam @NotNull @NotBlank String keyword, @RequestParam @NotNull SortModeDTO sortMode, @RequestParam @NotNull @Min(1) Integer pageNum) {
+    public SearchResultsDTO<Book> search(@RequestParam @NotBlank String keyword, @RequestParam @NotNull SortModeDTO sortMode, @RequestParam @NotNull @Min(1) Integer pageNum) {
         return SearchResultsDTO.of(keyword, sortMode, bookService.search(keyword, sortMode, pageNum));
     }
 

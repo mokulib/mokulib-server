@@ -20,7 +20,6 @@ public class UpdateBookCopyDTO {
     @NotNull(message = "购入日期不能为空")
     private LocalDate purchaseDate;
 
-    @NotNull(message = "来源不能为空")
     @NotBlank(message = "来源不能为空")
     private String source;
 
