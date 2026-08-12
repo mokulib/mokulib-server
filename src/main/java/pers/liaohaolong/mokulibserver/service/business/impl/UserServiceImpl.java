@@ -1,5 +1,6 @@
 package pers.liaohaolong.mokulibserver.service.business.impl;
 
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -7,10 +8,17 @@ import org.jspecify.annotations.NonNull;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import pers.liaohaolong.mokulibserver.config.ImageConfigurations;
+import pers.liaohaolong.mokulibserver.dao.BookCopyMapper;
+import pers.liaohaolong.mokulibserver.dao.BookMapper;
+import pers.liaohaolong.mokulibserver.dao.BorrowRecordMapper;
 import pers.liaohaolong.mokulibserver.dao.UserMapper;
+import pers.liaohaolong.mokulibserver.dto.response.BorrowingDTO;
 import pers.liaohaolong.mokulibserver.dto.response.NonsensitiveUserDTO;
 import pers.liaohaolong.mokulibserver.dto.response.UsernameDTO;
 import pers.liaohaolong.mokulibserver.exception.BusinessException;
+import pers.liaohaolong.mokulibserver.model.Book;
+import pers.liaohaolong.mokulibserver.model.BookCopy;
+import pers.liaohaolong.mokulibserver.model.BorrowRecord;
 import pers.liaohaolong.mokulibserver.model.User;
 import pers.liaohaolong.mokulibserver.service.base.ImageService;
 import pers.liaohaolong.mokulibserver.service.business.UserService;
@@ -23,6 +31,9 @@ import java.util.List;
 public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements UserService {
 
     private final ImageService imageService;
+    private final BookMapper bookMapper;
+    private final BookCopyMapper bookCopyMapper;
+    private final BorrowRecordMapper borrowRecordMapper;
 
     @Override
     public void uploadAvatar(Integer id, byte[] avatar) throws BusinessException {
@@ -55,6 +66,47 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
             throw new BusinessException("用户不存在");
 
         return NonsensitiveUserDTO.fromUser(user);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public BorrowingDTO getBorrowing(@NonNull Integer id) throws BusinessException {
+        // 查询借阅记录
+        List<BorrowRecord> borrowRecords = borrowRecordMapper.selectList(new LambdaQueryWrapper<BorrowRecord>()
+                .eq(BorrowRecord::getUserId, id)
+                .eq(BorrowRecord::getCloseStatus, BorrowRecord.CloseStatus.OPEN)
+        );
+
+        if (borrowRecords.isEmpty())
+            return new BorrowingDTO();
+
+        // 待查询的馆藏 ID 列表
+        List<Integer> bookCopyIds = borrowRecords.stream().map(BorrowRecord::getBookCopyId).distinct().toList();
+        // 批量查询
+        List<BookCopy> bookCopies = bookCopyMapper.selectByIds(bookCopyIds);
+
+        // 待查询的图书 ID 列表
+        List<Integer> bookIds = bookCopies.stream().map(BookCopy::getBookId).distinct().toList();
+        // 批量查询
+        List<Book> books = bookMapper.selectByIds(bookIds);
+
+        // 构造 BorrowRecordWithBookId 列表
+        List<BorrowingDTO.BorrowRecordWithBookId> borrowRecordsWithBookIds = borrowRecords.stream().map(borrowRecord ->
+            BorrowingDTO.BorrowRecordWithBookId.of(
+                    borrowRecord,
+                    bookCopies.stream()
+                            .filter(bookCopy -> bookCopy.getId().equals(borrowRecord.getBookCopyId()))
+                            .findFirst()
+                            .orElseThrow()
+                            .getBookId()
+            )
+        ).toList();
+
+        // 构造 BorrowingDTO
+        BorrowingDTO borrowingDTO = new BorrowingDTO();
+        borrowingDTO.setBooks(books);
+        borrowingDTO.setBorrowRecords(borrowRecordsWithBookIds);
+        return borrowingDTO;
     }
 
 }

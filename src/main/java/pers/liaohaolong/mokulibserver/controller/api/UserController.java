@@ -8,6 +8,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import pers.liaohaolong.mokulibserver.annotation.SuccessInfo;
+import pers.liaohaolong.mokulibserver.dto.response.BorrowingDTO;
 import pers.liaohaolong.mokulibserver.dto.response.NonsensitiveUserDTO;
 import pers.liaohaolong.mokulibserver.dto.response.UsernameDTO;
 import pers.liaohaolong.mokulibserver.exception.BusinessException;
@@ -47,6 +48,12 @@ public class UserController {
     @PreAuthorize("hasAnyRole('ADMIN')")
     public List<UsernameDTO> get(@RequestParam @NotNull @NotEmpty List<Integer> ids) throws BusinessException {
         return userService.getUsernames(ids);
+    }
+
+    @GetMapping("/borrowing")
+    @PreAuthorize("isAuthenticated()")
+    public BorrowingDTO getBorrowing(@AuthenticationPrincipal User user) throws BusinessException {
+        return userService.getBorrowing(user.getId());
     }
 
 }

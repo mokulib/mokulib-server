@@ -2,6 +2,7 @@ package pers.liaohaolong.mokulibserver.service.business;
 
 import com.baomidou.mybatisplus.extension.service.IService;
 import org.jspecify.annotations.NonNull;
+import pers.liaohaolong.mokulibserver.dto.response.BorrowingDTO;
 import pers.liaohaolong.mokulibserver.dto.response.NonsensitiveUserDTO;
 import pers.liaohaolong.mokulibserver.dto.response.UsernameDTO;
 import pers.liaohaolong.mokulibserver.exception.BusinessException;
@@ -18,5 +19,7 @@ public interface UserService extends IService<User> {
     NonsensitiveUserDTO get(@NonNull Integer id) throws BusinessException;
 
     NonsensitiveUserDTO get(@NonNull String email) throws BusinessException;
+
+    BorrowingDTO getBorrowing(@NonNull Integer id) throws BusinessException;
 
 }
