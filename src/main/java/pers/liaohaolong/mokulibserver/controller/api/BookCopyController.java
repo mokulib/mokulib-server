@@ -12,8 +12,12 @@ import pers.liaohaolong.mokulibserver.dto.request.BorrowDTO;
 import pers.liaohaolong.mokulibserver.dto.request.UpdateBookCopyDTO;
 import pers.liaohaolong.mokulibserver.dto.response.BookCopyAdminDTO;
 import pers.liaohaolong.mokulibserver.exception.BusinessException;
+import pers.liaohaolong.mokulibserver.model.BookCopy;
+import pers.liaohaolong.mokulibserver.model.BorrowRecord;
 import pers.liaohaolong.mokulibserver.model.User;
 import pers.liaohaolong.mokulibserver.service.business.BookCopyService;
+
+import java.util.List;
 
 @Slf4j
 @RestController
@@ -35,6 +39,20 @@ public class BookCopyController {
     @SuccessInfo(message = "修改成功")
     public BookCopyAdminDTO update(@PathVariable @NotNull Integer id, @RequestBody UpdateBookCopyDTO updateBookCopyDTO) throws BusinessException {
         return bookCopyService.update(id, updateBookCopyDTO);
+    }
+
+    @GetMapping("/{id}")
+    @PreAuthorize("hasAnyRole('ADMIN')")
+    @SuccessInfo(message = "获取成功")
+    public BookCopy get(@PathVariable @NotNull Integer id) throws BusinessException {
+        return bookCopyService.get(id);
+    }
+
+    @GetMapping("/{id}/borrow-records")
+    @PreAuthorize("hasAnyRole('ADMIN')")
+    @SuccessInfo(message = "获取成功")
+    public List<BorrowRecord> getBorrowRecords(@PathVariable @NotNull Integer id) throws BusinessException {
+        return bookCopyService.getBorrowRecords(id);
     }
 
     @PostMapping("/{id}/borrow")

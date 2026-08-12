@@ -7,12 +7,19 @@ import pers.liaohaolong.mokulibserver.dto.request.UpdateBookCopyDTO;
 import pers.liaohaolong.mokulibserver.dto.response.BookCopyAdminDTO;
 import pers.liaohaolong.mokulibserver.exception.BusinessException;
 import pers.liaohaolong.mokulibserver.model.BookCopy;
+import pers.liaohaolong.mokulibserver.model.BorrowRecord;
+
+import java.util.List;
 
 public interface BookCopyService extends IService<BookCopy> {
 
     BookCopyAdminDTO add(Integer entryBy, AddBookCopyDTO addBookCopyDTO);
 
     BookCopyAdminDTO update(Integer id, UpdateBookCopyDTO updateBookCopyDTO) throws BusinessException;
+
+    BookCopy get(Integer id) throws BusinessException;
+
+    List<BorrowRecord> getBorrowRecords(Integer id) throws BusinessException;
 
     BookCopyAdminDTO borrow(Integer id, BorrowDTO borrowDTO) throws BusinessException;
 

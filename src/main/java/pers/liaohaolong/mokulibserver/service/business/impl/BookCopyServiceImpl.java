@@ -19,6 +19,7 @@ import pers.liaohaolong.mokulibserver.model.BorrowRecord;
 import pers.liaohaolong.mokulibserver.service.business.BookCopyService;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Slf4j
 @Service
@@ -60,6 +61,23 @@ public class BookCopyServiceImpl extends ServiceImpl<BookCopyMapper, BookCopy> i
         return bookCopyAdminDTO;
     }
 
+    @Override
+    public BookCopy get(Integer id) throws BusinessException {
+        if (!exists(new LambdaQueryWrapper<BookCopy>().eq(BookCopy::getId, id)))
+            throw new BusinessException("图书不存在，获取失败");
+        return getById(id);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<BorrowRecord> getBorrowRecords(Integer id) throws BusinessException {
+        if (!exists(new LambdaQueryWrapper<BookCopy>().eq(BookCopy::getId, id)))
+            throw new BusinessException("图书不存在，获取借阅记录失败");
+
+        return borrowRecordMapper.selectList(new LambdaQueryWrapper<BorrowRecord>()
+                .eq(BorrowRecord::getBookCopyId, id)
+        );
+    }
 
     @Override
     @Transactional
