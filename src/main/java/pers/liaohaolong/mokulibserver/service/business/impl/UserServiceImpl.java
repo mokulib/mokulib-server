@@ -78,7 +78,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         );
 
         if (borrowRecords.isEmpty())
-            return new BorrowingDTO();
+            return BorrowingDTO.EMPTY;
 
         // 待查询的馆藏 ID 列表
         List<Integer> bookCopyIds = borrowRecords.stream().map(BorrowRecord::getBookCopyId).distinct().toList();

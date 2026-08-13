@@ -1,14 +1,20 @@
 package pers.liaohaolong.mokulibserver.dto.response;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
 import pers.liaohaolong.mokulibserver.model.Book;
 import pers.liaohaolong.mokulibserver.model.BorrowRecord;
 
 import java.util.List;
 
 @Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class BorrowingDTO {
+
+    public static final BorrowingDTO EMPTY = new BorrowingDTO(List.of(), List.of());
 
     private List<Book> books;
 
