@@ -36,7 +36,7 @@ public class BorrowRecord {
     public enum CloseStatus {
 
         OPEN("OPEN", "借阅中"),
-        CLOSE("CLOSED", "已归还"),
+        CLOSED("CLOSED", "已归还"),
         LOST("LOST", "已丢失"),
         DAMAGED("DAMAGED", "已损坏");
 

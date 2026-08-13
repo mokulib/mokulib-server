@@ -73,7 +73,7 @@ public class BorrowRecordServiceImpl extends ServiceImpl<BorrowRecordMapper, Bor
         );
 
         // 正常归还
-        if (returnBookDTO.getCloseStatus() == BorrowRecord.CloseStatus.CLOSE) {
+        if (returnBookDTO.getCloseStatus() == BorrowRecord.CloseStatus.CLOSED) {
             bookCopyMapper.update(new LambdaUpdateWrapper<BookCopy>()
                     .eq(BookCopy::getId, borrowRecord.getBookCopyId())
                     .set(BookCopy::getStatus, BookCopy.Status.AVAILABLE)
