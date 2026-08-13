@@ -9,6 +9,7 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import pers.liaohaolong.mokulibserver.annotation.SuccessInfo;
 import pers.liaohaolong.mokulibserver.dto.response.BorrowingDTO;
+import pers.liaohaolong.mokulibserver.dto.response.HistoryDTO;
 import pers.liaohaolong.mokulibserver.dto.response.NonsensitiveUserDTO;
 import pers.liaohaolong.mokulibserver.dto.response.UsernameDTO;
 import pers.liaohaolong.mokulibserver.exception.BusinessException;
@@ -61,6 +62,12 @@ public class UserController {
     @PreAuthorize("isAuthenticated()")
     public List<Book> getFavorites(@AuthenticationPrincipal User user) {
         return userService.getFavorites(user.getId());
+    }
+
+    @GetMapping("/history")
+    @PreAuthorize("isAuthenticated()")
+    public List<HistoryDTO> getHistory(@AuthenticationPrincipal User user) {
+        return userService.getHistory(user.getId());
     }
 
 }
