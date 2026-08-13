@@ -8,18 +8,12 @@ import org.jspecify.annotations.NonNull;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import pers.liaohaolong.mokulibserver.config.ImageConfigurations;
-import pers.liaohaolong.mokulibserver.dao.BookCopyMapper;
-import pers.liaohaolong.mokulibserver.dao.BookMapper;
-import pers.liaohaolong.mokulibserver.dao.BorrowRecordMapper;
-import pers.liaohaolong.mokulibserver.dao.UserMapper;
+import pers.liaohaolong.mokulibserver.dao.*;
 import pers.liaohaolong.mokulibserver.dto.response.BorrowingDTO;
 import pers.liaohaolong.mokulibserver.dto.response.NonsensitiveUserDTO;
 import pers.liaohaolong.mokulibserver.dto.response.UsernameDTO;
 import pers.liaohaolong.mokulibserver.exception.BusinessException;
-import pers.liaohaolong.mokulibserver.model.Book;
-import pers.liaohaolong.mokulibserver.model.BookCopy;
-import pers.liaohaolong.mokulibserver.model.BorrowRecord;
-import pers.liaohaolong.mokulibserver.model.User;
+import pers.liaohaolong.mokulibserver.model.*;
 import pers.liaohaolong.mokulibserver.service.base.ImageService;
 import pers.liaohaolong.mokulibserver.service.business.UserService;
 
@@ -34,6 +28,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
     private final BookMapper bookMapper;
     private final BookCopyMapper bookCopyMapper;
     private final BorrowRecordMapper borrowRecordMapper;
+    private final FavoriteMapper favoriteMapper;
 
     @Override
     public void uploadAvatar(Integer id, byte[] avatar) throws BusinessException {
@@ -70,7 +65,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
 
     @Override
     @Transactional(readOnly = true)
-    public BorrowingDTO getBorrowing(@NonNull Integer id) throws BusinessException {
+    public BorrowingDTO getBorrowing(@NonNull Integer id) {
         // 查询借阅记录
         List<BorrowRecord> borrowRecords = borrowRecordMapper.selectList(new LambdaQueryWrapper<BorrowRecord>()
                 .eq(BorrowRecord::getUserId, id)
@@ -107,6 +102,21 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         borrowingDTO.setBooks(books);
         borrowingDTO.setBorrowRecords(borrowRecordsWithBookIds);
         return borrowingDTO;
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<Book> getFavorites(@NonNull Integer id) {
+        // 查询收藏的图书 ID 列表
+        List<Integer> bookIds = favoriteMapper.selectList(new LambdaQueryWrapper<Favorite>()
+                .eq(Favorite::getUserId, id)
+        ).stream().map(Favorite::getBookId).toList();
+
+        if (bookIds.isEmpty())
+            return List.of();
+
+        // 批量查询收藏的图书
+        return bookMapper.selectByIds(bookIds);
     }
 
 }

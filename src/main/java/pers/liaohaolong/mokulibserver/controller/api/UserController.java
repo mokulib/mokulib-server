@@ -12,6 +12,7 @@ import pers.liaohaolong.mokulibserver.dto.response.BorrowingDTO;
 import pers.liaohaolong.mokulibserver.dto.response.NonsensitiveUserDTO;
 import pers.liaohaolong.mokulibserver.dto.response.UsernameDTO;
 import pers.liaohaolong.mokulibserver.exception.BusinessException;
+import pers.liaohaolong.mokulibserver.model.Book;
 import pers.liaohaolong.mokulibserver.model.User;
 import pers.liaohaolong.mokulibserver.service.business.UserService;
 
@@ -52,8 +53,14 @@ public class UserController {
 
     @GetMapping("/borrowing")
     @PreAuthorize("isAuthenticated()")
-    public BorrowingDTO getBorrowing(@AuthenticationPrincipal User user) throws BusinessException {
+    public BorrowingDTO getBorrowing(@AuthenticationPrincipal User user) {
         return userService.getBorrowing(user.getId());
+    }
+
+    @GetMapping("/favorites")
+    @PreAuthorize("isAuthenticated()")
+    public List<Book> getFavorites(@AuthenticationPrincipal User user) {
+        return userService.getFavorites(user.getId());
     }
 
 }
