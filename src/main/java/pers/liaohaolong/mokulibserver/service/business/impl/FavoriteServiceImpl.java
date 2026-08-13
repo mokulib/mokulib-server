@@ -46,7 +46,7 @@ public class FavoriteServiceImpl extends ServiceImpl<FavoriteMapper, Favorite> i
     @Override
     @Transactional
     public FavoriteDTO delete(Integer userId, Integer bookId) throws BusinessException {
-        if (exists(new LambdaQueryWrapper<Favorite>()
+        if (!exists(new LambdaQueryWrapper<Favorite>()
                 .eq(Favorite::getUserId, userId)
                 .eq(Favorite::getBookId, bookId)
         ))
