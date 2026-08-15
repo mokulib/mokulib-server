@@ -1,7 +1,6 @@
 package pers.liaohaolong.mokulibserver.service.business.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
-import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -12,7 +11,6 @@ import pers.liaohaolong.mokulibserver.dao.BookCopyMapper;
 import pers.liaohaolong.mokulibserver.dao.BookMapper;
 import pers.liaohaolong.mokulibserver.dao.BorrowRecordMapper;
 import pers.liaohaolong.mokulibserver.dto.request.BookDTO;
-import pers.liaohaolong.mokulibserver.dto.request.SortModeDTO;
 import pers.liaohaolong.mokulibserver.dto.response.BookCopyAdminDTO;
 import pers.liaohaolong.mokulibserver.dto.response.BookCopyUserDTO;
 import pers.liaohaolong.mokulibserver.exception.BusinessException;
@@ -157,20 +155,6 @@ public class BookServiceImpl extends ServiceImpl<BookMapper, Book> implements Bo
             bookCopyAdminDTO.setCurrentBorrowRecord(borrowRecordMap.get(bookCopy.getId())); // 获取此副本的当前借阅记录（不一定存在）
             return bookCopyAdminDTO;
         }).toList();
-    }
-
-    @Override
-    @Transactional(readOnly = true)
-    public Page<Book> search(String keyword, SortModeDTO sortMode, Integer pageNum) throws BusinessException {
-        LambdaQueryWrapper<Book> wrapper = new LambdaQueryWrapper<>();
-        wrapper.like(Book::getTitle, keyword);
-        switch (sortMode) {
-            case PUBLISH_DATE_FROM_NEW_TO_OLD -> wrapper.orderByDesc(Book::getPublishDate);
-            case PUBLISH_DATE_FROM_OLD_TO_NEW -> wrapper.orderByAsc(Book::getPublishDate);
-            case PRICE_FROM_LOW_TO_HIGH -> wrapper.orderByAsc(Book::getPrice);
-            case PRICE_FROM_HIGH_TO_LOW -> wrapper.orderByDesc(Book::getPrice);
-        }
-        return page(new Page<>(pageNum, 5), wrapper);
     }
 
 }

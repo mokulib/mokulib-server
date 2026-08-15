@@ -124,3 +124,11 @@ CREATE TABLE IF NOT EXISTS `image_captcha`
     `captcha`     CHAR(4)  NOT NULL,
     `expire_time` DATETIME NOT NULL
 );
+
+CREATE TABLE IF NOT EXISTS 'hot_search'
+(
+    `id`          INT AUTO_INCREMENT PRIMARY KEY,
+    `keyword`     VARCHAR(128)                      NOT NULL UNIQUE,
+    `count`       INT          DEFAULT 1            NOT NULL,
+    `update_time` DATETIME                          NOT NULL
+);

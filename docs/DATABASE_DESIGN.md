@@ -146,3 +146,12 @@ business_type: 'LOGIN', 'CLOSE_ACCOUNT'
 | expire_time | datetime |         |         |           | Y       |
 
 token: 默认值由 MybatisPlus 的 IdType.ASSIGN_UUID 生成
+
+## hot_search（热搜）
+
+| Name        | DataType     | Default | AutoInc | PK/UK/IDX | NotNull |
+|:------------|:-------------|:--------|:--------|:----------|:--------|
+| id          | int          |         | Y       | PK        | Y       |
+| keyword     | varchar(128) |         |         | UK        | Y       |
+| count       | int          | 1       |         |           | Y       |
+| update_time | datetime     |         |         |           | Y       |
