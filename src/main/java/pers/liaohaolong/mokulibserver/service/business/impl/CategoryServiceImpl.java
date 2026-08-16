@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import pers.liaohaolong.mokulibserver.dao.BookMapper;
 import pers.liaohaolong.mokulibserver.dao.CategoryMapper;
+import pers.liaohaolong.mokulibserver.dto.request.SortModeDTO;
 import pers.liaohaolong.mokulibserver.exception.BusinessException;
 import pers.liaohaolong.mokulibserver.model.Book;
 import pers.liaohaolong.mokulibserver.model.Category;
@@ -52,13 +53,11 @@ public class CategoryServiceImpl extends ServiceImpl<CategoryMapper, Category> i
 
     @Override
     @Transactional(readOnly = true)
-    public Page<Book> getBooks(Integer id, Integer pageNum) throws BusinessException {
+    public Page<Book> getBooks(Integer id, Integer pageNum, SortModeDTO sortMode) throws BusinessException {
         if (!exists(new LambdaQueryWrapper<Category>().eq(Category::getId, id)))
             throw new BusinessException("分类未找到");
 
-        return bookMapper.selectPage(new Page<>(pageNum, 12), new LambdaQueryWrapper<Book>()
-                .eq(Book::getCategoryId, id)
-        );
+        return bookMapper.selectPage(new Page<>(pageNum, 12), SortModeDTO.apply(new LambdaQueryWrapper<Book>().eq(Book::getCategoryId, id), sortMode));
     }
 
 }

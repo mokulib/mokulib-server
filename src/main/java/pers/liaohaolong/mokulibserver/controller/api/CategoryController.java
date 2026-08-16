@@ -6,6 +6,7 @@ import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 import pers.liaohaolong.mokulibserver.dto.request.AddCategoryDTO;
+import pers.liaohaolong.mokulibserver.dto.request.SortModeDTO;
 import pers.liaohaolong.mokulibserver.exception.BusinessException;
 import pers.liaohaolong.mokulibserver.model.Book;
 import pers.liaohaolong.mokulibserver.model.Category;
@@ -37,8 +38,8 @@ public class CategoryController {
     }
 
     @GetMapping("/{id}/books")
-    public Page<Book> getBooks(@PathVariable @NotNull Integer id, @RequestParam @NotNull Integer pageNum) throws BusinessException {
-        return categoryService.getBooks(id, pageNum);
+    public Page<Book> getBooks(@PathVariable @NotNull Integer id, @RequestParam @NotNull Integer pageNum, @RequestParam @NotNull SortModeDTO sortMode) throws BusinessException {
+        return categoryService.getBooks(id, pageNum, sortMode);
     }
 
 }

@@ -41,15 +41,7 @@ public class SearchServiceImpl extends ServiceImpl<HotSearchMapper, HotSearch> i
             saveOrUpdate(hotSearch);
         }
         // 搜索业务
-        LambdaQueryWrapper<Book> wrapper = new LambdaQueryWrapper<>();
-        wrapper.like(Book::getTitle, keyword);
-        switch (sortMode) {
-            case PUBLISH_DATE_FROM_NEW_TO_OLD -> wrapper.orderByDesc(Book::getPublishDate);
-            case PUBLISH_DATE_FROM_OLD_TO_NEW -> wrapper.orderByAsc(Book::getPublishDate);
-            case PRICE_FROM_LOW_TO_HIGH -> wrapper.orderByAsc(Book::getPrice);
-            case PRICE_FROM_HIGH_TO_LOW -> wrapper.orderByDesc(Book::getPrice);
-        }
-        return bookMapper.selectPage(new Page<>(pageNum, 5), wrapper);
+        return bookMapper.selectPage(new Page<>(pageNum, 5), SortModeDTO.apply(new LambdaQueryWrapper<Book>().like(Book::getTitle, keyword), sortMode));
     }
 
 }
