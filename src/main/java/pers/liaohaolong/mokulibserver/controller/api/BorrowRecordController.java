@@ -14,8 +14,6 @@ import pers.liaohaolong.mokulibserver.model.BorrowRecord;
 import pers.liaohaolong.mokulibserver.model.User;
 import pers.liaohaolong.mokulibserver.service.business.BorrowRecordService;
 
-import java.util.List;
-
 @Slf4j
 @RestController
 @RequestMapping("/api/borrow-records")
@@ -36,11 +34,6 @@ public class BorrowRecordController {
     @SuccessInfo(message = "归还成功")
     public BookCopyAdminDTO returnBook(@PathVariable @NotNull Integer id, @RequestBody ReturnBookDTO returnBookDTO) throws BusinessException {
         return borrowRecordService.returnBook(id, returnBookDTO);
-    }
-
-    @GetMapping("/hot")
-    public List<Integer> getTopBorrowedBookIds() {
-        return borrowRecordService.getTopBorrowedBookIds();
     }
 
 }

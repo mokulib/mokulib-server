@@ -16,7 +16,6 @@ import pers.liaohaolong.mokulibserver.model.BorrowRecord;
 import pers.liaohaolong.mokulibserver.model.User;
 import pers.liaohaolong.mokulibserver.service.business.BorrowRecordService;
 
-import java.util.List;
 import java.util.Objects;
 
 @Slf4j
@@ -90,11 +89,6 @@ public class BorrowRecordServiceImpl extends ServiceImpl<BorrowRecordMapper, Bor
                 .set(BookCopy::getWithdrawnTime, returnBookDTO.getCloseTime())
         );
         return BookCopyAdminDTO.fromBookCopy(bookCopyMapper.selectById(borrowRecord.getBookCopyId()));
-    }
-
-    @Override
-    public List<Integer> getTopBorrowedBookIds() {
-        return getBaseMapper().getTopBorrowedBookIds();
     }
 
 }
