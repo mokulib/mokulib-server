@@ -14,6 +14,8 @@ import pers.liaohaolong.mokulibserver.model.Book;
 import pers.liaohaolong.mokulibserver.model.Favorite;
 import pers.liaohaolong.mokulibserver.service.business.FavoriteService;
 
+import java.util.List;
+
 @Slf4j
 @Service
 @AllArgsConstructor
@@ -67,6 +69,12 @@ public class FavoriteServiceImpl extends ServiceImpl<FavoriteMapper, Favorite> i
                 .eq(Favorite::getUserId, userId)
                 .eq(Favorite::getBookId, bookId)
         ));
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<Integer> getTopFavoriteBookIds() {
+        return getBaseMapper().getTopFavoriteBookIds();
     }
 
 }
