@@ -3,6 +3,7 @@ package pers.liaohaolong.mokulibserver.service.business.impl;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import pers.liaohaolong.mokulibserver.dao.virtual.RankMapper;
 import pers.liaohaolong.mokulibserver.service.business.RankService;
 
@@ -18,6 +19,12 @@ public class RankServiceImpl implements RankService {
     @Override
     public List<Integer> borrow() {
         return rankMapper.borrow();
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<Integer> favorite() {
+        return rankMapper.favorite();
     }
 
 }

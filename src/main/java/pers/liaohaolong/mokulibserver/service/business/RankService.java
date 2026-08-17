@@ -5,4 +5,6 @@ import java.util.List;
 public interface RankService {
 
     List<Integer> borrow();
+
+    List<Integer> favorite();
 }

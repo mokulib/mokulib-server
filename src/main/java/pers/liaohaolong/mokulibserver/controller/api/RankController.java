@@ -22,4 +22,9 @@ public class RankController {
         return rankService.borrow();
     }
 
+    @GetMapping("/favorite")
+    public List<Integer> favorite() {
+        return rankService.favorite();
+    }
+
 }

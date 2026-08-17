@@ -12,8 +12,6 @@ import pers.liaohaolong.mokulibserver.exception.BusinessException;
 import pers.liaohaolong.mokulibserver.model.User;
 import pers.liaohaolong.mokulibserver.service.business.FavoriteService;
 
-import java.util.List;
-
 @Slf4j
 @RestController
 @RequestMapping("/api/favorites")
@@ -40,11 +38,6 @@ public class FavoriteController {
     @PreAuthorize("isAuthenticated()")
     public FavoriteDTO isFavorite(@AuthenticationPrincipal User user, @PathVariable @NotNull Integer bookId) {
         return favoriteService.isFavorite(user.getId(), bookId);
-    }
-
-    @GetMapping("/hot")
-    public List<Integer> getTopFavoriteBookIds() {
-        return favoriteService.getTopFavoriteBookIds();
     }
 
 }
