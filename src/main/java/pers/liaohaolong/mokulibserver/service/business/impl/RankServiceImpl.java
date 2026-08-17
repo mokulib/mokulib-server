@@ -17,6 +17,7 @@ public class RankServiceImpl implements RankService {
     private final RankMapper rankMapper;
 
     @Override
+    @Transactional(readOnly = true)
     public List<Integer> borrow() {
         return rankMapper.borrow();
     }
@@ -25,6 +26,18 @@ public class RankServiceImpl implements RankService {
     @Transactional(readOnly = true)
     public List<Integer> favorite() {
         return rankMapper.favorite();
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<Integer> newMonthly() {
+        return rankMapper.newMonthly();
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<Integer> newStore() {
+        return rankMapper.newStore();
     }
 
 }

@@ -27,4 +27,14 @@ public class RankController {
         return rankService.favorite();
     }
 
+    @GetMapping("/new-monthly")
+    public List<Integer> newMonthly() {
+        return rankService.newMonthly();
+    }
+
+    @GetMapping("/new-store")
+    public List<Integer> newStore() {
+        return rankService.newStore();
+    }
+
 }
