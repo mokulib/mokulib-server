@@ -27,8 +27,10 @@ public class SearchServiceImpl extends ServiceImpl<HotSearchMapper, HotSearch> i
     @Override
     @Transactional
     public Page<Book> search(String keyword, SortModeDTO sortMode, Integer pageNum) throws BusinessException {
-        // 热搜统计，只统计对默认状态的搜索
-        if (sortMode == SortModeDTO.PUBLISH_DATE_FROM_NEW_TO_OLD && pageNum == 1) {
+        // 搜索业务
+        Page<Book> page = bookMapper.selectPage(new Page<>(pageNum, 5), SortModeDTO.apply(new LambdaQueryWrapper<Book>().like(Book::getTitle, keyword), sortMode));
+        // 热搜统计，只对有结果的、默认状态的搜索进行统计
+        if (page.getTotal() > 0 && sortMode == SortModeDTO.PUBLISH_DATE_FROM_NEW_TO_OLD && pageNum == 1) {
             HotSearch hotSearch = getOne(new LambdaQueryWrapper<HotSearch>().eq(HotSearch::getKeyword, keyword));
             if (hotSearch == null) {
                 hotSearch = new HotSearch();
@@ -40,8 +42,8 @@ public class SearchServiceImpl extends ServiceImpl<HotSearchMapper, HotSearch> i
             hotSearch.setUpdateTime(LocalDateTime.now());
             saveOrUpdate(hotSearch);
         }
-        // 搜索业务
-        return bookMapper.selectPage(new Page<>(pageNum, 5), SortModeDTO.apply(new LambdaQueryWrapper<Book>().like(Book::getTitle, keyword), sortMode));
+        // 返回搜索结果
+        return page;
     }
 
 }
