@@ -7,10 +7,14 @@ import pers.liaohaolong.mokulibserver.exception.BusinessException;
 import pers.liaohaolong.mokulibserver.model.BorrowRecord;
 import pers.liaohaolong.mokulibserver.model.User;
 
+import java.util.List;
+
 public interface BorrowRecordService extends IService<BorrowRecord> {
 
     BorrowRecord renew(User user, Integer id) throws BusinessException;
 
     BookCopyAdminDTO returnBook(Integer id, ReturnBookDTO returnBookDTO) throws BusinessException;
+
+    List<Integer> getTopBorrowedBookIds();
 
 }
