@@ -9,6 +9,7 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
+import org.springframework.http.CacheControl;
 import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
@@ -19,6 +20,7 @@ import pers.liaohaolong.mokulibserver.config.ImageConfigurations;
 import pers.liaohaolong.mokulibserver.config.properties.ImageProperties;
 
 import java.io.IOException;
+import java.util.concurrent.TimeUnit;
 
 /**
  * <h3>MokuLib Server 启动类</h3>
@@ -49,6 +51,7 @@ public class MokuLibServerApplication implements WebMvcConfigurer {
 
             registry.addResourceHandler(pathPattern)
                     .addResourceLocations(resourceLocation)
+                    .setCacheControl(CacheControl.maxAge(1, TimeUnit.HOURS))
                     .resourceChain(true)
                     .addResolver(new DefaultResourceResolver(properties));
 
