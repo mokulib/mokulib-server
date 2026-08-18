@@ -5,9 +5,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import pers.liaohaolong.mokulibserver.dto.response.RankDTO;
 import pers.liaohaolong.mokulibserver.service.business.RankService;
-
-import java.util.List;
 
 @Slf4j
 @RestController
@@ -18,22 +17,22 @@ public class RankController {
     private final RankService rankService;
 
     @GetMapping("/borrow")
-    public List<Integer> borrow() {
+    public RankDTO borrow() {
         return rankService.borrow();
     }
 
     @GetMapping("/favorite")
-    public List<Integer> favorite() {
+    public RankDTO favorite() {
         return rankService.favorite();
     }
 
     @GetMapping("/new-monthly")
-    public List<Integer> newMonthly() {
+    public RankDTO newMonthly() {
         return rankService.newMonthly();
     }
 
     @GetMapping("/new-store")
-    public List<Integer> newStore() {
+    public RankDTO newStore() {
         return rankService.newStore();
     }
 

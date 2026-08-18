@@ -1,14 +1,16 @@
 package pers.liaohaolong.mokulibserver.service.business;
 
-import java.util.List;
+import pers.liaohaolong.mokulibserver.dto.response.RankDTO;
 
 public interface RankService {
 
-    List<Integer> borrow();
+    void refresh();
 
-    List<Integer> favorite();
+    RankDTO borrow();
 
-    List<Integer> newMonthly();
+    RankDTO favorite();
 
-    List<Integer> newStore();
+    RankDTO newMonthly();
+
+    RankDTO newStore();
 }
