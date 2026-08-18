@@ -52,7 +52,7 @@ public class MokuLibServerApplication implements WebMvcConfigurer {
             registry.addResourceHandler(pathPattern)
                     .addResourceLocations(resourceLocation)
                     .setCacheControl(CacheControl.maxAge(1, TimeUnit.HOURS))
-                    .resourceChain(true)
+                    .resourceChain(false)
                     .addResolver(new DefaultResourceResolver(properties));
 
             log.info("Registering resource handler: mapping URL path {} to physical location {}, default resource {}.",
