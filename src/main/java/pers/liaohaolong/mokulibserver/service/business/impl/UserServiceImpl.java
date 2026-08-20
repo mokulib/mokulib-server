@@ -1,6 +1,7 @@
 package pers.liaohaolong.mokulibserver.service.business.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -36,6 +37,11 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
     @Override
     public void uploadAvatar(Integer id, byte[] avatar) throws BusinessException {
         imageService.save(ImageConfigurations.ImageType.AVATARS, String.valueOf(id), avatar);
+    }
+
+    @Override
+    public void updateUsername(Integer id, String username) throws BusinessException {
+        update(new LambdaUpdateWrapper<User>().eq(User::getId, id).set(User::getUsername, username));
     }
 
     @Override

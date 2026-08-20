@@ -16,6 +16,8 @@ public interface UserService extends IService<User> {
 
     void uploadAvatar(Integer id, byte[] avatar) throws BusinessException;
 
+    void updateUsername(Integer id, String username) throws BusinessException;
+
     List<UsernameDTO> getUsernames(@NonNull List<Integer> ids) throws BusinessException;
 
     NonsensitiveUserDTO get(@NonNull Integer id) throws BusinessException;

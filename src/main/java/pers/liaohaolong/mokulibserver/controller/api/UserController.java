@@ -8,14 +8,13 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import pers.liaohaolong.mokulibserver.annotation.SuccessInfo;
-import pers.liaohaolong.mokulibserver.dto.response.BorrowingDTO;
-import pers.liaohaolong.mokulibserver.dto.response.HistoryDTO;
-import pers.liaohaolong.mokulibserver.dto.response.NonsensitiveUserDTO;
-import pers.liaohaolong.mokulibserver.dto.response.UsernameDTO;
+import pers.liaohaolong.mokulibserver.dto.request.UpdateUsernameDTO;
+import pers.liaohaolong.mokulibserver.dto.response.*;
 import pers.liaohaolong.mokulibserver.exception.BusinessException;
 import pers.liaohaolong.mokulibserver.model.Book;
 import pers.liaohaolong.mokulibserver.model.User;
 import pers.liaohaolong.mokulibserver.service.business.UserService;
+import pers.liaohaolong.mokulibserver.util.JwtUtils;
 
 import java.util.List;
 
@@ -27,6 +26,8 @@ public class UserController {
 
     private final UserService userService;
 
+    private final JwtUtils jwtUtils;
+
     @PostMapping(value = "/{id}/avatar", consumes = "application/octet-stream")
     @PreAuthorize("isAuthenticated()")
     @SuccessInfo(message = "上传成功")
@@ -34,6 +35,14 @@ public class UserController {
         if (!user.getId().equals(id))
             throw new BusinessException("不能修改其他用户的头像");
         userService.uploadAvatar(user.getId(), avatar);
+    }
+
+    @PostMapping("/username")
+    @PreAuthorize("isAuthenticated()")
+    @SuccessInfo(message = "修改成功")
+    public JwtDTO updateUsername(@AuthenticationPrincipal User user, @RequestBody UpdateUsernameDTO updateUsernameDTO) throws BusinessException {
+        userService.updateUsername(user.getId(), updateUsernameDTO.getUsername());
+        return new JwtDTO(jwtUtils.generateToken(userService.getById(user.getId())));
     }
 
     @GetMapping
