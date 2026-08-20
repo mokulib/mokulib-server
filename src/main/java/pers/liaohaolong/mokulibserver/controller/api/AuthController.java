@@ -9,7 +9,7 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import pers.liaohaolong.mokulibserver.annotation.SuccessInfo;
 import pers.liaohaolong.mokulibserver.dto.ResultDTO;
-import pers.liaohaolong.mokulibserver.dto.request.ChangePasswordDTO;
+import pers.liaohaolong.mokulibserver.dto.request.ResetPasswordDTO;
 import pers.liaohaolong.mokulibserver.exception.BusinessException;
 import pers.liaohaolong.mokulibserver.model.EmailCaptcha;
 import pers.liaohaolong.mokulibserver.model.User;
@@ -54,16 +54,16 @@ public class AuthController {
         return Map.of("jwt", "");
     }
 
-    @GetMapping("change-password")
-    public ResultDTO getChangePasswordCaptcha(@AuthenticationPrincipal User user) {
-        return authService.getChangePasswordCaptcha(user).toResultDTO(EmailCaptcha.BusinessType.CHANGE_PASSWORD);
+    @GetMapping("reset-password")
+    public ResultDTO getResetPasswordCaptcha(@AuthenticationPrincipal User user) {
+        return authService.getResetPasswordCaptcha(user).toResultDTO(EmailCaptcha.BusinessType.RESET_PASSWORD);
     }
 
-    @PostMapping("change-password")
+    @PostMapping("reset-password")
     @SuccessInfo(message = "密码已修改，请重新登录")
-    public Map<String, String> changePassword(@AuthenticationPrincipal User user, @RequestParam("emailCaptcha") String emailCaptcha, @RequestBody @NotNull ChangePasswordDTO changePasswordDTO) {
+    public Map<String, String> resetPassword(@AuthenticationPrincipal User user, @RequestParam("emailCaptcha") String emailCaptcha, @RequestBody @NotNull ResetPasswordDTO resetPasswordDTO) {
         // 修改密码
-        authService.changePassword(user, emailCaptcha, changePasswordDTO);
+        authService.resetPassword(user, emailCaptcha, resetPasswordDTO);
         // 签发无效 JWT，强制重新登陆
         return Map.of("jwt", "");
     }

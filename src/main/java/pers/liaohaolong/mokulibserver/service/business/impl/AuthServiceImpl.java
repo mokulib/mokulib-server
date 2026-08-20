@@ -1,5 +1,6 @@
 package pers.liaohaolong.mokulibserver.service.business.impl;
 
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import lombok.AllArgsConstructor;
@@ -10,7 +11,7 @@ import org.springframework.transaction.annotation.Transactional;
 import pers.liaohaolong.mokulibserver.dao.ActivationTokenMapper;
 import pers.liaohaolong.mokulibserver.dao.UserMapper;
 import pers.liaohaolong.mokulibserver.dto.GetEmailCaptchaResultDTO;
-import pers.liaohaolong.mokulibserver.dto.request.ChangePasswordDTO;
+import pers.liaohaolong.mokulibserver.dto.request.ResetPasswordDTO;
 import pers.liaohaolong.mokulibserver.exception.BusinessException;
 import pers.liaohaolong.mokulibserver.model.ActivationToken;
 import pers.liaohaolong.mokulibserver.model.EmailCaptcha.BusinessType;
@@ -88,19 +89,19 @@ public class AuthServiceImpl extends ServiceImpl<UserMapper, User> implements Au
 
     @Override
     @Transactional
-    public GetEmailCaptchaResultDTO getChangePasswordCaptcha(User user) {
-        return emailCaptchaBaseService.getEmailCaptcha(user.getId(), user.getEmail(), BusinessType.CHANGE_PASSWORD);
+    public GetEmailCaptchaResultDTO getResetPasswordCaptcha(User user) {
+        return emailCaptchaBaseService.getEmailCaptcha(user.getId(), user.getEmail(), BusinessType.RESET_PASSWORD);
     }
 
     @Override
     @Transactional
-    public void changePassword(User user, String captcha, ChangePasswordDTO changePasswordDTO) {
-        if (!emailCaptchaBaseService.verifyEmailCaptcha(user.getId(), BusinessType.CHANGE_PASSWORD, captcha))
+    public void resetPassword(User user, String captcha, ResetPasswordDTO resetPasswordDTO) {
+        if (!emailCaptchaBaseService.verifyEmailCaptcha(user.getId(), BusinessType.RESET_PASSWORD, captcha))
             throw new BusinessException("验证码错误或验证码已过期");
         // 修改密码
         update(new LambdaUpdateWrapper<User>()
                 .eq(User::getId, user.getId())
-                .set(User::getPassword, passwordEncoder.encode(changePasswordDTO.getNewPassword()))
+                .set(User::getPassword, passwordEncoder.encode(resetPasswordDTO.getNewPassword()))
         );
     }
 

@@ -2,7 +2,7 @@ package pers.liaohaolong.mokulibserver.service.business;
 
 import com.baomidou.mybatisplus.extension.service.IService;
 import pers.liaohaolong.mokulibserver.dto.GetEmailCaptchaResultDTO;
-import pers.liaohaolong.mokulibserver.dto.request.ChangePasswordDTO;
+import pers.liaohaolong.mokulibserver.dto.request.ResetPasswordDTO;
 import pers.liaohaolong.mokulibserver.exception.BusinessException;
 import pers.liaohaolong.mokulibserver.model.User;
 
@@ -16,8 +16,8 @@ public interface AuthService extends IService<User> {
 
     void closeAccount(User user, String captcha) throws BusinessException;
 
-    GetEmailCaptchaResultDTO getChangePasswordCaptcha(User user);
+    GetEmailCaptchaResultDTO getResetPasswordCaptcha(User user);
 
-    void changePassword(User user, String emailCaptcha, ChangePasswordDTO changePasswordDTO);
+    void resetPassword(User user, String emailCaptcha, ResetPasswordDTO resetPasswordDTO);
 
 }

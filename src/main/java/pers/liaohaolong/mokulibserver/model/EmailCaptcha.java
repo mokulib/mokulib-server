@@ -30,7 +30,7 @@ public class EmailCaptcha {
 
         LOGIN("LOGIN", "登录", 1, 15, "login"),
         CLOSE_ACCOUNT("CLOSE_ACCOUNT", "删除账户", 1, 30, "close-account"),
-        CHANGE_PASSWORD("CHANGE_PASSWORD", "修改密码", 1, 30, "change-password");
+        RESET_PASSWORD("RESET_PASSWORD", "重置密码", 1, 30, "reset-password");
 
         @EnumValue
         private final String code;

@@ -6,7 +6,7 @@ import lombok.Data;
 import pers.liaohaolong.mokulibserver.config.RegexpConfigurations;
 
 @Data
-public class ChangePasswordDTO {
+public class ResetPasswordDTO {
 
     @NotBlank(message = "密码不能为空")
     @Pattern(regexp = RegexpConfigurations.PASSWORD_REGEXP, message = "密码格式错误")
