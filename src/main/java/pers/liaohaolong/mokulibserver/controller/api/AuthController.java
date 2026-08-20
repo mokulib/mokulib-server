@@ -45,7 +45,7 @@ public class AuthController {
         return authService.getCloseAccountCaptcha(user).toResultDTO(EmailCaptcha.BusinessType.CLOSE_ACCOUNT);
     }
 
-    @PostMapping("close-account")
+    @DeleteMapping("close-account")
     @SuccessInfo(message = "账户已关闭")
     public Map<String, String> closeAccount(@AuthenticationPrincipal User user, @RequestParam("emailCaptcha") String emailCaptcha) throws BusinessException {
         // 关闭账户

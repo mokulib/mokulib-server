@@ -9,11 +9,13 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import pers.liaohaolong.mokulibserver.dao.ActivationTokenMapper;
+import pers.liaohaolong.mokulibserver.dao.BorrowRecordMapper;
 import pers.liaohaolong.mokulibserver.dao.UserMapper;
 import pers.liaohaolong.mokulibserver.dto.GetEmailCaptchaResultDTO;
 import pers.liaohaolong.mokulibserver.dto.request.ResetPasswordDTO;
 import pers.liaohaolong.mokulibserver.exception.BusinessException;
 import pers.liaohaolong.mokulibserver.model.ActivationToken;
+import pers.liaohaolong.mokulibserver.model.BorrowRecord;
 import pers.liaohaolong.mokulibserver.model.EmailCaptcha.BusinessType;
 import pers.liaohaolong.mokulibserver.model.User;
 import pers.liaohaolong.mokulibserver.service.base.EmailCaptchaBaseService;
@@ -26,8 +28,9 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 public class AuthServiceImpl extends ServiceImpl<UserMapper, User> implements AuthService {
 
-    private final ActivationTokenMapper activationTokenMapper;
     private final EmailCaptchaBaseService emailCaptchaBaseService;
+    private final ActivationTokenMapper activationTokenMapper;
+    private final BorrowRecordMapper borrowRecordMapper;
     private final PasswordEncoder passwordEncoder;
 
     @Override
@@ -83,6 +86,9 @@ public class AuthServiceImpl extends ServiceImpl<UserMapper, User> implements Au
     public void closeAccount(User user, String captcha) throws BusinessException {
         if (!emailCaptchaBaseService.verifyEmailCaptcha(user.getId(), BusinessType.CLOSE_ACCOUNT, captcha))
             throw new BusinessException("验证码错误或验证码已过期");
+        // 是否有未完成的借阅
+        if (borrowRecordMapper.selectCount(new LambdaQueryWrapper<BorrowRecord>().eq(BorrowRecord::getUserId, user.getId()).eq(BorrowRecord::getCloseStatus, BorrowRecord.CloseStatus.OPEN)) > 0)
+            throw new BusinessException("账户有未完成的借阅，无法注销");
         // 关闭账户
         removeById(user.getId());
     }
