@@ -1,5 +1,6 @@
 package pers.liaohaolong.mokulibserver.service.business.impl;
 
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import lombok.AllArgsConstructor;
@@ -91,4 +92,30 @@ public class BorrowRecordServiceImpl extends ServiceImpl<BorrowRecordMapper, Bor
         return BookCopyAdminDTO.fromBookCopy(bookCopyMapper.selectById(borrowRecord.getBookCopyId()));
     }
 
+    @Override
+    @Transactional
+    public void rollbackReturn(Integer id) throws BusinessException {
+        BorrowRecord borrowRecord = getById(id);
+
+        if (borrowRecord == null)
+            throw new BusinessException("拒绝操作，借阅记录不存在");
+        if (exists(new LambdaQueryWrapper<BorrowRecord>().eq(BorrowRecord::getBookCopyId, borrowRecord.getBookCopyId()).gt(BorrowRecord::getCreateTime, borrowRecord.getCreateTime())))
+            throw new BusinessException("拒绝操作，只能撤销最近一次的归还操作");
+        if (borrowRecord.getCloseStatus() == BorrowRecord.CloseStatus.OPEN)
+            throw new BusinessException("拒绝操作，图书尚未归还");
+
+        // 撤销归还
+        update(new LambdaUpdateWrapper<BorrowRecord>()
+                .eq(BorrowRecord::getId, id)
+                .set(BorrowRecord::getCloseStatus, BorrowRecord.CloseStatus.OPEN)
+                .set(BorrowRecord::getCloseTime, null)
+        );
+        // 恢复馆藏状态
+        bookCopyMapper.update(new LambdaUpdateWrapper<BookCopy>()
+                .eq(BookCopy::getId, borrowRecord.getBookCopyId())
+                .set(BookCopy::getStatus, BookCopy.Status.UNAVAILABLE)
+                .set(BookCopy::getWithdrawnReason, null)
+                .set(BookCopy::getWithdrawnTime, null)
+        );
+    }
 }

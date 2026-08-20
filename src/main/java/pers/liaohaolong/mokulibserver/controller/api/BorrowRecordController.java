@@ -36,4 +36,11 @@ public class BorrowRecordController {
         return borrowRecordService.returnBook(id, returnBookDTO);
     }
 
+    @PostMapping("{id}/rollback-return")
+    @PreAuthorize("hasAnyRole('ADMIN')")
+    @SuccessInfo(message = "撤销归还成功")
+    public void rollbackReturn(@PathVariable @NotNull Integer id) throws BusinessException {
+        borrowRecordService.rollbackReturn(id);
+    }
+
 }

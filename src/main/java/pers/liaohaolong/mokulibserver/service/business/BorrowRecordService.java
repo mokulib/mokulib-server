@@ -13,4 +13,6 @@ public interface BorrowRecordService extends IService<BorrowRecord> {
 
     BookCopyAdminDTO returnBook(Integer id, ReturnBookDTO returnBookDTO) throws BusinessException;
 
+    void rollbackReturn(Integer id) throws BusinessException;
+
 }
