@@ -27,20 +27,20 @@ public class BookController {
 
     @PostMapping
     @PreAuthorize("hasAnyRole('ADMIN')")
-    public int add(@RequestBody @Valid BookDTO bookDTO) {
+    public int add(@RequestBody @Valid BookDTO bookDTO) throws BusinessException {
         return bookService.add(bookDTO);
     }
 
     @DeleteMapping("/{id}")
     @PreAuthorize("hasAnyRole('ADMIN')")
-    public void delete(@PathVariable @NotNull Integer id) {
+    public void delete(@PathVariable @NotNull Integer id) throws BusinessException {
         bookService.delete(id);
     }
 
     @PutMapping("/{id}")
     @PreAuthorize("hasAnyRole('ADMIN')")
     @SuccessInfo(message = "更新成功")
-    public Book update(@PathVariable @NotNull Integer id, @RequestBody @Valid BookDTO bookDTO) {
+    public Book update(@PathVariable @NotNull Integer id, @RequestBody @Valid BookDTO bookDTO) throws BusinessException {
         return bookService.update(id, bookDTO);
     }
 
@@ -52,7 +52,7 @@ public class BookController {
     @PostMapping(value = "/{id}/cover", consumes = "application/octet-stream")
     @PreAuthorize("hasAnyRole('ADMIN')")
     @SuccessInfo(message = "上传成功")
-    public void uploadCover(@PathVariable @NotNull Integer id, @RequestBody byte[] cover) {
+    public void uploadCover(@PathVariable @NotNull Integer id, @RequestBody byte[] cover) throws BusinessException {
         bookService.uploadCover(id, cover);
     }
 
