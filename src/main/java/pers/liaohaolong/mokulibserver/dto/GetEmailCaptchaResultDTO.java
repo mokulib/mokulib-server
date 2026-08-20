@@ -29,7 +29,7 @@ public class GetEmailCaptchaResultDTO {
                 .status(isSent ? ResultDTO.OK_STATUS : ResultDTO.TOO_FREQUENT)
                 .businessType(businessType.getDesc())
                 .message(isSent ? "验证码已发送，请注意查收" : "请求过于频繁，请稍后再试")
-                .data(Map.of("codePrefix", codePrefix, "coolingTime", coolingTime))
+                .data(Map.of("code_prefix", codePrefix, "cooling_time", coolingTime))
                 .build();
     }
 
