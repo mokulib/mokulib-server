@@ -76,6 +76,7 @@ public class BookCopyServiceImpl extends ServiceImpl<BookCopyMapper, BookCopy> i
 
         return borrowRecordMapper.selectList(new LambdaQueryWrapper<BorrowRecord>()
                 .eq(BorrowRecord::getBookCopyId, id)
+                .orderByDesc(BorrowRecord::getCreateTime)
         );
     }
 
