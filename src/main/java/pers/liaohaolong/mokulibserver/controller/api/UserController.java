@@ -9,7 +9,10 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import pers.liaohaolong.mokulibserver.annotation.SuccessInfo;
 import pers.liaohaolong.mokulibserver.dto.request.UpdateUsernameDTO;
-import pers.liaohaolong.mokulibserver.dto.response.*;
+import pers.liaohaolong.mokulibserver.dto.response.BorrowingDTO;
+import pers.liaohaolong.mokulibserver.dto.response.HistoryDTO;
+import pers.liaohaolong.mokulibserver.dto.response.JwtDTO;
+import pers.liaohaolong.mokulibserver.dto.response.NonsensitiveUserDTO;
 import pers.liaohaolong.mokulibserver.exception.BusinessException;
 import pers.liaohaolong.mokulibserver.model.Book;
 import pers.liaohaolong.mokulibserver.model.User;
@@ -28,6 +31,22 @@ public class UserController {
 
     private final JwtUtils jwtUtils;
 
+    @GetMapping
+    @PreAuthorize("hasAnyRole('ADMIN')")
+    public NonsensitiveUserDTO get(@RequestParam(required = false) Integer id, @RequestParam(required = false) String email) throws BusinessException {
+        if (id != null)
+            return userService.get(id);
+        if (email != null)
+            return userService.get(email);
+        throw new BusinessException("id 和 email 参数不能同时为空");
+    }
+
+    @GetMapping("/list")
+    @PreAuthorize("hasAnyRole('ADMIN')")
+    public List<NonsensitiveUserDTO> list(@RequestParam @NotNull @NotEmpty List<Integer> ids) throws BusinessException {
+        return userService.listByIds(ids.stream().distinct().toList()).stream().map(NonsensitiveUserDTO::fromUser).toList();
+    }
+
     @PostMapping(value = "/{id}/avatar", consumes = "application/octet-stream")
     @PreAuthorize("isAuthenticated()")
     @SuccessInfo(message = "上传成功")
@@ -43,22 +62,6 @@ public class UserController {
     public JwtDTO updateUsername(@AuthenticationPrincipal User user, @RequestBody UpdateUsernameDTO updateUsernameDTO) throws BusinessException {
         userService.updateUsername(user.getId(), updateUsernameDTO.getUsername());
         return new JwtDTO(jwtUtils.generateToken(userService.getById(user.getId())));
-    }
-
-    @GetMapping
-    @PreAuthorize("hasAnyRole('ADMIN')")
-    public NonsensitiveUserDTO get(@RequestParam(required = false) Integer id, @RequestParam(required = false) String email) throws BusinessException {
-        if (id != null)
-            return userService.get(id);
-        if (email != null)
-            return userService.get(email);
-        throw new BusinessException("id 和 email 参数不能同时为空");
-    }
-
-    @GetMapping("/usernames")
-    @PreAuthorize("hasAnyRole('ADMIN')")
-    public List<UsernameDTO> get(@RequestParam @NotNull @NotEmpty List<Integer> ids) throws BusinessException {
-        return userService.getUsernames(ids);
     }
 
     @GetMapping("/borrowing")

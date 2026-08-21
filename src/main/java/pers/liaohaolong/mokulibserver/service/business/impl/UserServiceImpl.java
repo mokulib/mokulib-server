@@ -13,7 +13,6 @@ import pers.liaohaolong.mokulibserver.dao.*;
 import pers.liaohaolong.mokulibserver.dto.response.BorrowingDTO;
 import pers.liaohaolong.mokulibserver.dto.response.HistoryDTO;
 import pers.liaohaolong.mokulibserver.dto.response.NonsensitiveUserDTO;
-import pers.liaohaolong.mokulibserver.dto.response.UsernameDTO;
 import pers.liaohaolong.mokulibserver.exception.BusinessException;
 import pers.liaohaolong.mokulibserver.model.*;
 import pers.liaohaolong.mokulibserver.service.base.ImageService;
@@ -35,22 +34,6 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
     private final FavoriteMapper favoriteMapper;
 
     @Override
-    public void uploadAvatar(Integer id, byte[] avatar) throws BusinessException {
-        imageService.save(ImageConfigurations.ImageType.AVATARS, String.valueOf(id), avatar);
-    }
-
-    @Override
-    public void updateUsername(Integer id, String username) throws BusinessException {
-        update(new LambdaUpdateWrapper<User>().eq(User::getId, id).set(User::getUsername, username));
-    }
-
-    @Override
-    @Transactional(readOnly = true)
-    public List<UsernameDTO> getUsernames(@NonNull List<Integer> ids) throws BusinessException {
-        return listByIds(ids.stream().distinct().toList()).stream().map(user -> new UsernameDTO(user.getId(), user.getUsername())).toList();
-    }
-
-    @Override
     @Transactional(readOnly = true)
     public NonsensitiveUserDTO get(@NonNull Integer id) throws BusinessException {
         User user = getById(id);
@@ -70,6 +53,16 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
             throw new BusinessException("用户不存在");
 
         return NonsensitiveUserDTO.fromUser(user);
+    }
+
+    @Override
+    public void uploadAvatar(Integer id, byte[] avatar) throws BusinessException {
+        imageService.save(ImageConfigurations.ImageType.AVATARS, String.valueOf(id), avatar);
+    }
+
+    @Override
+    public void updateUsername(Integer id, String username) throws BusinessException {
+        update(new LambdaUpdateWrapper<User>().eq(User::getId, id).set(User::getUsername, username));
     }
 
     @Override

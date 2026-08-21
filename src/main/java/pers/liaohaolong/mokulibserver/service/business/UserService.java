@@ -5,7 +5,6 @@ import org.jspecify.annotations.NonNull;
 import pers.liaohaolong.mokulibserver.dto.response.BorrowingDTO;
 import pers.liaohaolong.mokulibserver.dto.response.HistoryDTO;
 import pers.liaohaolong.mokulibserver.dto.response.NonsensitiveUserDTO;
-import pers.liaohaolong.mokulibserver.dto.response.UsernameDTO;
 import pers.liaohaolong.mokulibserver.exception.BusinessException;
 import pers.liaohaolong.mokulibserver.model.Book;
 import pers.liaohaolong.mokulibserver.model.User;
@@ -14,15 +13,13 @@ import java.util.List;
 
 public interface UserService extends IService<User> {
 
-    void uploadAvatar(Integer id, byte[] avatar) throws BusinessException;
-
-    void updateUsername(Integer id, String username) throws BusinessException;
-
-    List<UsernameDTO> getUsernames(@NonNull List<Integer> ids) throws BusinessException;
-
     NonsensitiveUserDTO get(@NonNull Integer id) throws BusinessException;
 
     NonsensitiveUserDTO get(@NonNull String email) throws BusinessException;
+
+    void uploadAvatar(Integer id, byte[] avatar) throws BusinessException;
+
+    void updateUsername(Integer id, String username) throws BusinessException;
 
     BorrowingDTO getBorrowing(@NonNull Integer id);
 
