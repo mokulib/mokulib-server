@@ -12,7 +12,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import pers.liaohaolong.mokulibserver.dto.request.SortModeDTO;
 import pers.liaohaolong.mokulibserver.dto.response.SearchResultsDTO;
-import pers.liaohaolong.mokulibserver.model.Book;
 import pers.liaohaolong.mokulibserver.model.HotSearch;
 import pers.liaohaolong.mokulibserver.service.business.SearchService;
 
@@ -27,7 +26,7 @@ public class SearchController {
     private final SearchService searchService;
 
     @GetMapping()
-    public SearchResultsDTO<Book> search(@RequestParam @NotBlank String keyword, @RequestParam @NotNull SortModeDTO sortMode, @RequestParam @NotNull @Min(1) Integer pageNum) {
+    public SearchResultsDTO<Integer> search(@RequestParam @NotBlank String keyword, @RequestParam @NotNull SortModeDTO sortMode, @RequestParam @NotNull @Min(1) Integer pageNum) {
         return SearchResultsDTO.of(keyword, sortMode, searchService.search(keyword, sortMode, pageNum));
     }
 

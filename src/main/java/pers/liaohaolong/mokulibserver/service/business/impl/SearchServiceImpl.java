@@ -1,6 +1,7 @@
 package pers.liaohaolong.mokulibserver.service.business.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import lombok.AllArgsConstructor;
@@ -26,7 +27,7 @@ public class SearchServiceImpl extends ServiceImpl<HotSearchMapper, HotSearch> i
 
     @Override
     @Transactional
-    public Page<Book> search(String keyword, SortModeDTO sortMode, Integer pageNum) throws BusinessException {
+    public IPage<Integer> search(String keyword, SortModeDTO sortMode, Integer pageNum) throws BusinessException {
         // 搜索业务
         Page<Book> page = bookMapper.selectPage(new Page<>(pageNum, 5), SortModeDTO.apply(new LambdaQueryWrapper<Book>().like(Book::getTitle, keyword), sortMode));
         // 热搜统计，只对有结果的、默认状态的搜索进行统计
@@ -43,7 +44,7 @@ public class SearchServiceImpl extends ServiceImpl<HotSearchMapper, HotSearch> i
             saveOrUpdate(hotSearch);
         }
         // 返回搜索结果
-        return page;
+        return page.convert(Book::getId);
     }
 
 }

@@ -1,9 +1,8 @@
 package pers.liaohaolong.mokulibserver.dto.response;
 
-import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.baomidou.mybatisplus.core.metadata.IPage;
 import lombok.Data;
 import pers.liaohaolong.mokulibserver.dto.request.SortModeDTO;
-import pers.liaohaolong.mokulibserver.model.Book;
 
 import java.util.Map;
 
@@ -17,10 +16,10 @@ public class SearchResultsDTO<T> {
 
     private Map<String, String> conditions;
 
-    private Page<T> results;
+    private IPage<T> results;
 
-    public static SearchResultsDTO<Book> of(String keyword, SortModeDTO sortMode, Page<Book> results) {
-        SearchResultsDTO<Book> response = new SearchResultsDTO<>();
+    public static <T> SearchResultsDTO<T> of(String keyword, SortModeDTO sortMode, IPage<T> results) {
+        SearchResultsDTO<T> response = new SearchResultsDTO<>();
         response.setConditions(Map.of("keyword", keyword, "sortMode", sortMode.getCode()));
         response.setResults(results);
         return response;
