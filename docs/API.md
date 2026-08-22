@@ -13,6 +13,7 @@
 | /api/auth/reset-password +               | POST     | 修改密码                      |
 | /api/captcha                             | GET      | 请求图片验证码                |
 | /api/books                               | POST     | 新建书籍信息                  |
+| /api/books/search                        | GET      | 搜索                          |
 | /api/books/{id}                          | GET      | 获取书籍信息                  |
 | /api/books/{id}                          | PUT      | 修改书籍信息                  |
 | /api/books/{id}                          | DELETE   | 删除书籍信息                  |
@@ -47,8 +48,7 @@
 | /api/borrow-records/{id}/renew           | POST     | 续借                          |
 | /api/borrow-records/{id}/return          | POST     | 归还                          |
 | /api/borrow-records/{id}/rollback-return | POST     | 撤销归还操作                  |
-| /api/search                              | GET      | 搜索                          |
-| /api/search/hot                          | GET      | 获取热门搜索关键词            |
+| /api/hot-search                          | GET      | 获取热搜关键词                |
 | /api/ranks/borrow                        | GET      | 借阅量排名                    |
 | /api/ranks/favorite                      | GET      | 收藏量排名                    |
 | /api/ranks/new-monthly                   | GET      | 近 30 天首次入库的图书        |

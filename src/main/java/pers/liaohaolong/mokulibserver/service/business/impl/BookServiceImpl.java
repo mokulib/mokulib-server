@@ -1,6 +1,8 @@
 package pers.liaohaolong.mokulibserver.service.business.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -10,16 +12,20 @@ import pers.liaohaolong.mokulibserver.config.ImageConfigurations;
 import pers.liaohaolong.mokulibserver.dao.BookCopyMapper;
 import pers.liaohaolong.mokulibserver.dao.BookMapper;
 import pers.liaohaolong.mokulibserver.dao.BorrowRecordMapper;
+import pers.liaohaolong.mokulibserver.dao.HotSearchMapper;
 import pers.liaohaolong.mokulibserver.dto.request.BookDTO;
+import pers.liaohaolong.mokulibserver.dto.request.SortModeDTO;
 import pers.liaohaolong.mokulibserver.dto.response.BookCopyAdminDTO;
 import pers.liaohaolong.mokulibserver.dto.response.BookCopyUserDTO;
 import pers.liaohaolong.mokulibserver.exception.BusinessException;
 import pers.liaohaolong.mokulibserver.model.Book;
 import pers.liaohaolong.mokulibserver.model.BookCopy;
 import pers.liaohaolong.mokulibserver.model.BorrowRecord;
+import pers.liaohaolong.mokulibserver.model.HotSearch;
 import pers.liaohaolong.mokulibserver.service.base.ImageService;
 import pers.liaohaolong.mokulibserver.service.business.BookService;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
@@ -32,6 +38,7 @@ public class BookServiceImpl extends ServiceImpl<BookMapper, Book> implements Bo
 
     private final BookCopyMapper bookCopyMapper;
     private final BorrowRecordMapper borrowRecordMapper;
+    private final HotSearchMapper hotSearchMapper;
     private final ImageService imageService;
 
     @Override
@@ -155,6 +162,28 @@ public class BookServiceImpl extends ServiceImpl<BookMapper, Book> implements Bo
             bookCopyAdminDTO.setCurrentBorrowRecord(borrowRecordMap.get(bookCopy.getId())); // 获取此副本的当前借阅记录（不一定存在）
             return bookCopyAdminDTO;
         }).toList();
+    }
+
+    @Override
+    @Transactional
+    public IPage<Integer> search(String keyword, SortModeDTO sortMode, Integer pageNum) throws BusinessException {
+        // 搜索业务
+        Page<Book> page = page(new Page<>(pageNum, 5), SortModeDTO.apply(new LambdaQueryWrapper<Book>().like(Book::getTitle, keyword), sortMode));
+        // 热搜统计，只对有结果的、默认状态的搜索进行统计
+        if (page.getTotal() > 0 && sortMode == SortModeDTO.PUBLISH_DATE_FROM_NEW_TO_OLD && pageNum == 1) {
+            HotSearch hotSearch = hotSearchMapper.selectOne(new LambdaQueryWrapper<HotSearch>().eq(HotSearch::getKeyword, keyword));
+            if (hotSearch == null) {
+                hotSearch = new HotSearch();
+                hotSearch.setKeyword(keyword);
+                hotSearch.setCount(1);
+            } else {
+                hotSearch.setCount(hotSearch.getCount() + 1);
+            }
+            hotSearch.setUpdateTime(LocalDateTime.now());
+            hotSearchMapper.insertOrUpdate(hotSearch);
+        }
+        // 返回搜索结果
+        return page.convert(Book::getId);
     }
 
 }
