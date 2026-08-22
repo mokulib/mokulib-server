@@ -6,7 +6,6 @@ import pers.liaohaolong.mokulibserver.dto.response.BorrowRecordWithBookIdDTO;
 import pers.liaohaolong.mokulibserver.dto.response.HistoryDTO;
 import pers.liaohaolong.mokulibserver.dto.response.NonsensitiveUserDTO;
 import pers.liaohaolong.mokulibserver.exception.BusinessException;
-import pers.liaohaolong.mokulibserver.model.Book;
 import pers.liaohaolong.mokulibserver.model.User;
 
 import java.util.List;
@@ -23,7 +22,7 @@ public interface UserService extends IService<User> {
 
     List<BorrowRecordWithBookIdDTO> getBorrowing(@NonNull Integer id);
 
-    List<Book> getFavorites(@NonNull Integer id);
+    List<Integer> getFavorites(@NonNull Integer id);
 
     List<HistoryDTO> getHistory(@NonNull Integer id);
 

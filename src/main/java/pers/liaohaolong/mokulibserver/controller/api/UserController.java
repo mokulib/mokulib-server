@@ -14,7 +14,6 @@ import pers.liaohaolong.mokulibserver.dto.response.HistoryDTO;
 import pers.liaohaolong.mokulibserver.dto.response.JwtDTO;
 import pers.liaohaolong.mokulibserver.dto.response.NonsensitiveUserDTO;
 import pers.liaohaolong.mokulibserver.exception.BusinessException;
-import pers.liaohaolong.mokulibserver.model.Book;
 import pers.liaohaolong.mokulibserver.model.User;
 import pers.liaohaolong.mokulibserver.service.business.UserService;
 import pers.liaohaolong.mokulibserver.util.JwtUtils;
@@ -72,7 +71,7 @@ public class UserController {
 
     @GetMapping("/favorites")
     @PreAuthorize("isAuthenticated()")
-    public List<Book> getFavorites(@AuthenticationPrincipal User user) {
+    public List<Integer> getFavorites(@AuthenticationPrincipal User user) {
         return userService.getFavorites(user.getId());
     }
 

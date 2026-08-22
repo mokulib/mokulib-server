@@ -92,7 +92,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
 
     @Override
     @Transactional(readOnly = true)
-    public List<Book> getFavorites(@NonNull Integer id) {
+    public List<Integer> getFavorites(@NonNull Integer id) {
         // 查询收藏的图书 ID 列表
         List<Integer> bookIds = favoriteMapper.selectList(new LambdaQueryWrapper<Favorite>()
                 .eq(Favorite::getUserId, id)
@@ -102,7 +102,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
             return List.of();
 
         // 批量查询收藏的图书
-        return bookMapper.selectByIds(bookIds);
+        return bookMapper.selectByIds(bookIds).stream().map(Book::getId).toList();
     }
 
     @Override
