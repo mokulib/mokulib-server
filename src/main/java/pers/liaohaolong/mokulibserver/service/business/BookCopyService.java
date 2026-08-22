@@ -17,8 +17,6 @@ public interface BookCopyService extends IService<BookCopy> {
 
     BookCopyAdminDTO update(Integer id, UpdateBookCopyDTO updateBookCopyDTO) throws BusinessException;
 
-    BookCopy get(Integer id) throws BusinessException;
-
     List<BorrowRecord> getBorrowRecords(Integer id) throws BusinessException;
 
     BookCopyAdminDTO borrow(Integer id, BorrowDTO borrowDTO) throws BusinessException;

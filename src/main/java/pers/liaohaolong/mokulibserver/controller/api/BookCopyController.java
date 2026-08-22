@@ -45,7 +45,7 @@ public class BookCopyController {
     @PreAuthorize("hasAnyRole('ADMIN')")
     @SuccessInfo(message = "获取成功")
     public BookCopy get(@PathVariable @NotNull Integer id) throws BusinessException {
-        return bookCopyService.get(id);
+        return bookCopyService.getOptById(id).orElseThrow(() -> new BusinessException("图书不存在，获取失败"));
     }
 
     @GetMapping("/{id}/borrow-records")
