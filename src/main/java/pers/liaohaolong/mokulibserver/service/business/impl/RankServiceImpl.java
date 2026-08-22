@@ -1,8 +1,9 @@
 package pers.liaohaolong.mokulibserver.service.business.impl;
 
-import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.boot.context.event.ApplicationReadyEvent;
+import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import pers.liaohaolong.mokulibserver.dao.virtual.RankMapper;
@@ -23,12 +24,9 @@ public class RankServiceImpl implements RankService {
     private RankDTO newMonthlyRank;
     private RankDTO newStoreRank;
 
-    @PostConstruct
-    public void init() {
-        refresh();
-    }
-
     @Override
+    @EventListener(ApplicationReadyEvent.class)
+    @Transactional(readOnly = true)
     public void refresh() {
         log.info("开始更新排行榜...");
         borrowRank = new RankDTO(rankMapper.borrow(), LocalDateTime.now());
