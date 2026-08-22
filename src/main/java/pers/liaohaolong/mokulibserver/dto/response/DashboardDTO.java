@@ -44,6 +44,9 @@ public class DashboardDTO {
     private int damagedWithdrawnCount;  // 损坏数量
     private int otherWithdrawnCount;    // 其他下架数量
 
+    // 更新时间
+    private LocalDateTime updateTime;
+
     @Data
     @NoArgsConstructor
     @AllArgsConstructor

@@ -1,17 +1,32 @@
 package pers.liaohaolong.mokulibserver.service.business.impl;
 
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.boot.context.event.ApplicationReadyEvent;
+import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import pers.liaohaolong.mokulibserver.dao.virtual.DashboardMapper;
 import pers.liaohaolong.mokulibserver.dto.response.DashboardDTO;
 import pers.liaohaolong.mokulibserver.service.business.DashboardService;
 
 import java.time.LocalDateTime;
 import java.util.List;
 
+@Slf4j
 @Service
+@RequiredArgsConstructor
 public class DashboardServiceImpl implements DashboardService {
 
+    private final DashboardMapper dashboardMapper;
+
+    private DashboardDTO cache;
+
     @Override
-    public DashboardDTO get() {
+    @EventListener(ApplicationReadyEvent.class)
+    @Transactional(readOnly = true)
+    public void refresh() {
+        log.info("开始更新数据概览...");
         DashboardDTO dashboardDTO = new DashboardDTO();
 
         dashboardDTO.setAvailableCopies(1272);
@@ -24,6 +39,7 @@ public class DashboardServiceImpl implements DashboardService {
         dashboardDTO.setBorrowingPercentage(3.7);
         dashboardDTO.setTodayBorrowedChange(5);
         dashboardDTO.setTodayReturnedChange(-2);
+
         dashboardDTO.setBorrowTrend(List.of(12, 18, 15, 22, 19, 14, 8));
         dashboardDTO.setReturnTrend(List.of(8, 10, 12, 16, 14, 9, 6));
         dashboardDTO.setNewBookCopyTrend(List.of(2, 3, 1, 4, 2, 0, 3));
@@ -37,12 +53,11 @@ public class DashboardServiceImpl implements DashboardService {
                 new DashboardDTO.CategoryStat("计算机", 13),
                 new DashboardDTO.CategoryStat("其他", 4)
         ));
-
         dashboardDTO.setOverdueRecords(List.of(
                 new DashboardDTO.OverdueRecord(1, 1, 2, LocalDateTime.of(2026, 8, 10, 0, 0)),
                 new DashboardDTO.OverdueRecord(2, 2, 3, LocalDateTime.of(2026, 8, 12, 0, 0)),
                 new DashboardDTO.OverdueRecord(3, 3, 5, LocalDateTime.of(2026, 8, 14, 0, 0)),
-                new DashboardDTO.OverdueRecord(4, 4, 7, LocalDateTime.of(2026, 8, 15, 0, 0)),
+                new DashboardDTO.OverdueRecord(4, 4, 8, LocalDateTime.of(2026, 8, 15, 0, 0)),
                 new DashboardDTO.OverdueRecord(5, 5, 5, LocalDateTime.of(2026, 8, 16, 0, 0)),
                 new DashboardDTO.OverdueRecord(6, 6, 3, LocalDateTime.of(2026, 8, 20, 0, 0))
         ));
@@ -52,7 +67,16 @@ public class DashboardServiceImpl implements DashboardService {
         dashboardDTO.setDamagedWithdrawnCount(4);
         dashboardDTO.setOtherWithdrawnCount(3);
 
-        return dashboardDTO;
+        dashboardDTO.setUpdateTime(LocalDateTime.now());
+
+        cache = dashboardDTO;
+        log.info("数据概览更新完成");
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public DashboardDTO get() {
+        return cache;
     }
 
 }
