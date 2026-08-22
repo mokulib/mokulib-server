@@ -10,7 +10,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import pers.liaohaolong.mokulibserver.config.ImageConfigurations;
 import pers.liaohaolong.mokulibserver.dao.*;
-import pers.liaohaolong.mokulibserver.dto.response.BorrowingDTO;
+import pers.liaohaolong.mokulibserver.dto.response.BorrowRecordWithBookIdDTO;
 import pers.liaohaolong.mokulibserver.dto.response.HistoryDTO;
 import pers.liaohaolong.mokulibserver.dto.response.NonsensitiveUserDTO;
 import pers.liaohaolong.mokulibserver.exception.BusinessException;
@@ -67,7 +67,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
 
     @Override
     @Transactional(readOnly = true)
-    public BorrowingDTO getBorrowing(@NonNull Integer id) {
+    public List<BorrowRecordWithBookIdDTO> getBorrowing(@NonNull Integer id) {
         // 查询借阅记录
         List<BorrowRecord> borrowRecords = borrowRecordMapper.selectList(new LambdaQueryWrapper<BorrowRecord>()
                 .eq(BorrowRecord::getUserId, id)
@@ -75,35 +75,19 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         );
 
         if (borrowRecords.isEmpty())
-            return BorrowingDTO.EMPTY;
+            return List.of();
 
         // 待查询的馆藏 ID 列表
         List<Integer> bookCopyIds = borrowRecords.stream().map(BorrowRecord::getBookCopyId).distinct().toList();
         // 批量查询
         List<BookCopy> bookCopies = bookCopyMapper.selectByIds(bookCopyIds);
-
-        // 待查询的图书 ID 列表
-        List<Integer> bookIds = bookCopies.stream().map(BookCopy::getBookId).distinct().toList();
-        // 批量查询
-        List<Book> books = bookMapper.selectByIds(bookIds);
+        // 构造 bookCopyId -> bookId 的映射
+        Map<Integer, Integer> bookCopyIdToBookId = bookCopies.stream().collect(Collectors.toMap(BookCopy::getId, BookCopy::getBookId));
 
         // 构造 BorrowRecordWithBookId 列表
-        List<BorrowingDTO.BorrowRecordWithBookId> borrowRecordsWithBookIds = borrowRecords.stream().map(borrowRecord ->
-            BorrowingDTO.BorrowRecordWithBookId.of(
-                    borrowRecord,
-                    bookCopies.stream()
-                            .filter(bookCopy -> bookCopy.getId().equals(borrowRecord.getBookCopyId()))
-                            .findFirst()
-                            .orElseThrow()
-                            .getBookId()
-            )
+        return borrowRecords.stream().map(borrowRecord ->
+            BorrowRecordWithBookIdDTO.of(borrowRecord, bookCopyIdToBookId.get(borrowRecord.getBookCopyId()))
         ).toList();
-
-        // 构造 BorrowingDTO
-        BorrowingDTO borrowingDTO = new BorrowingDTO();
-        borrowingDTO.setBooks(books);
-        borrowingDTO.setBorrowRecords(borrowRecordsWithBookIds);
-        return borrowingDTO;
     }
 
     @Override

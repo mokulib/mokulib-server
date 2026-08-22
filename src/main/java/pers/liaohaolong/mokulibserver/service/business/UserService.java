@@ -2,7 +2,7 @@ package pers.liaohaolong.mokulibserver.service.business;
 
 import com.baomidou.mybatisplus.extension.service.IService;
 import org.jspecify.annotations.NonNull;
-import pers.liaohaolong.mokulibserver.dto.response.BorrowingDTO;
+import pers.liaohaolong.mokulibserver.dto.response.BorrowRecordWithBookIdDTO;
 import pers.liaohaolong.mokulibserver.dto.response.HistoryDTO;
 import pers.liaohaolong.mokulibserver.dto.response.NonsensitiveUserDTO;
 import pers.liaohaolong.mokulibserver.exception.BusinessException;
@@ -21,7 +21,7 @@ public interface UserService extends IService<User> {
 
     void updateUsername(Integer id, String username) throws BusinessException;
 
-    BorrowingDTO getBorrowing(@NonNull Integer id);
+    List<BorrowRecordWithBookIdDTO> getBorrowing(@NonNull Integer id);
 
     List<Book> getFavorites(@NonNull Integer id);
 

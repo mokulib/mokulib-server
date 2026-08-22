@@ -9,7 +9,7 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import pers.liaohaolong.mokulibserver.annotation.SuccessInfo;
 import pers.liaohaolong.mokulibserver.dto.request.UpdateUsernameDTO;
-import pers.liaohaolong.mokulibserver.dto.response.BorrowingDTO;
+import pers.liaohaolong.mokulibserver.dto.response.BorrowRecordWithBookIdDTO;
 import pers.liaohaolong.mokulibserver.dto.response.HistoryDTO;
 import pers.liaohaolong.mokulibserver.dto.response.JwtDTO;
 import pers.liaohaolong.mokulibserver.dto.response.NonsensitiveUserDTO;
@@ -66,7 +66,7 @@ public class UserController {
 
     @GetMapping("/borrowing")
     @PreAuthorize("isAuthenticated()")
-    public BorrowingDTO getBorrowing(@AuthenticationPrincipal User user) {
+    public List<BorrowRecordWithBookIdDTO> getBorrowing(@AuthenticationPrincipal User user) {
         return userService.getBorrowing(user.getId());
     }
 
