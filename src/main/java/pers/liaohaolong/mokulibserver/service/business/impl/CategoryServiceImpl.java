@@ -1,6 +1,7 @@
 package pers.liaohaolong.mokulibserver.service.business.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import lombok.AllArgsConstructor;
@@ -53,11 +54,13 @@ public class CategoryServiceImpl extends ServiceImpl<CategoryMapper, Category> i
 
     @Override
     @Transactional(readOnly = true)
-    public Page<Book> getBooks(Integer id, Integer pageNum, SortModeDTO sortMode) throws BusinessException {
+    public IPage<Integer> getBooks(Integer id, Integer pageNum, SortModeDTO sortMode) throws BusinessException {
         if (!exists(new LambdaQueryWrapper<Category>().eq(Category::getId, id)))
             throw new BusinessException("分类未找到");
 
-        return bookMapper.selectPage(new Page<>(pageNum, 12), SortModeDTO.apply(new LambdaQueryWrapper<Book>().eq(Book::getCategoryId, id), sortMode));
+        return bookMapper
+                .selectPage(new Page<>(pageNum, 12), SortModeDTO.apply(new LambdaQueryWrapper<Book>().eq(Book::getCategoryId, id), sortMode))
+                .convert(Book::getId);
     }
 
 }

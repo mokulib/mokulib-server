@@ -1,6 +1,6 @@
 package pers.liaohaolong.mokulibserver.controller.api;
 
-import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.baomidou.mybatisplus.core.metadata.IPage;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -8,7 +8,6 @@ import org.springframework.web.bind.annotation.*;
 import pers.liaohaolong.mokulibserver.dto.request.AddCategoryDTO;
 import pers.liaohaolong.mokulibserver.dto.request.SortModeDTO;
 import pers.liaohaolong.mokulibserver.exception.BusinessException;
-import pers.liaohaolong.mokulibserver.model.Book;
 import pers.liaohaolong.mokulibserver.model.Category;
 import pers.liaohaolong.mokulibserver.service.business.CategoryService;
 
@@ -37,8 +36,8 @@ public class CategoryController {
         return categoryService.get(id);
     }
 
-    @GetMapping("/{id}/books")
-    public Page<Book> getBooks(@PathVariable @NotNull Integer id, @RequestParam @NotNull Integer pageNum, @RequestParam @NotNull SortModeDTO sortMode) throws BusinessException {
+    @GetMapping("/{id}/books/page")
+    public IPage<Integer> getBooks(@PathVariable @NotNull Integer id, @RequestParam @NotNull Integer pageNum, @RequestParam @NotNull SortModeDTO sortMode) throws BusinessException {
         return categoryService.getBooks(id, pageNum, sortMode);
     }
 
