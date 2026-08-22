@@ -19,8 +19,6 @@ public interface BookService extends IService<Book> {
 
     Book update(Integer id, BookDTO bookDTO) throws BusinessException;
 
-    Book get(String id) throws BusinessException;
-
     void uploadCover(Integer id, byte[] cover) throws BusinessException;
 
     List<BookCopyUserDTO> getUserBookCopies(Integer userId, Integer bookId) throws BusinessException;

@@ -81,17 +81,6 @@ public class BookServiceImpl extends ServiceImpl<BookMapper, Book> implements Bo
     }
 
     @Override
-    @Transactional(readOnly = true)
-    public Book get(String id) throws BusinessException {
-        Book book = getById(id);
-
-        if (book == null)
-            throw new BusinessException("图书不存在");
-
-        return book;
-    }
-
-    @Override
     @Transactional
     public void uploadCover(Integer id, byte[] cover) throws BusinessException {
         imageService.save(ImageConfigurations.ImageType.BOOKS, String.valueOf(id), cover);

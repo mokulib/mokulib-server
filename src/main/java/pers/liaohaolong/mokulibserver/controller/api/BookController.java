@@ -49,7 +49,7 @@ public class BookController {
 
     @GetMapping("/{id}")
     public Book get(@PathVariable @NotBlank String id) throws BusinessException {
-        return bookService.get(id);
+        return bookService.getOptById(id).orElseThrow(() -> new BusinessException("图书不存在"));
     }
 
     @PostMapping(value = "/{id}/cover", consumes = "application/octet-stream")
