@@ -25,7 +25,7 @@ public class AuthController {
     private final AuthService authService;
 
     @GetMapping("ping")
-    @PreAuthorize("hasAnyRole('ADMIN', 'USER')")
+    @PreAuthorize("isAuthenticated()")
     public void ping() {
     }
 
@@ -41,11 +41,13 @@ public class AuthController {
     }
 
     @GetMapping("close-account")
+    @PreAuthorize("isAuthenticated()")
     public ResultDTO getCloseAccountCaptcha(@AuthenticationPrincipal User user) {
         return authService.getCloseAccountCaptcha(user).toResultDTO(EmailCaptcha.BusinessType.CLOSE_ACCOUNT);
     }
 
     @DeleteMapping("close-account")
+    @PreAuthorize("isAuthenticated()")
     @SuccessInfo(message = "账户已关闭")
     public Map<String, String> closeAccount(@AuthenticationPrincipal User user, @RequestParam("emailCaptcha") String emailCaptcha) throws BusinessException {
         // 关闭账户
@@ -55,11 +57,13 @@ public class AuthController {
     }
 
     @GetMapping("reset-password")
+    @PreAuthorize("isAuthenticated()")
     public ResultDTO getResetPasswordCaptcha(@AuthenticationPrincipal User user) {
         return authService.getResetPasswordCaptcha(user).toResultDTO(EmailCaptcha.BusinessType.RESET_PASSWORD);
     }
 
     @PostMapping("reset-password")
+    @PreAuthorize("isAuthenticated()")
     @SuccessInfo(message = "密码已修改，请重新登录")
     public Map<String, String> resetPassword(@AuthenticationPrincipal User user, @RequestParam("emailCaptcha") String emailCaptcha, @RequestBody @NotNull ResetPasswordDTO resetPasswordDTO) {
         // 修改密码
