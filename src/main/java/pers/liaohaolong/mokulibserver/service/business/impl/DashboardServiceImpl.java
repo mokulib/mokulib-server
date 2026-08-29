@@ -81,7 +81,9 @@ public class DashboardServiceImpl implements DashboardService {
 
     @Override
     @Transactional(readOnly = true)
-    public DashboardDTO get() {
+    public DashboardDTO get(boolean noCache) {
+        if (noCache)
+            refresh();
         return cache;
     }
 

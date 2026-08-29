@@ -13,11 +13,13 @@ import org.springframework.http.CacheControl;
 import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
+import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import org.springframework.web.servlet.resource.PathResourceResolver;
 import pers.liaohaolong.mokulibserver.config.ImageConfigurations;
 import pers.liaohaolong.mokulibserver.config.properties.ImageProperties;
+import pers.liaohaolong.mokulibserver.controller.GlobalRequestHandler;
 
 import java.io.IOException;
 import java.util.concurrent.TimeUnit;
@@ -34,11 +36,17 @@ import java.util.concurrent.TimeUnit;
 @MapperScan("pers.liaohaolong.mokulibserver.dao")
 public class MokuLibServerApplication implements WebMvcConfigurer {
 
+    private final GlobalRequestHandler globalRequestHandler;
     private final ImageConfigurations imageConfigurations;
 
     static void main(String[] args) {
         SpringApplication.run(MokuLibServerApplication.class, args);
         log.info("OHH, I'm free! ^_^");
+    }
+
+    @Override
+    public void addInterceptors(InterceptorRegistry registry) {
+        registry.addInterceptor(globalRequestHandler).addPathPatterns("/api/**");
     }
 
     @Override

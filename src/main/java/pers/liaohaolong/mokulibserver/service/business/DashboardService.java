@@ -6,6 +6,6 @@ public interface DashboardService {
 
     void refresh();
 
-    DashboardDTO get();
+    DashboardDTO get(boolean noCache);
 
 }
