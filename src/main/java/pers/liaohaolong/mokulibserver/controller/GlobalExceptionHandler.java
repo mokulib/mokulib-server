@@ -8,6 +8,7 @@ import org.springframework.dao.DataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.authorization.AuthorizationDeniedException;
 import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -17,6 +18,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.method.annotation.HandlerMethodValidationException;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 import org.springframework.web.servlet.resource.NoResourceFoundException;
+import pers.liaohaolong.mokulibserver.annotation.PrePermission;
 import pers.liaohaolong.mokulibserver.dto.ResultDTO;
 import pers.liaohaolong.mokulibserver.exception.BusinessException;
 
@@ -33,14 +35,15 @@ public class GlobalExceptionHandler {
      * <h3>处理认证拒绝异常</h3>
      *
      * <p>
-     *     {@link AuthorizationDeniedException} 认证拒绝异常：表示接口权限认证失败，通常由用户凭证已过期或越权访问产生。
+     *     {@link AccessDeniedException} 访问拒绝异常：表示 {@link PrePermission} 认证失败，通常由用户凭证已过期或越权访问产生。
+     *     {@link AuthorizationDeniedException} 认证拒绝异常：表示 {@link org.springframework.security.access.prepost.PreAuthorize} 认证失败，通常由用户凭证已过期或越权访问产生。
      * </p>
      *
      * @param ignore 异常
      * @return {@link ResultDTO}
      */
-    @ExceptionHandler({AuthorizationDeniedException.class})
-    public ResponseEntity<ResultDTO> authorizationDeniedException(AuthorizationDeniedException ignore) {
+    @ExceptionHandler({AccessDeniedException.class})
+    public ResponseEntity<ResultDTO> authorizationDeniedException(AccessDeniedException ignore) {
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(ResultDTO.error().businessType("认证").message("访问拒绝.").build());
     }
 

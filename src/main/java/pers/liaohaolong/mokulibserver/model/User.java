@@ -6,7 +6,9 @@ import lombok.Getter;
 import org.jspecify.annotations.NonNull;
 import org.springframework.security.core.CredentialsContainer;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
+import pers.liaohaolong.mokulibserver.security.Permission;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -45,7 +47,8 @@ public class User implements UserDetails, CredentialsContainer {
     public enum Role {
 
         USER("USER", "用户", List.of()),
-        ADMIN("ADMIN", "管理员", List.of()),;
+        ADMIN("ADMIN", "管理员", List.of()),
+        ;
 
         /**
          * code 与 枚举名 必须一致
@@ -57,15 +60,15 @@ public class User implements UserDetails, CredentialsContainer {
 
         private final List<GrantedAuthority> permissions;
 
-        Role(String code, String desc, List<String> permissions) {
+        Role(String code, String desc, List<Permission> permissions) {
             this.code = code;
             this.desc = desc;
             this.permissions = new ArrayList<>();
             // 添加角色
-            this.permissions.add(() -> "ROLE_" + code);
+            this.permissions.add(new SimpleGrantedAuthority("ROLE_" + code));
             // 添加权限
-            for (String permission : permissions) {
-                this.permissions.add(() -> permission);
+            for (Permission permission : permissions) {
+                this.permissions.add(new SimpleGrantedAuthority(permission.getValue()));
             }
         }
 
