@@ -3,14 +3,10 @@
 | URL                                      | Function | Note                          |
 |------------------------------------------|----------|-------------------------------|
 | /api/auth/activate/{token}               | POST     | 激活账户                      |
-| /api/auth/close-account                  | GET      | 关闭账户 · 请求邮箱验证码     |
-| /api/auth/close-account +                | POST     | 关闭账户                      |
 | /api/auth/login *                        | GET      | 登录 · 请求邮箱验证码         |
-| /api/auth/login *                        | POST     | 邮箱密码登录 or 注册          |
-| /api/auth/login +                        | POST     | 邮箱验证码登录                |
+| /api/auth/login *$                       | POST     | 邮箱密码登录 or 注册          |
+| /api/auth/login +$                       | POST     | 邮箱验证码登录                |
 | /api/auth/ping                           | GET      | token 校验                    |
-| /api/auth/reset-password                 | GET      | 请求邮箱验证码·修改密码       |
-| /api/auth/reset-password +               | POST     | 修改密码                      |
 | /api/captcha                             | GET      | 请求图片验证码                |
 | /api/books                               | POST     | 新建书籍信息                  |
 | /api/books/search                        | GET      | 搜索                          |
@@ -39,12 +35,16 @@
 | /api/book-copies/{id}/relist             | POST     | 重新上架馆藏                  |
 | /api/book-copies/{id}/withdrawn          | POST     | 下架馆藏                      |
 | /api/users                               | GET      | 使用 id 或 email 查询用户信息 |
-| /api/users/borrowing                     | GET      | 查询用户的借阅中记录          |
-| /api/users/favorites                     | GET      | 查询用户的收藏记录            |
-| /api/users/history                       | GET      | 查询用户的借阅历史记录        |
 | /api/users/list                          | GET      | 批量查询用户列表              |
-| /api/users/username                      | POST     | 修改用户名                    |
-| /api/users/{id}/avatar                   | POST     | 上传用户头像                  |
+| /api/users/me/avatar                     | POST     | 上传用户头像                  |
+| /api/users/me/borrowing                  | GET      | 查询借阅中记录                |
+| /api/users/me/close-account              | GET      | 关闭账户 · 请求邮箱验证码     |
+| /api/users/me/close-account +            | DELETE   | 关闭账户                      |
+| /api/users/me/favorites                  | GET      | 查询收藏记录                  |
+| /api/users/me/history                    | GET      | 查询借阅历史记录              |
+| /api/users/me/reset-password             | GET      | 重置密码 · 请求邮箱验证码     |
+| /api/users/me/reset-password +           | POST     | 重置密码                      |
+| /api/users/me/username                   | POST     | 修改用户名                    |
 | /api/borrow-records/{id}/renew           | POST     | 续借                          |
 | /api/borrow-records/{id}/return          | POST     | 归还                          |
 | /api/borrow-records/{id}/rollback-return | POST     | 撤销归还操作                  |
@@ -58,3 +58,4 @@
 备注：
 - 加 `*` 的接口，需要在请求时附带图片验证码相关参数。
 - 加 `+` 的接口，需要在请求时附带邮箱验证码相关参数。
+- 加 `$` 的接口，使用非控制器方式实现。

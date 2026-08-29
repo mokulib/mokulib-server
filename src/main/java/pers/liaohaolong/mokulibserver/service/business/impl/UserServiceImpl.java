@@ -6,15 +6,19 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.jspecify.annotations.NonNull;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import pers.liaohaolong.mokulibserver.config.ImageConfigurations;
 import pers.liaohaolong.mokulibserver.dao.*;
+import pers.liaohaolong.mokulibserver.dto.GetEmailCaptchaResultDTO;
+import pers.liaohaolong.mokulibserver.dto.request.ResetPasswordDTO;
 import pers.liaohaolong.mokulibserver.dto.response.BorrowRecordWithBookIdDTO;
 import pers.liaohaolong.mokulibserver.dto.response.HistoryDTO;
 import pers.liaohaolong.mokulibserver.dto.response.NonsensitiveUserDTO;
 import pers.liaohaolong.mokulibserver.exception.BusinessException;
 import pers.liaohaolong.mokulibserver.model.*;
+import pers.liaohaolong.mokulibserver.service.base.EmailCaptchaBaseService;
 import pers.liaohaolong.mokulibserver.service.base.ImageService;
 import pers.liaohaolong.mokulibserver.service.business.UserService;
 
@@ -27,11 +31,13 @@ import java.util.stream.Collectors;
 @AllArgsConstructor
 public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements UserService {
 
+    private final EmailCaptchaBaseService emailCaptchaBaseService;
     private final ImageService imageService;
     private final BookMapper bookMapper;
     private final BookCopyMapper bookCopyMapper;
     private final BorrowRecordMapper borrowRecordMapper;
     private final FavoriteMapper favoriteMapper;
+    private final PasswordEncoder passwordEncoder;
 
     @Override
     @Transactional(readOnly = true)
@@ -137,6 +143,42 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
             historyDTO.setDueTime(borrowRecord.getDueTime());
             return historyDTO;
         }).toList();
+    }
+
+    @Override
+    @Transactional
+    public GetEmailCaptchaResultDTO getCloseAccountCaptcha(User user) {
+        return emailCaptchaBaseService.getEmailCaptcha(user.getId(), user.getEmail(), EmailCaptcha.BusinessType.CLOSE_ACCOUNT);
+    }
+
+    @Override
+    @Transactional
+    public void closeAccount(User user, String captcha) throws BusinessException {
+        if (!emailCaptchaBaseService.verifyEmailCaptcha(user.getId(), EmailCaptcha.BusinessType.CLOSE_ACCOUNT, captcha))
+            throw new BusinessException("验证码错误或验证码已过期");
+        // 是否有未完成的借阅
+        if (borrowRecordMapper.selectCount(new LambdaQueryWrapper<BorrowRecord>().eq(BorrowRecord::getUserId, user.getId()).eq(BorrowRecord::getCloseStatus, BorrowRecord.CloseStatus.OPEN)) > 0)
+            throw new BusinessException("账户有未完成的借阅，无法注销");
+        // 关闭账户
+        removeById(user.getId());
+    }
+
+    @Override
+    @Transactional
+    public GetEmailCaptchaResultDTO getResetPasswordCaptcha(User user) {
+        return emailCaptchaBaseService.getEmailCaptcha(user.getId(), user.getEmail(), EmailCaptcha.BusinessType.RESET_PASSWORD);
+    }
+
+    @Override
+    @Transactional
+    public void resetPassword(User user, String captcha, ResetPasswordDTO resetPasswordDTO) {
+        if (!emailCaptchaBaseService.verifyEmailCaptcha(user.getId(), EmailCaptcha.BusinessType.RESET_PASSWORD, captcha))
+            throw new BusinessException("验证码错误或验证码已过期");
+        // 修改密码
+        update(new LambdaUpdateWrapper<User>()
+                .eq(User::getId, user.getId())
+                .set(User::getPassword, passwordEncoder.encode(resetPasswordDTO.getNewPassword()))
+        );
     }
 
 }

@@ -1,21 +1,16 @@
 package pers.liaohaolong.mokulibserver.service.business.impl;
 
-import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import pers.liaohaolong.mokulibserver.dao.ActivationTokenMapper;
-import pers.liaohaolong.mokulibserver.dao.BorrowRecordMapper;
 import pers.liaohaolong.mokulibserver.dao.UserMapper;
 import pers.liaohaolong.mokulibserver.dto.GetEmailCaptchaResultDTO;
-import pers.liaohaolong.mokulibserver.dto.request.ResetPasswordDTO;
 import pers.liaohaolong.mokulibserver.exception.BusinessException;
 import pers.liaohaolong.mokulibserver.model.ActivationToken;
-import pers.liaohaolong.mokulibserver.model.BorrowRecord;
 import pers.liaohaolong.mokulibserver.model.EmailCaptcha.BusinessType;
 import pers.liaohaolong.mokulibserver.model.User;
 import pers.liaohaolong.mokulibserver.service.base.EmailCaptchaBaseService;
@@ -30,8 +25,6 @@ public class AuthServiceImpl extends ServiceImpl<UserMapper, User> implements Au
 
     private final EmailCaptchaBaseService emailCaptchaBaseService;
     private final ActivationTokenMapper activationTokenMapper;
-    private final BorrowRecordMapper borrowRecordMapper;
-    private final PasswordEncoder passwordEncoder;
 
     @Override
     @Transactional
@@ -72,42 +65,6 @@ public class AuthServiceImpl extends ServiceImpl<UserMapper, User> implements Au
         update(new LambdaUpdateWrapper<User>()
                 .eq(User::getId, activationToken.getUserId())
                 .set(User::getIsActivated, true)
-        );
-    }
-
-    @Override
-    @Transactional
-    public GetEmailCaptchaResultDTO getCloseAccountCaptcha(User user) {
-        return emailCaptchaBaseService.getEmailCaptcha(user.getId(), user.getEmail(), BusinessType.CLOSE_ACCOUNT);
-    }
-
-    @Override
-    @Transactional
-    public void closeAccount(User user, String captcha) throws BusinessException {
-        if (!emailCaptchaBaseService.verifyEmailCaptcha(user.getId(), BusinessType.CLOSE_ACCOUNT, captcha))
-            throw new BusinessException("验证码错误或验证码已过期");
-        // 是否有未完成的借阅
-        if (borrowRecordMapper.selectCount(new LambdaQueryWrapper<BorrowRecord>().eq(BorrowRecord::getUserId, user.getId()).eq(BorrowRecord::getCloseStatus, BorrowRecord.CloseStatus.OPEN)) > 0)
-            throw new BusinessException("账户有未完成的借阅，无法注销");
-        // 关闭账户
-        removeById(user.getId());
-    }
-
-    @Override
-    @Transactional
-    public GetEmailCaptchaResultDTO getResetPasswordCaptcha(User user) {
-        return emailCaptchaBaseService.getEmailCaptcha(user.getId(), user.getEmail(), BusinessType.RESET_PASSWORD);
-    }
-
-    @Override
-    @Transactional
-    public void resetPassword(User user, String captcha, ResetPasswordDTO resetPasswordDTO) {
-        if (!emailCaptchaBaseService.verifyEmailCaptcha(user.getId(), BusinessType.RESET_PASSWORD, captcha))
-            throw new BusinessException("验证码错误或验证码已过期");
-        // 修改密码
-        update(new LambdaUpdateWrapper<User>()
-                .eq(User::getId, user.getId())
-                .set(User::getPassword, passwordEncoder.encode(resetPasswordDTO.getNewPassword()))
         );
     }
 

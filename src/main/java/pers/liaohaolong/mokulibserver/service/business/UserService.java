@@ -2,6 +2,8 @@ package pers.liaohaolong.mokulibserver.service.business;
 
 import com.baomidou.mybatisplus.extension.service.IService;
 import org.jspecify.annotations.NonNull;
+import pers.liaohaolong.mokulibserver.dto.GetEmailCaptchaResultDTO;
+import pers.liaohaolong.mokulibserver.dto.request.ResetPasswordDTO;
 import pers.liaohaolong.mokulibserver.dto.response.BorrowRecordWithBookIdDTO;
 import pers.liaohaolong.mokulibserver.dto.response.HistoryDTO;
 import pers.liaohaolong.mokulibserver.dto.response.NonsensitiveUserDTO;
@@ -25,5 +27,13 @@ public interface UserService extends IService<User> {
     List<Integer> getFavorites(@NonNull Integer id);
 
     List<HistoryDTO> getHistory(@NonNull Integer id);
+
+    GetEmailCaptchaResultDTO getCloseAccountCaptcha(User user);
+
+    void closeAccount(User user, String captcha) throws BusinessException;
+
+    GetEmailCaptchaResultDTO getResetPasswordCaptcha(User user);
+
+    void resetPassword(User user, String emailCaptcha, ResetPasswordDTO resetPasswordDTO);
 
 }
