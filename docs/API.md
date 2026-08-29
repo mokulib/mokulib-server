@@ -30,7 +30,6 @@
 | /api/book-copies                         | POST     | 新建馆藏信息                  |
 | /api/book-copies/{id}                    | GET      | 获取馆藏信息                  |
 | /api/book-copies/{id}                    | PUT      | 修改入库信息                  |
-| /api/book-copies/{id}/borrow             | POST     | 借阅馆藏                      |
 | /api/book-copies/{id}/borrow-records     | GET      | 获取馆藏的全部借阅记录        |
 | /api/book-copies/{id}/relist             | POST     | 重新上架馆藏                  |
 | /api/book-copies/{id}/withdrawn          | POST     | 下架馆藏                      |
@@ -45,6 +44,7 @@
 | /api/users/me/reset-password             | GET      | 重置密码 · 请求邮箱验证码     |
 | /api/users/me/reset-password +           | POST     | 重置密码                      |
 | /api/users/me/username                   | POST     | 修改用户名                    |
+| /api/borrow-records                      | POST     | 借阅                          |
 | /api/borrow-records/{id}/renew           | POST     | 续借                          |
 | /api/borrow-records/{id}/return          | POST     | 归还                          |
 | /api/borrow-records/{id}/rollback-return | POST     | 撤销归还操作                  |

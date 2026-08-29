@@ -8,7 +8,6 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import pers.liaohaolong.mokulibserver.annotation.SuccessInfo;
 import pers.liaohaolong.mokulibserver.dto.request.AddBookCopyDTO;
-import pers.liaohaolong.mokulibserver.dto.request.BorrowDTO;
 import pers.liaohaolong.mokulibserver.dto.request.UpdateBookCopyDTO;
 import pers.liaohaolong.mokulibserver.dto.response.BookCopyAdminDTO;
 import pers.liaohaolong.mokulibserver.exception.BusinessException;
@@ -53,13 +52,6 @@ public class BookCopyController {
     @SuccessInfo(message = "获取成功")
     public List<BorrowRecord> getBorrowRecords(@PathVariable @NotNull Integer id) throws BusinessException {
         return bookCopyService.getBorrowRecords(id);
-    }
-
-    @PostMapping("/{id}/borrow")
-    @PreAuthorize("hasAnyRole('ADMIN')")
-    @SuccessInfo(message = "借阅成功")
-    public BookCopyAdminDTO borrow(@PathVariable @NotNull Integer id, @RequestBody BorrowDTO borrowDTO) throws BusinessException {
-        return bookCopyService.borrow(id, borrowDTO);
     }
 
     @PostMapping("/{id}/withdrawn")

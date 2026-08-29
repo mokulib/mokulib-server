@@ -7,6 +7,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import pers.liaohaolong.mokulibserver.annotation.SuccessInfo;
+import pers.liaohaolong.mokulibserver.dto.request.BorrowDTO;
 import pers.liaohaolong.mokulibserver.dto.request.ReturnBookDTO;
 import pers.liaohaolong.mokulibserver.dto.response.BookCopyAdminDTO;
 import pers.liaohaolong.mokulibserver.exception.BusinessException;
@@ -21,6 +22,13 @@ import pers.liaohaolong.mokulibserver.service.business.BorrowRecordService;
 public class BorrowRecordController {
 
     private final BorrowRecordService borrowRecordService;
+
+    @PostMapping
+    @PreAuthorize("hasAnyRole('ADMIN')")
+    @SuccessInfo(message = "借阅成功")
+    public BookCopyAdminDTO post(@RequestBody BorrowDTO borrowDTO) throws BusinessException {
+        return borrowRecordService.borrow(borrowDTO);
+    }
 
     @PostMapping("/{id}/renew")
     @PreAuthorize("isAuthenticated()")

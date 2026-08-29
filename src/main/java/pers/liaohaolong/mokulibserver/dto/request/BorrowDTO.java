@@ -13,6 +13,9 @@ public class BorrowDTO {
     @NotNull(message = "用户 ID 不能为空")
     private Integer userId;
 
+    @NotNull(message = "馆藏 ID 不能为空")
+    private Integer bookCopyId;
+
     @NotNull(message = "是否续借不能为空")
     private Boolean isRenewed;
 

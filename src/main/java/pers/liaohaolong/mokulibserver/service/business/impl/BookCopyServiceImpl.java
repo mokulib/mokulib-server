@@ -10,7 +10,6 @@ import org.springframework.transaction.annotation.Transactional;
 import pers.liaohaolong.mokulibserver.dao.BookCopyMapper;
 import pers.liaohaolong.mokulibserver.dao.BorrowRecordMapper;
 import pers.liaohaolong.mokulibserver.dto.request.AddBookCopyDTO;
-import pers.liaohaolong.mokulibserver.dto.request.BorrowDTO;
 import pers.liaohaolong.mokulibserver.dto.request.UpdateBookCopyDTO;
 import pers.liaohaolong.mokulibserver.dto.response.BookCopyAdminDTO;
 import pers.liaohaolong.mokulibserver.exception.BusinessException;
@@ -71,41 +70,6 @@ public class BookCopyServiceImpl extends ServiceImpl<BookCopyMapper, BookCopy> i
                 .eq(BorrowRecord::getBookCopyId, id)
                 .orderByDesc(BorrowRecord::getCreateTime)
         );
-    }
-
-    @Override
-    @Transactional
-    public BookCopyAdminDTO borrow(Integer id, BorrowDTO borrowDTO) throws BusinessException {
-        // 获取图书副本
-        BookCopy bookCopy = getById(id);
-        // 验证
-        if (bookCopy == null)
-            throw new BusinessException("图书不存在，借阅失败");
-        if (bookCopy.getStatus() == BookCopy.Status.UNAVAILABLE)
-            throw new BusinessException("该书已借出，借阅失败");
-        if (bookCopy.getStatus() == BookCopy.Status.WITHDRAWN)
-            throw new BusinessException("该书已下架，借阅失败");
-
-        BorrowRecord borrowRecord = new BorrowRecord();
-        borrowRecord.setUserId(borrowDTO.getUserId());
-        borrowRecord.setBookCopyId(id);
-        borrowRecord.setIsRenewed(borrowDTO.getIsRenewed());
-        borrowRecord.setCreateTime(LocalDateTime.now());
-        borrowRecord.setDueTime(borrowRecord.getCreateTime().plusDays(borrowDTO.getIsRenewed() ? 14 : 7)); // 借阅 7 / 14 天
-
-        // 插入借阅记录
-        borrowRecordMapper.insert(borrowRecord);
-
-        // 更新图书副本状态
-        update(new LambdaUpdateWrapper<BookCopy>()
-                .eq(BookCopy::getId, id)
-                .set(BookCopy::getStatus, BookCopy.Status.UNAVAILABLE)
-        );
-
-        // 构造返回值
-        BookCopyAdminDTO bookCopyAdminDTO = BookCopyAdminDTO.fromBookCopy(getById(id));
-        bookCopyAdminDTO.setCurrentBorrowRecord(borrowRecordMapper.selectById(borrowRecord.getId()));
-        return bookCopyAdminDTO;
     }
 
     @Override

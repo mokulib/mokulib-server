@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import pers.liaohaolong.mokulibserver.dao.BookCopyMapper;
 import pers.liaohaolong.mokulibserver.dao.BorrowRecordMapper;
+import pers.liaohaolong.mokulibserver.dto.request.BorrowDTO;
 import pers.liaohaolong.mokulibserver.dto.request.ReturnBookDTO;
 import pers.liaohaolong.mokulibserver.dto.response.BookCopyAdminDTO;
 import pers.liaohaolong.mokulibserver.exception.BusinessException;
@@ -17,6 +18,7 @@ import pers.liaohaolong.mokulibserver.model.BorrowRecord;
 import pers.liaohaolong.mokulibserver.model.User;
 import pers.liaohaolong.mokulibserver.service.business.BorrowRecordService;
 
+import java.time.LocalDateTime;
 import java.util.Objects;
 
 @Slf4j
@@ -25,6 +27,41 @@ import java.util.Objects;
 public class BorrowRecordServiceImpl extends ServiceImpl<BorrowRecordMapper, BorrowRecord> implements BorrowRecordService {
 
     private final BookCopyMapper bookCopyMapper;
+
+    @Override
+    @Transactional
+    public BookCopyAdminDTO borrow(BorrowDTO borrowDTO) throws BusinessException {
+        // 获取图书副本
+        BookCopy bookCopy = bookCopyMapper.selectById(borrowDTO.getBookCopyId());
+        // 验证
+        if (bookCopy == null)
+            throw new BusinessException("图书不存在，借阅失败");
+        if (bookCopy.getStatus() == BookCopy.Status.UNAVAILABLE)
+            throw new BusinessException("该书已借出，借阅失败");
+        if (bookCopy.getStatus() == BookCopy.Status.WITHDRAWN)
+            throw new BusinessException("该书已下架，借阅失败");
+
+        BorrowRecord borrowRecord = new BorrowRecord();
+        borrowRecord.setUserId(borrowDTO.getUserId());
+        borrowRecord.setBookCopyId(borrowDTO.getBookCopyId());
+        borrowRecord.setIsRenewed(borrowDTO.getIsRenewed());
+        borrowRecord.setCreateTime(LocalDateTime.now());
+        borrowRecord.setDueTime(borrowRecord.getCreateTime().plusDays(borrowDTO.getIsRenewed() ? 14 : 7)); // 借阅 7 / 14 天
+
+        // 插入借阅记录
+        save(borrowRecord);
+
+        // 更新图书副本状态
+        bookCopyMapper.update(new LambdaUpdateWrapper<BookCopy>()
+                .eq(BookCopy::getId, borrowDTO.getBookCopyId())
+                .set(BookCopy::getStatus, BookCopy.Status.UNAVAILABLE)
+        );
+
+        // 构造返回值
+        BookCopyAdminDTO bookCopyAdminDTO = BookCopyAdminDTO.fromBookCopy(bookCopyMapper.selectById(borrowDTO.getBookCopyId()));
+        bookCopyAdminDTO.setCurrentBorrowRecord(getById(borrowRecord.getId()));
+        return bookCopyAdminDTO;
+    }
 
     @Override
     @Transactional
