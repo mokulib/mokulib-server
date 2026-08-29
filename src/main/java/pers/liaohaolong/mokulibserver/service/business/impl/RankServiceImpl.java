@@ -2,8 +2,8 @@ package pers.liaohaolong.mokulibserver.service.business.impl;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.boot.context.event.ApplicationReadyEvent;
-import org.springframework.context.event.EventListener;
+import org.springframework.cache.annotation.CacheConfig;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import pers.liaohaolong.mokulibserver.dao.virtual.RankMapper;
@@ -14,50 +14,38 @@ import java.time.LocalDateTime;
 
 @Slf4j
 @Service
+@CacheConfig(cacheNames = "rank")
 @RequiredArgsConstructor
 public class RankServiceImpl implements RankService {
 
     private final RankMapper rankMapper;
 
-    private RankDTO borrowRank;
-    private RankDTO favoriteRank;
-    private RankDTO newMonthlyRank;
-    private RankDTO newStoreRank;
-
     @Override
-    @EventListener(ApplicationReadyEvent.class)
-    @Transactional(readOnly = true)
-    public void refresh() {
-        log.info("开始更新排行榜...");
-        borrowRank = new RankDTO(rankMapper.borrow(), LocalDateTime.now());
-        favoriteRank = new RankDTO(rankMapper.favorite(), LocalDateTime.now());
-        newMonthlyRank = new RankDTO(rankMapper.newMonthly(), LocalDateTime.now());
-        newStoreRank = new RankDTO(rankMapper.newStore(), LocalDateTime.now());
-        log.info("排行榜更新完成");
-    }
-
-    @Override
+    @Cacheable(key = "#root.methodName")
     @Transactional(readOnly = true)
     public RankDTO borrow() {
-        return borrowRank;
+        return new RankDTO(rankMapper.borrow(), LocalDateTime.now());
     }
 
     @Override
+    @Cacheable(key = "#root.methodName")
     @Transactional(readOnly = true)
     public RankDTO favorite() {
-        return favoriteRank;
+        return new RankDTO(rankMapper.favorite(), LocalDateTime.now());
     }
 
     @Override
+    @Cacheable(key = "#root.methodName")
     @Transactional(readOnly = true)
     public RankDTO newMonthly() {
-        return newMonthlyRank;
+        return new RankDTO(rankMapper.newMonthly(), LocalDateTime.now());
     }
 
     @Override
+    @Cacheable(key = "#root.methodName")
     @Transactional(readOnly = true)
     public RankDTO newStore() {
-        return newStoreRank;
+        return new RankDTO(rankMapper.newStore(), LocalDateTime.now());
     }
 
 }
