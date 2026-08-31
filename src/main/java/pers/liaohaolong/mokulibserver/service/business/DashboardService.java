@@ -4,8 +4,6 @@ import pers.liaohaolong.mokulibserver.dto.response.DashboardDTO;
 
 public interface DashboardService {
 
-    void refresh();
-
     DashboardDTO get(boolean noCache);
 
 }

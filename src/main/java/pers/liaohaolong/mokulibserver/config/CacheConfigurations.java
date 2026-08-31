@@ -25,6 +25,7 @@ public class CacheConfigurations {
 
         // 独立配置
         manager.registerCustomCache("rank", Caffeine.newBuilder().maximumSize(4).build());
+        manager.registerCustomCache("dashboard", Caffeine.newBuilder().expireAfterWrite(1, TimeUnit.HOURS).maximumSize(1).build());
 
         return manager;
     }
