@@ -55,30 +55,12 @@ CREATE TABLE IF NOT EXISTS `book_copy`
     `withdrawn_time`   DATETIME
 );
 
-CREATE TABLE IF NOT EXISTS `book_review`
-(
-    `id`          INT AUTO_INCREMENT PRIMARY KEY,
-    `user_id`     INT                                NOT NULL,
-    `book_id`     INT                                NOT NULL,
-    `score`       INT                                NOT NULL,
-    `content`     TEXT                               NOT NULL,
-    `create_time` DATETIME DEFAULT CURRENT_TIMESTAMP NOT NULL
-);
-
 CREATE TABLE IF NOT EXISTS `favorite`
 (
     `user_id`     INT                                NOT NULL,
     `book_id`     INT                                NOT NULL,
     `create_time` DATETIME DEFAULT CURRENT_TIMESTAMP NOT NULL,
     PRIMARY KEY (`user_id`, `book_id`)
-);
-
-CREATE TABLE IF NOT EXISTS `user_book_review_like`
-(
-    `user_id`        INT                                NOT NULL,
-    `book_review_id` INT                                NOT NULL,
-    `create_time`    DATETIME DEFAULT CURRENT_TIMESTAMP NOT NULL,
-    PRIMARY KEY (`user_id`, `book_review_id`)
 );
 
 CREATE TABLE IF NOT EXISTS `borrow_record`

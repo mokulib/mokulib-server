@@ -67,17 +67,6 @@ role: 'ADMIN', 'USER'
 status: 'AVAILABLE', 'UNAVAILABLE', 'WITHDRAWN'
 withdrawn_reason: 'LOST', 'DAMAGED', 'OTHER'
 
-## book_review (书评)
-
-| Name         | DataType | Default           | AutoInc | PK/UK/IDX | NotNull |
-|:-------------|:---------|:------------------|:--------|:----------|:--------|
-| id           | int      |                   | Y       | PK        | Y       |
-| user_id      | int      |                   |         |           | Y       |
-| book_id      | int      |                   |         |           | Y       |
-| score        | int      |                   |         |           | Y       |
-| content      | text     |                   |         |           | Y       |
-| create_time  | datetime | current_timestamp |         |           | Y       |
-
 ## favorite (收藏)
 
 | Name        | DataType | Default           | AutoInc | PK/UK/IDX | NotNull |
@@ -85,14 +74,6 @@ withdrawn_reason: 'LOST', 'DAMAGED', 'OTHER'
 | user_id     | int      |                   |         | PK(Union) | Y       |
 | book_id     | int      |                   |         | PK(Union) | Y       |
 | create_time | datetime | current_timestamp |         |           | Y       |
-
-## user_book_review_like (书评点赞)
-
-| Name           | DataType | Default           | AutoInc | PK/UK/IDX | NotNull |
-|:---------------|:---------|:------------------|:--------|:----------|:--------|
-| user_id        | int      |                   |         | PK(Union) | Y       |
-| book_review_id | int      |                   |         | PK(Union) | Y       |
-| create_time    | datetime | current_timestamp |         |           | Y       |
 
 ## borrow_record (借阅记录)
 
