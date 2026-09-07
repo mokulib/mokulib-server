@@ -59,6 +59,9 @@ public class BookServiceImpl extends ServiceImpl<BookMapper, Book> implements Bo
     public void delete(Integer id) throws BusinessException {
         if (!exists(new LambdaQueryWrapper<Book>().eq(Book::getId, id)))
             throw new BusinessException("图书不存在");
+        if (bookCopyMapper.exists(new LambdaQueryWrapper<BookCopy>().eq(BookCopy::getBookId, id).ne(BookCopy::getStatus, BookCopy.Status.WITHDRAWN)))
+            throw new BusinessException("图书存在未下架馆藏，请先处理后再删除图书");
+
         removeById(id);
     }
 
