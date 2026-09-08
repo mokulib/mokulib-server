@@ -19,7 +19,9 @@
 | /api/books/{bookId}/tags                 | POST     | 为书籍添加标签                |
 | /api/books/{bookId}/tags/{tagId}         | DELETE   | 删除书籍的标签                |
 | /api/tags                                | GET      | 获取全部标签                  |
+| /api/tags                                | PUT      | 修改标签名                    |
 | /api/tags                                | POST     | 新建标签                      |
+| /api/tags                                | DELETE   | 删除标签                      |
 | /api/favorites/{bookId}                  | GET      | 用户是否收藏书籍              |
 | /api/favorites/{bookId}                  | POST     | 收藏书籍                      |
 | /api/favorites/{bookId}                  | DELETE   | 取消收藏                      |

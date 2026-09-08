@@ -36,23 +36,20 @@ public class CategoryServiceImpl extends ServiceImpl<CategoryMapper, Category> i
         if (validNames.isEmpty())
             return List.of();
 
-        // 构造插入实体
-        List<Category> categoryList = validNames.stream().map(name -> {
+        // 查询已有分类
+        List<String> existCategories = list(new LambdaQueryWrapper<Category>().in(Category::getName, validNames)).stream().map(Category::getName).toList();
+
+        // 过滤掉已有的分类，并构造实体
+        List<Category> categories = validNames.stream().filter(name -> !existCategories.contains(name)).map(name -> {
             Category category = new Category();
             category.setName(name);
             return category;
         }).toList();
 
-        // 查询已存在的分类
-        List<String> existCategories = list(new LambdaQueryWrapper<Category>().in(Category::getName, validNames)).stream().map(Category::getName).toList();
-
-        // 过滤掉已存在的分类
-        List<Category> notExistCategories = categoryList.stream().filter(category -> !existCategories.contains(category.getName())).toList();
-
         // 批量插入
-        saveBatch(notExistCategories);
+        saveBatch(categories);
 
-        return notExistCategories;
+        return categories;
     }
 
     @Override
@@ -69,14 +66,14 @@ public class CategoryServiceImpl extends ServiceImpl<CategoryMapper, Category> i
         List<Category> existCategories = list(new LambdaQueryWrapper<Category>().in(Category::getId, validIds));
 
         // 过滤掉有关联的分类
-        List<Category> notRelatedCategories = existCategories.stream()
+        List<Category> categories = existCategories.stream()
                 .filter(category -> bookMapper.selectCount(new LambdaQueryWrapper<Book>().eq(Book::getCategoryId, category.getId())) == 0)
                 .toList();
 
         // 批量删除
-        removeBatchByIds(notRelatedCategories.stream().map(Category::getId).toList());
+        removeBatchByIds(categories.stream().map(Category::getId).toList());
 
-        return notRelatedCategories;
+        return categories;
     }
 
     @Override

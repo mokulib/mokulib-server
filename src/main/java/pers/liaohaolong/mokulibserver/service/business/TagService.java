@@ -9,4 +9,8 @@ public interface TagService extends IService<Tag> {
 
     List<Tag> add(List<String> tags);
 
+    List<Tag> delete(List<Integer> ids);
+
+    List<Tag> update(List<Tag> tags);
+
 }

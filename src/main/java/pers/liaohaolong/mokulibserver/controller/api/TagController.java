@@ -22,8 +22,20 @@ public class TagController {
 
     @PostMapping
     @PreAuthorize("hasAnyRole('ADMIN')")
-    public List<Tag> add(@RequestBody @NotNull @NotEmpty List<@NotBlank String> tags) {
+    public List<Tag> add(@RequestBody @NotEmpty List<@NotBlank String> tags) {
         return tagService.add(tags);
+    }
+
+    @DeleteMapping
+    @PreAuthorize("hasAnyRole('ADMIN')")
+    public List<Tag> delete(@RequestParam(value = "ids") @NotEmpty List<Integer> ids) {
+        return tagService.delete(ids);
+    }
+
+    @PutMapping
+    @PreAuthorize("hasAnyRole('ADMIN')")
+    public List<Tag> update(@RequestBody @NotEmpty List<@NotNull Tag> tags) {
+        return tagService.update(tags);
     }
 
     @GetMapping
