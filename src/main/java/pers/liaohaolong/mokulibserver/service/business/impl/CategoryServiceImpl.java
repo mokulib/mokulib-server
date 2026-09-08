@@ -16,7 +16,6 @@ import pers.liaohaolong.mokulibserver.model.Book;
 import pers.liaohaolong.mokulibserver.model.Category;
 import pers.liaohaolong.mokulibserver.service.business.CategoryService;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -35,7 +34,7 @@ public class CategoryServiceImpl extends ServiceImpl<CategoryMapper, Category> i
 
         // 提前返回
         if (validNames.isEmpty())
-            return new ArrayList<>();
+            return List.of();
 
         // 构造插入实体
         List<Category> categoryList = validNames.stream().map(name -> {
@@ -64,7 +63,7 @@ public class CategoryServiceImpl extends ServiceImpl<CategoryMapper, Category> i
 
         // 提前返回
         if (validIds.isEmpty())
-            return new ArrayList<>();
+            return List.of();
 
         // 查询已存在的分类
         List<Category> existCategories = list(new LambdaQueryWrapper<Category>().in(Category::getId, validIds));
