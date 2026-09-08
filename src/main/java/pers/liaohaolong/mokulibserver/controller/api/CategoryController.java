@@ -31,13 +31,13 @@ public class CategoryController {
 
     @DeleteMapping
     @PreAuthorize("hasAnyRole('ADMIN')")
-    public List<Category> delete(@RequestParam(value = "ids") @NotNull List<Integer> ids) {
+    public List<Category> delete(@RequestParam(value = "ids") @NotEmpty List<Integer> ids) {
         return categoryService.delete(ids);
     }
 
     @PutMapping
     @PreAuthorize("hasAnyRole('ADMIN')")
-    public List<Category> update(@RequestBody @NotNull List<Category> categories) {
+    public List<Category> update(@RequestBody @NotEmpty List<Category> categories) {
         return categoryService.update(categories);
     }
 
