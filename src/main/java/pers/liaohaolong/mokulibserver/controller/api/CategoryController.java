@@ -6,6 +6,7 @@ import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import pers.liaohaolong.mokulibserver.dto.request.SortModeDTO;
 import pers.liaohaolong.mokulibserver.exception.BusinessException;
@@ -23,16 +24,19 @@ public class CategoryController {
     private final CategoryService categoryService;
 
     @PostMapping
+    @PreAuthorize("hasAnyRole('ADMIN')")
     public List<Category> add(@RequestBody @NotEmpty List<@NotBlank String> categories) {
         return categoryService.add(categories);
     }
 
     @DeleteMapping
+    @PreAuthorize("hasAnyRole('ADMIN')")
     public List<Category> delete(@RequestParam(value = "ids") @NotNull List<Integer> ids) {
         return categoryService.delete(ids);
     }
 
     @PutMapping
+    @PreAuthorize("hasAnyRole('ADMIN')")
     public List<Category> update(@RequestBody @NotNull List<Category> categories) {
         return categoryService.update(categories);
     }
