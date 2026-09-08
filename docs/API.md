@@ -24,7 +24,9 @@
 | /api/favorites/{bookId}                  | POST     | 收藏书籍                      |
 | /api/favorites/{bookId}                  | DELETE   | 取消收藏                      |
 | /api/categories                          | GET      | 获取全部分类                  |
+| /api/categories                          | PUT      | 修改分类名                    |
 | /api/categories                          | POST     | 新建分类                      |
+| /api/categories                          | DELETE   | 删除分类                      |
 | /api/categories/{id}                     | GET      | 获取分类信息                  |
 | /api/categories/{id}/books/page          | GET      | 按分类获取图书信息            |
 | /api/book-copies                         | POST     | 新建馆藏信息                  |

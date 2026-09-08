@@ -1,11 +1,12 @@
 package pers.liaohaolong.mokulibserver.controller.api;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
-import pers.liaohaolong.mokulibserver.dto.request.AddCategoryDTO;
 import pers.liaohaolong.mokulibserver.dto.request.SortModeDTO;
 import pers.liaohaolong.mokulibserver.exception.BusinessException;
 import pers.liaohaolong.mokulibserver.model.Category;
@@ -22,8 +23,18 @@ public class CategoryController {
     private final CategoryService categoryService;
 
     @PostMapping
-    public Category add(@RequestBody @NotNull AddCategoryDTO addCategoryDTO) {
-        return categoryService.add(addCategoryDTO.getName());
+    public List<Category> add(@RequestBody @NotEmpty List<@NotBlank String> categories) {
+        return categoryService.add(categories);
+    }
+
+    @DeleteMapping
+    public List<Category> delete(@RequestParam(value = "ids") @NotNull List<Integer> ids) {
+        return categoryService.delete(ids);
+    }
+
+    @PutMapping
+    public List<Category> update(@RequestBody @NotNull List<Category> categories) {
+        return categoryService.update(categories);
     }
 
     @GetMapping
