@@ -103,29 +103,27 @@ public class BorrowRecordServiceImpl extends ServiceImpl<BorrowRecordMapper, Bor
         if (borrowRecord.getCreateTime().isAfter(returnBookDTO.getEndTime()))
             throw new BusinessException("归还时间不能早于借阅时间");
 
-        // 归还
+        // 借阅记录 - 归还
         update(new LambdaUpdateWrapper<BorrowRecord>()
                 .eq(BorrowRecord::getId, id)
                 .set(BorrowRecord::getStatus, returnBookDTO.getStatus())
                 .set(BorrowRecord::getEndTime, returnBookDTO.getEndTime())
         );
 
-        // 正常归还
-        if (returnBookDTO.getStatus() == BorrowRecord.Status.RETURNED) {
-            bookCopyMapper.update(new LambdaUpdateWrapper<BookCopy>()
-                    .eq(BookCopy::getId, borrowRecord.getBookCopyId())
-                    .set(BookCopy::getStatus, BookCopy.Status.AVAILABLE)
-            );
-            return BookCopyAdminDTO.fromBookCopy(bookCopyMapper.selectById(borrowRecord.getBookCopyId()));
+        // 馆藏状态更新
+        LambdaUpdateWrapper<BookCopy> wrapper = new LambdaUpdateWrapper<BookCopy>().eq(BookCopy::getId, borrowRecord.getBookCopyId());
+        // 设置馆藏状态
+        wrapper.set(BookCopy::getStatus, switch (returnBookDTO.getStatus()) {
+            case RETURNED -> BookCopy.Status.AVAILABLE;
+            case LOST, DAMAGED -> BookCopy.Status.WITHDRAWN;
+            default -> throw new IllegalStateException("归还状态错误");
+        });
+        // 若归还会导致下架，设置下架原因和时间
+        if (returnBookDTO.getStatus() == BorrowRecord.Status.LOST || returnBookDTO.getStatus() == BorrowRecord.Status.DAMAGED) {
+            wrapper.set(BookCopy::getWithdrawnReason, returnBookDTO.getStatus() == BorrowRecord.Status.LOST ? BookCopy.WithdrawnReason.LOST : BookCopy.WithdrawnReason.DAMAGED);
+            wrapper.set(BookCopy::getWithdrawnTime, returnBookDTO.getEndTime());
         }
 
-        // 异常归还
-        bookCopyMapper.update(new LambdaUpdateWrapper<BookCopy>()
-                .eq(BookCopy::getId, borrowRecord.getBookCopyId())
-                .set(BookCopy::getStatus, BookCopy.Status.WITHDRAWN)
-                .set(BookCopy::getWithdrawnReason, returnBookDTO.toWithdrawnReason())
-                .set(BookCopy::getWithdrawnTime, returnBookDTO.getEndTime())
-        );
         return BookCopyAdminDTO.fromBookCopy(bookCopyMapper.selectById(borrowRecord.getBookCopyId()));
     }
 
