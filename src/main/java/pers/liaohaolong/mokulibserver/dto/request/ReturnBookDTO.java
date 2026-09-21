@@ -17,13 +17,13 @@ public class ReturnBookDTO {
 
     @NotNull(message = "归还状态不能为空")
     @ValidReturnStatus(message = "归还状态错误")
-    private BorrowRecord.CloseStatus closeStatus;
+    private BorrowRecord.Status status;
 
     @NotNull(message = "归还时间不能为空")
-    private LocalDateTime closeTime;
+    private LocalDateTime endTime;
 
     public BookCopy.WithdrawnReason toWithdrawnReason() {
-        return switch (closeStatus) {
+        return switch (status) {
             case LOST -> BookCopy.WithdrawnReason.LOST;
             case DAMAGED -> BookCopy.WithdrawnReason.DAMAGED;
             default -> throw new RuntimeException("内部服务器错误");

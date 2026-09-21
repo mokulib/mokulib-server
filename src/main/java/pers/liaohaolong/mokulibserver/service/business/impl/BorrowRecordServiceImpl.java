@@ -74,7 +74,7 @@ public class BorrowRecordServiceImpl extends ServiceImpl<BorrowRecordMapper, Bor
             throw new BusinessException("借阅记录不存在");
         if (user.getRole() == User.Role.USER && !Objects.equals(borrowRecord.getUserId(), user.getId()))
             throw new BusinessException("您没有权限续借此图书");
-        if (borrowRecord.getCloseStatus() != BorrowRecord.CloseStatus.OPEN)
+        if (borrowRecord.getStatus() != BorrowRecord.Status.BORROWING)
             throw new BusinessException("图书已归还，无法续借");
         if (borrowRecord.getIsRenewed())
             throw new BusinessException("已续借一次，不能再次续借");
@@ -98,20 +98,20 @@ public class BorrowRecordServiceImpl extends ServiceImpl<BorrowRecordMapper, Bor
         // 验证
         if (borrowRecord == null)
             throw new BusinessException("借阅记录不存在");
-        if (borrowRecord.getCloseStatus() != BorrowRecord.CloseStatus.OPEN)
+        if (borrowRecord.getStatus() != BorrowRecord.Status.BORROWING)
             throw new BusinessException("图书已归还，请勿重复操作");
-        if (borrowRecord.getCreateTime().isAfter(returnBookDTO.getCloseTime()))
+        if (borrowRecord.getCreateTime().isAfter(returnBookDTO.getEndTime()))
             throw new BusinessException("归还时间不能早于借阅时间");
 
         // 归还
         update(new LambdaUpdateWrapper<BorrowRecord>()
                 .eq(BorrowRecord::getId, id)
-                .set(BorrowRecord::getCloseStatus, returnBookDTO.getCloseStatus())
-                .set(BorrowRecord::getCloseTime, returnBookDTO.getCloseTime())
+                .set(BorrowRecord::getStatus, returnBookDTO.getStatus())
+                .set(BorrowRecord::getEndTime, returnBookDTO.getEndTime())
         );
 
         // 正常归还
-        if (returnBookDTO.getCloseStatus() == BorrowRecord.CloseStatus.CLOSED) {
+        if (returnBookDTO.getStatus() == BorrowRecord.Status.RETURNED) {
             bookCopyMapper.update(new LambdaUpdateWrapper<BookCopy>()
                     .eq(BookCopy::getId, borrowRecord.getBookCopyId())
                     .set(BookCopy::getStatus, BookCopy.Status.AVAILABLE)
@@ -124,7 +124,7 @@ public class BorrowRecordServiceImpl extends ServiceImpl<BorrowRecordMapper, Bor
                 .eq(BookCopy::getId, borrowRecord.getBookCopyId())
                 .set(BookCopy::getStatus, BookCopy.Status.WITHDRAWN)
                 .set(BookCopy::getWithdrawnReason, returnBookDTO.toWithdrawnReason())
-                .set(BookCopy::getWithdrawnTime, returnBookDTO.getCloseTime())
+                .set(BookCopy::getWithdrawnTime, returnBookDTO.getEndTime())
         );
         return BookCopyAdminDTO.fromBookCopy(bookCopyMapper.selectById(borrowRecord.getBookCopyId()));
     }
@@ -138,14 +138,14 @@ public class BorrowRecordServiceImpl extends ServiceImpl<BorrowRecordMapper, Bor
             throw new BusinessException("拒绝操作，借阅记录不存在");
         if (exists(new LambdaQueryWrapper<BorrowRecord>().eq(BorrowRecord::getBookCopyId, borrowRecord.getBookCopyId()).gt(BorrowRecord::getCreateTime, borrowRecord.getCreateTime())))
             throw new BusinessException("拒绝操作，只能撤销最近一次的归还操作");
-        if (borrowRecord.getCloseStatus() == BorrowRecord.CloseStatus.OPEN)
+        if (borrowRecord.getStatus() == BorrowRecord.Status.BORROWING)
             throw new BusinessException("拒绝操作，图书尚未归还");
 
         // 撤销归还
         update(new LambdaUpdateWrapper<BorrowRecord>()
                 .eq(BorrowRecord::getId, id)
-                .set(BorrowRecord::getCloseStatus, BorrowRecord.CloseStatus.OPEN)
-                .set(BorrowRecord::getCloseTime, null)
+                .set(BorrowRecord::getStatus, BorrowRecord.Status.BORROWING)
+                .set(BorrowRecord::getEndTime, null)
         );
         // 恢复馆藏状态
         bookCopyMapper.update(new LambdaUpdateWrapper<BookCopy>()

@@ -69,10 +69,10 @@ CREATE TABLE IF NOT EXISTS `borrow_record`
     `user_id`      INT                                   NOT NULL,
     `book_copy_id` INT                                   NOT NULL,
     `is_renewed`   BOOLEAN     DEFAULT FALSE             NOT NULL,
-    `close_status` VARCHAR(16) DEFAULT 'OPEN'            NOT NULL,
+    `status`       VARCHAR(16) DEFAULT 'BORROWING'       NOT NULL,
     `create_time`  DATETIME                              NOT NULL,
     `due_time`     DATETIME                              NOT NULL,
-    `close_time`   DATETIME
+    `end_time`     DATETIME
 );
 
 CREATE TABLE IF NOT EXISTS `book_tag_relation`

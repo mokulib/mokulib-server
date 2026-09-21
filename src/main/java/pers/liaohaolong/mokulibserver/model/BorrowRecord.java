@@ -24,19 +24,19 @@ public class BorrowRecord {
 
     private Boolean isRenewed;
 
-    private CloseStatus closeStatus;
+    private Status status;
 
     private LocalDateTime createTime;
 
     private LocalDateTime dueTime;
 
-    private LocalDateTime closeTime;
+    private LocalDateTime endTime;
 
     @Getter
-    public enum CloseStatus {
+    public enum Status {
 
-        OPEN("OPEN", "借阅中"),
-        CLOSED("CLOSED", "已归还"),
+        BORROWING("BORROWING", "借阅中"),
+        RETURNED("RETURNED", "已归还"),
         LOST("LOST", "已丢失"),
         DAMAGED("DAMAGED", "已损坏");
 
@@ -45,7 +45,7 @@ public class BorrowRecord {
 
         private final String desc;
 
-        CloseStatus(String code, String desc) {
+        Status(String code, String desc) {
             this.code = code;
             this.desc = desc;
         }

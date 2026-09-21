@@ -109,7 +109,7 @@ public class BookServiceImpl extends ServiceImpl<BookMapper, Book> implements Bo
         List<BorrowRecord> borrowRecords = borrowRecordMapper.selectList(new LambdaQueryWrapper<BorrowRecord>()
                 .eq(BorrowRecord::getUserId, userId)
                 .in(BorrowRecord::getBookCopyId, unavailableBookCopies.stream().map(BookCopy::getId).toList())
-                .eq(BorrowRecord::getCloseStatus, BorrowRecord.CloseStatus.OPEN)
+                .eq(BorrowRecord::getStatus, BorrowRecord.Status.BORROWING)
         );
 
         // 将我借阅的记录，映射为 Map 以便后续处理
@@ -142,7 +142,7 @@ public class BookServiceImpl extends ServiceImpl<BookMapper, Book> implements Bo
         // 查询已借出副本的当前借阅信息（不限定借阅用户）
         List<BorrowRecord> borrowRecords = borrowRecordMapper.selectList(new LambdaQueryWrapper<BorrowRecord>()
                 .in(BorrowRecord::getBookCopyId, unavailableBookCopies.stream().map(BookCopy::getId).toList())
-                .eq(BorrowRecord::getCloseStatus, BorrowRecord.CloseStatus.OPEN)
+                .eq(BorrowRecord::getStatus, BorrowRecord.Status.BORROWING)
         );
 
         // 映射为 Map 以便后续处理

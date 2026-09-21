@@ -16,10 +16,10 @@ public class BorrowRecordWithBookIdDTO extends BorrowRecord {
         borrowRecordWithBookIdDTO.setUserId(borrowRecord.getUserId());
         borrowRecordWithBookIdDTO.setBookCopyId(borrowRecord.getBookCopyId());
         borrowRecordWithBookIdDTO.setIsRenewed(borrowRecord.getIsRenewed());
-        borrowRecordWithBookIdDTO.setCloseStatus(borrowRecord.getCloseStatus());
+        borrowRecordWithBookIdDTO.setStatus(borrowRecord.getStatus());
         borrowRecordWithBookIdDTO.setCreateTime(borrowRecord.getCreateTime());
         borrowRecordWithBookIdDTO.setDueTime(borrowRecord.getDueTime());
-        borrowRecordWithBookIdDTO.setCloseTime(borrowRecord.getCloseTime());
+        borrowRecordWithBookIdDTO.setEndTime(borrowRecord.getEndTime());
         borrowRecordWithBookIdDTO.setBookId(bookId);
         return borrowRecordWithBookIdDTO;
     }

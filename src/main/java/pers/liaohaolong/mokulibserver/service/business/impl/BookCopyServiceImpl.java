@@ -55,7 +55,7 @@ public class BookCopyServiceImpl extends ServiceImpl<BookCopyMapper, BookCopy> i
         BookCopyAdminDTO bookCopyAdminDTO = BookCopyAdminDTO.fromBookCopy(getById(id));
         bookCopyAdminDTO.setCurrentBorrowRecord(borrowRecordMapper.selectOne(new LambdaQueryWrapper<BorrowRecord>()
                 .eq(BorrowRecord::getBookCopyId, id)
-                .eq(BorrowRecord::getCloseStatus, BorrowRecord.CloseStatus.OPEN)
+                .eq(BorrowRecord::getStatus, BorrowRecord.Status.BORROWING)
         ));
         return bookCopyAdminDTO;
     }

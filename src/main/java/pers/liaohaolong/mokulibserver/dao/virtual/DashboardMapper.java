@@ -21,7 +21,7 @@ public interface DashboardMapper {
     int countBookTypes();
 
     // 借阅中数量
-    @Select("SELECT COUNT(*) FROM borrow_record WHERE close_status = 'OPEN'")
+    @Select("SELECT COUNT(*) FROM borrow_record WHERE status = 'BORROWING'")
     int countBorrowing();
 
     // 今日借出数量
@@ -29,7 +29,7 @@ public interface DashboardMapper {
     int countTodayBorrowed();
 
     // 今日归还数量（包含借阅丢失和借阅损毁）
-    @Select("SELECT COUNT(*) FROM borrow_record WHERE close_time >= CURDATE() AND close_time < CURDATE() + INTERVAL 1 DAY AND close_status != 'OPEN'")
+    @Select("SELECT COUNT(*) FROM borrow_record WHERE end_time >= CURDATE() AND end_time < CURDATE() + INTERVAL 1 DAY AND status != 'BORROWING'")
     int countTodayReturned();
 
     // 上月最后一天可流通馆藏数量
@@ -45,7 +45,7 @@ public interface DashboardMapper {
     int countYesterdayBorrowed();
 
     // 昨日归还数量
-    @Select("SELECT COUNT(*) FROM borrow_record WHERE close_time >= DATE_SUB(CURDATE(), INTERVAL 1 DAY) AND close_time < CURDATE()")
+    @Select("SELECT COUNT(*) FROM borrow_record WHERE end_time >= DATE_SUB(CURDATE(), INTERVAL 1 DAY) AND end_time < CURDATE()")
     int countYesterdayReturned();
 
     // 近7天借阅趋势（按自然日）
@@ -53,7 +53,7 @@ public interface DashboardMapper {
     List<TrendPointDTO> getBorrowTrend(@Param("today") LocalDate today);
 
     // 近7天归还趋势（按自然日）
-    @Select("SELECT DATE(close_time) as date, COUNT(*) as count FROM borrow_record WHERE close_time >= DATE_SUB(#{today}, INTERVAL 6 DAY) AND close_status = 'CLOSED' GROUP BY DATE(close_time) ORDER BY date")
+    @Select("SELECT DATE(end_time) as date, COUNT(*) as count FROM borrow_record WHERE end_time >= DATE_SUB(#{today}, INTERVAL 6 DAY) AND status = 'RETURNED' GROUP BY DATE(end_time) ORDER BY date")
     List<TrendPointDTO> getReturnTrend(@Param("today") LocalDate today);
 
     // 近7天新增馆藏趋势（按自然日）
@@ -69,7 +69,7 @@ public interface DashboardMapper {
     List<DashboardDTO.CategoryStat> getCategoryStats();
 
     // 逾期记录（所有未归还且已逾期的）
-    @Select("SELECT br.book_copy_id as bookCopyId, bc.book_id as bookId, br.user_id as userId, br.due_time as dueTime FROM borrow_record br JOIN book_copy bc ON br.book_copy_id = bc.id WHERE br.close_status = 'OPEN' AND br.due_time < NOW() ORDER BY br.due_time")
+    @Select("SELECT br.book_copy_id as bookCopyId, bc.book_id as bookId, br.user_id as userId, br.due_time as dueTime FROM borrow_record br JOIN book_copy bc ON br.book_copy_id = bc.id WHERE br.status = 'BORROWING' AND br.due_time < NOW() ORDER BY br.due_time")
     List<DashboardDTO.OverdueRecord> getOverdueRecords();
 
     // 已下架总量

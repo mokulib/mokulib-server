@@ -18,7 +18,7 @@ public class HistoryDTO {
 
     private LocalDateTime returnTime;
 
-    private BorrowRecord.CloseStatus closeStatus;
+    private BorrowRecord.Status status;
 
     private Boolean isRenewed;
 

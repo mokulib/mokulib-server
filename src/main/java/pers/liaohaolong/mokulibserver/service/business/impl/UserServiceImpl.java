@@ -77,7 +77,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         // 查询借阅记录
         List<BorrowRecord> borrowRecords = borrowRecordMapper.selectList(new LambdaQueryWrapper<BorrowRecord>()
                 .eq(BorrowRecord::getUserId, id)
-                .eq(BorrowRecord::getCloseStatus, BorrowRecord.CloseStatus.OPEN)
+                .eq(BorrowRecord::getStatus, BorrowRecord.Status.BORROWING)
         );
 
         if (borrowRecords.isEmpty())
@@ -117,7 +117,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         // 查询已完成的借阅记录
         List<BorrowRecord> borrowRecords = borrowRecordMapper.selectList(new LambdaQueryWrapper<BorrowRecord>()
                 .eq(BorrowRecord::getUserId, id)
-                .ne(BorrowRecord::getCloseStatus, BorrowRecord.CloseStatus.OPEN)
+                .ne(BorrowRecord::getStatus, BorrowRecord.Status.BORROWING)
         );
 
         if (borrowRecords.isEmpty())
@@ -137,8 +137,8 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
             historyDTO.setBookCopyId(borrowRecord.getBookCopyId());
             historyDTO.setBookId(bookCopyIdToBookId.get(borrowRecord.getBookCopyId()));
             historyDTO.setBorrowTime(borrowRecord.getCreateTime());
-            historyDTO.setReturnTime(borrowRecord.getCloseTime());
-            historyDTO.setCloseStatus(borrowRecord.getCloseStatus());
+            historyDTO.setReturnTime(borrowRecord.getEndTime());
+            historyDTO.setStatus(borrowRecord.getStatus());
             historyDTO.setIsRenewed(borrowRecord.getIsRenewed());
             historyDTO.setDueTime(borrowRecord.getDueTime());
             return historyDTO;
@@ -157,7 +157,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         if (!emailCaptchaBaseService.verifyEmailCaptcha(user.getId(), EmailCaptcha.BusinessType.CLOSE_ACCOUNT, captcha))
             throw new BusinessException("验证码错误或验证码已过期");
         // 是否有未完成的借阅
-        if (borrowRecordMapper.selectCount(new LambdaQueryWrapper<BorrowRecord>().eq(BorrowRecord::getUserId, user.getId()).eq(BorrowRecord::getCloseStatus, BorrowRecord.CloseStatus.OPEN)) > 0)
+        if (borrowRecordMapper.selectCount(new LambdaQueryWrapper<BorrowRecord>().eq(BorrowRecord::getUserId, user.getId()).eq(BorrowRecord::getStatus, BorrowRecord.Status.BORROWING)) > 0)
             throw new BusinessException("账户有未完成的借阅，无法注销");
         // 关闭账户
         removeById(user.getId());
