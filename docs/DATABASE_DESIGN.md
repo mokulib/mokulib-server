@@ -22,7 +22,7 @@ role: 'ADMIN', 'USER'
 | Name      | DataType    | Default | AutoInc | PK/UK/IDX | NotNull |
 |:----------|:------------|:--------|:--------|:----------|:--------|
 | id        | int         |         | Y       | PK        | Y       |
-| name      | varchar(16) |         |         |           | Y       |
+| name      | varchar(16) |         |         | UK        | Y       |
 
 ## tag (标签)
 
