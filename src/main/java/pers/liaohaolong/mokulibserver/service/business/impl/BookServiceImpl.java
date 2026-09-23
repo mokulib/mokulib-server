@@ -159,8 +159,18 @@ public class BookServiceImpl extends ServiceImpl<BookMapper, Book> implements Bo
     @Override
     @Transactional
     public IPage<Integer> search(String keyword, SortModeDTO sortMode, Integer pageNum) throws BusinessException {
+        // 搜索条件
+        LambdaQueryWrapper<Book> wrapper = new LambdaQueryWrapper<Book>().and(w -> w
+                .eq(Book::getIsbn, keyword) // ISBN 精确搜索
+                .or()
+                .like(Book::getTitle, keyword) // 标题 模糊搜索
+                .or()
+                .like(Book::getAuthor, keyword) // 作者 模糊搜索
+                .or()
+                .like(Book::getPublisher, keyword) // 出版社 模糊搜索
+        );
         // 搜索业务
-        Page<Book> page = page(new Page<>(pageNum, 5), SortModeDTO.apply(new LambdaQueryWrapper<Book>().like(Book::getTitle, keyword), sortMode));
+        Page<Book> page = page(new Page<>(pageNum, 5), SortModeDTO.apply(wrapper, sortMode));
         // 热搜统计，只对有结果的、默认状态的搜索进行统计
         if (page.getTotal() > 0 && sortMode == SortModeDTO.PUBLISH_DATE_FROM_NEW_TO_OLD && pageNum == 1) {
             HotSearch hotSearch = hotSearchMapper.selectOne(new LambdaQueryWrapper<HotSearch>().eq(HotSearch::getKeyword, keyword));
