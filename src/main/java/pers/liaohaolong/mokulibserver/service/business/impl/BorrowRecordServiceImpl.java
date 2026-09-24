@@ -123,6 +123,8 @@ public class BorrowRecordServiceImpl extends ServiceImpl<BorrowRecordMapper, Bor
             wrapper.set(BookCopy::getWithdrawnReason, returnBookDTO.getStatus() == BorrowRecord.Status.LOST ? BookCopy.WithdrawnReason.LOST : BookCopy.WithdrawnReason.DAMAGED);
             wrapper.set(BookCopy::getWithdrawnTime, returnBookDTO.getEndTime());
         }
+        // 更新馆藏状态
+        bookCopyMapper.update(wrapper);
 
         return BookCopyAdminDTO.fromBookCopy(bookCopyMapper.selectById(borrowRecord.getBookCopyId()));
     }
