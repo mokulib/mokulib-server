@@ -48,7 +48,7 @@ public class AuthenticationFailureHandler implements org.springframework.securit
         // 在本项目的邮箱验证码登录方式中，可能抛出 BadCredentialsException、LockedException
         else if (password.matches(RegexpConfigurations.EMAIL_CAPTCHA_REGEXP)) {
             if (exception instanceof BadCredentialsException) // 包括 UsernameNotFoundException, EmailCaptchaNotFoundException（含验证码过期和验证码已使用）和 BadCredentialsException
-                result = createFailureResult("邮箱不存在、验证码错误或验证码已过期");
+                result = createFailureResult("用户不存在、验证码错误或验证码已过期");
             else if (exception instanceof LockedException)
                 result = createFailureResult("账户未激活，请先激活账户");
         }
